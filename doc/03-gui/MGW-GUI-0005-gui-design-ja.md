@@ -9,7 +9,7 @@ sources:
   - MGW-GUI-0001（v1.0）
   - MGW-US-0026（v1.0）
   - MGW-US-0027（v1.0）
-  - doc/specification.md (v1.3) §9、§18
+  - doc/specification.md (v1.4) §9、§18
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:52:10+09:00
