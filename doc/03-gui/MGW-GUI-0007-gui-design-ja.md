@@ -2,7 +2,7 @@
 id: MGW-GUI-0007
 type: gui-design
 title: 更新の案内と起動の復旧
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -11,7 +11,9 @@ sources:
   - MGW-US-0004（v1.0）
   - MGW-ADR-0004（v1.1）
   - doc/specification.md (v1.3) §23
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:52:10+09:00
 ---
 
 # MGW-GUI-0007 更新の案内と起動の復旧

@@ -2,7 +2,7 @@
 id: MGW-GUI-0006
 type: gui-design
 title: 設定（表示方式）と擬似カラー
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -10,7 +10,9 @@ sources:
   - MGW-US-0028（v1.0）
   - MGW-US-0029（v1.0）
   - doc/specification.md (v1.3) §1.1、§19
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:52:10+09:00
 ---
 
 # MGW-GUI-0006 設定（表示方式）と擬似カラー

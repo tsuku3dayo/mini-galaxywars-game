@@ -3,7 +3,7 @@ name: Pages
 # 03 の試作（prototype/）を GitHub Pages に公開する。土台の WS で、アプリの build と合わせた公開に置き換える。
 on:
   push:
-    branches: [main, docs/03-gui-design]
+    branches: [main]
     paths: ['prototype/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 

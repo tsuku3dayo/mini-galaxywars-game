@@ -2,7 +2,7 @@
 id: MGW-GUI-0002
 type: gui-design
 title: タイトル画面
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -12,7 +12,9 @@ sources:
   - MGW-US-0024（v1.0）
   - MGW-US-0029（v1.0）
   - doc/specification.md (v1.3) §7、§18
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:52:10+09:00
 ---
 
 # MGW-GUI-0002 タイトル画面（`#/title`）

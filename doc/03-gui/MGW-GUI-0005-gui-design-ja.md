@@ -2,7 +2,7 @@
 id: MGW-GUI-0005
 type: gui-design
 title: ランキング画面（書き出し・読み込み）
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -10,7 +10,9 @@ sources:
   - MGW-US-0026（v1.0）
   - MGW-US-0027（v1.0）
   - doc/specification.md (v1.3) §9、§18
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:52:10+09:00
 ---
 
 # MGW-GUI-0005 ランキング画面（`#/ranking`）
