@@ -2,15 +2,13 @@
 id: MGW-TS-0001
 type: technology-stack
 title: 技術スタック
-status: stable
-version: 1.0
+status: review
+version: 1.1
 updated: 2026-10-26
 sources:
-  - MGW-PB-0001（v1.1） §3
-  - doc/specification.md (v1.1) §13〜§15、§22〜§24
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T15:48:01+09:00
+  - MGW-PB-0001（v1.2） §3
+  - doc/specification.md (v1.2) §13〜§15、§22〜§24
+verified: null
 ---
 
 # 技術スタック
@@ -75,3 +73,10 @@ verified:
 | 音のファイル | Web Audio で合成する（§22） |
 | サーバー・BaaS | サーバー通信を行わない（§1.2） |
 | TypeScript 7 系 | MGW-ADR-0006 |
+
+## 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-26 | 中身は変えない。sources の版の表記を直す（MGW-PB-0001 v1.2、仕様書 v1.2） |

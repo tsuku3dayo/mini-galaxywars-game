@@ -2,15 +2,13 @@
 id: MGW-ADR-0007
 type: architecture-decision
 title: アプリ名と見た目（「ギャラクシーウォーズミニ」）
-status: stable
-version: 1.0
+status: review
+version: 1.1
 updated: 2026-10-26
 sources:
-  - MGW-PB-0001（v1.1） §8
-  - doc/specification.md (v1.1) §1
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T15:48:01+09:00
+  - MGW-PB-0001（v1.2） §8
+  - doc/specification.md (v1.2) §1
+verified: null
 ---
 
 # MGW-ADR-0007 アプリ名と見た目
@@ -42,3 +40,10 @@ verified:
 ## 影響
 
 - 作品名を使うことで問題になる恐れは残る（オーナーが了承済み）。指摘を受けたら、変更の依頼として名前を変える。
+
+## 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-26 | 中身は変えない。sources の版の表記を直す（MGW-PB-0001 v1.2、仕様書 v1.2） |

@@ -2,15 +2,13 @@
 id: MGW-ADR-0005
 type: architecture-decision
 title: アプリ識別子と保存のキー
-status: stable
-version: 1.0
+status: review
+version: 1.1
 updated: 2026-10-26
 sources:
-  - MGW-PB-0001（v1.1） §7
-  - doc/specification.md (v1.1) §9、§21
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T15:48:01+09:00
+  - MGW-PB-0001（v1.2） §7
+  - doc/specification.md (v1.2) §9、§21
+verified: null
 ---
 
 # MGW-ADR-0005 アプリ識別子と保存のキー
@@ -46,3 +44,10 @@ verified:
 ## 影響
 
 - 保存のデータの形（版の番号を含める）は 04 で決める。
+
+## 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-26 | 中身は変えない。sources の版の表記を直す（MGW-PB-0001 v1.2、仕様書 v1.2） |
