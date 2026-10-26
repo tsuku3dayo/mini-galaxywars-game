@@ -3,14 +3,14 @@ id: MGW-SA-0001
 type: system-architecture
 title: システム構成
 status: stable
-version: 1.0
+version: 1.1
 updated: 2026-10-26
 sources:
-  - MGW-PB-0001（v1.1） §2、§3、§7
-  - doc/specification.md (v1.1) §1.2、§5、§10、§13〜§24
+  - MGW-PB-0001（v1.2） §2、§3、§7
+  - doc/specification.md (v1.2) §1.2、§5、§10、§13〜§24
 verified:
   by: tsuku3dayo
-  at: 2026-10-26T15:48:01+09:00
+  at: 2026-10-26T16:06:38+09:00
 ---
 
 # システム構成
@@ -82,7 +82,7 @@ flowchart TD
 | キー | 中身 |
 | :--- | :--- |
 | `galaxy-wars-scores` | ランキングの上位 10 件（仕様書 §21） |
-| `mini-galaxywars-settings` | 設定（表示方式・基板の版など。中身は 02〜04 で決める） |
+| `mini-galaxywars-settings` | 設定（表示方式など。中身は 02〜04 で決める） |
 
 Service Worker のキャッシュ名には `mini-galaxywars` を付ける。
 
@@ -122,3 +122,10 @@ flowchart LR
 | 画面の部品・大きさの合わせ方（拡大の仕方・安全領域） | 03 |
 | E2E 用の入口（`?debug=1`、body の data 属性など） | 04 |
 | モジュールごとの関数・データ型の詳細 | 04 |
+
+## 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-26 | §3.4 の設定の中身から「基板の版」を消す（仕様書 v1.2 でタイトー版に固定）。sources の版の表記を直す |

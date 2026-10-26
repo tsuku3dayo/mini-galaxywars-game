@@ -3,14 +3,14 @@ id: MGW-ADR-0003
 type: architecture-decision
 title: 公開先と公開の仕方（GitHub Pages・GitHub Actions）
 status: stable
-version: 1.0
+version: 1.1
 updated: 2026-10-26
 sources:
-  - MGW-PB-0001（v1.1） §3
-  - doc/specification.md (v1.1) §24
+  - MGW-PB-0001（v1.2） §3
+  - doc/specification.md (v1.2) §24
 verified:
   by: tsuku3dayo
-  at: 2026-10-26T15:48:01+09:00
+  at: 2026-10-26T16:06:38+09:00
 ---
 
 # MGW-ADR-0003 公開先と公開の仕方
@@ -41,3 +41,10 @@ verified:
 ## 影響
 
 - main へのマージ = 公開になる。リリースに関わる PR は、そう伝えてからマージを頼む。
+
+## 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-26 | 中身は変えない。sources の版の表記を直す（MGW-PB-0001 v1.2、仕様書 v1.2） |
