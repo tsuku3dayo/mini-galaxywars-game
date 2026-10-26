@@ -1,9 +1,8 @@
 name: CI
 
+# PR のときの確認。main へのマージのあとの確認と公開は pages.yml が行う
 on:
   pull_request:
-  push:
-    branches: [main]
 
 jobs:
   verify:

@@ -1,10 +1,9 @@
 name: Pages
 
-# 03 の試作（prototype/）を GitHub Pages に公開する。土台の WS で、アプリの build と合わせた公開に置き換える。
+# main へのマージ = 公開（MGW-ADR-0003、MGW-TD-0007 §6）。verify と e2e が通ったときだけ公開する
 on:
   push:
     branches: [main]
-    paths: ['prototype/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
@@ -14,20 +13,49 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      # 03 の試作も、いっしょに公開し続ける
+      - run: cp -r prototype dist/prototype
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:e2e
+
+  deploy:
+    needs: [verify, e2e]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - run: mkdir -p _site && cp -r prototype _site/prototype
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
