@@ -123,7 +123,7 @@ for (const file of mdFiles) {
   const looksLikeArtifact = name.startsWith(`${PREFIX}-`);
   if (!inTypeDir && !looksLikeArtifact) continue; // 仕様書・依頼メモなど
 
-  const parsed = parseFrontmatter(readFileSync(file, 'utf8').replace(/^﻿/, ''));
+  const parsed = parseFrontmatter(readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
   if (!parsed) {
     errors.push(`${r}: frontmatter がありません`);
     continue;
@@ -225,13 +225,24 @@ for (const file of codeFiles) {
     if (!definedChecks.has(m[0])) errors.push(`${rel(file)}: 確認 ID ${m[0]} が test-case にありません`);
   }
 }
+// implementation-task の対象の確認 ID（attested-computation は同じ番号の TASK を扱う）
+const taskOf = new Map(); // 確認 ID → TASK の番号
+for (const doc of docs.values()) {
+  if (doc.code !== 'TASK') continue;
+  for (const m of doc.body.matchAll(CHECK_ID_RE)) taskOf.set(m[0], doc.data.id.slice(-4));
+}
 const checksInAc = new Set();
-const tcInAc = new Set(); // attested-computation が扱っている test-case
+const acNumbers = new Set();
 for (const doc of docs.values()) {
   if (doc.code !== 'AC') continue;
-  const text = `${(doc.data.sources ?? []).join('\n')}\n${doc.body}`;
-  for (const m of text.matchAll(CHECK_ID_RE)) checksInAc.add(m[0]);
-  for (const m of text.matchAll(ID_RE)) if (m[1] === 'TC') tcInAc.add(m[0]);
+  const num = doc.data.id.slice(-4);
+  acNumbers.add(num);
+  const inThis = new Set([...doc.body.matchAll(CHECK_ID_RE)].map((m) => m[0]));
+  for (const c of inThis) checksInAc.add(c);
+  // TASK の対象の確認 ID が、すべて AC にある（確認の結果か、確認できなかったこと・まだ確かめていないこと）
+  for (const [check, task] of taskOf) {
+    if (task === num && !inThis.has(check)) errors.push(`${doc.file}: MGW-TASK-${num} の対象の確認 ID ${check} がありません`);
+  }
 }
 // テストのコード・記録がまだないもの（未実装・未記録）は、--strict（リリース）のときだけエラーにする
 const STRICT = process.argv.includes('--strict');
@@ -241,21 +252,22 @@ for (const [check, c] of definedChecks) {
   if (c.kind === 'auto') {
     if (!c.file) {
       errors.push(`${c.doc}: 確認 ID ${check}（自動）に確かめるファイルが書いてありません`);
-    } else if (existsSync(join(ROOT, c.file))) {
-      if (!readFileSync(join(ROOT, c.file), 'utf8').includes(check))
-        errors.push(`確認 ID ${check}（自動）が ${c.file} にありません`);
-    } else if (STRICT) {
-      errors.push(`確認 ID ${check}（自動）の ${c.file} がありません`);
     } else {
-      pendingAuto++;
+      // ファイルは複数の TASK で使うので、受け持つ TASK の AC ができてから（またはリリースのとき）求める
+      const due = STRICT || acNumbers.has(taskOf.get(check));
+      const exists = existsSync(join(ROOT, c.file));
+      if (exists && readFileSync(join(ROOT, c.file), 'utf8').includes(check)) continue;
+      if (due) errors.push(`確認 ID ${check}（自動）が ${c.file} にありません`);
+      else pendingAuto++;
     }
   } else if (!checksInAc.has(check)) {
-    if (tcInAc.has(c.tc) || STRICT) errors.push(`確認 ID ${check}（手動）が attested-computation にありません`);
-    else pendingManual++;
+    // AC があれば上で調べている。AC がまだないものは数える
+    if (STRICT) errors.push(`確認 ID ${check}（手動）が attested-computation にありません`);
+    else if (!acNumbers.has(taskOf.get(check))) pendingManual++;
   }
 }
 if (pendingAuto + pendingManual > 0)
-  console.log(`未実装の確認 ID：自動 ${pendingAuto} 件（テストのファイルがまだない）、手動 ${pendingManual} 件（記録がまだない）`);
+  console.log(`未実装の確認 ID：自動 ${pendingAuto} 件（テストがまだない）、手動 ${pendingManual} 件（記録がまだない）`);
 
 // ---- 結果 ----
 for (const w of warnings) console.log(`注意: ${w}`);

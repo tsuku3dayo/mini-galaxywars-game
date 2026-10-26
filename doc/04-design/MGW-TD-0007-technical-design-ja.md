@@ -3,7 +3,7 @@ id: MGW-TD-0007
 type: technical-design
 title: PWA・起動の復旧・ビルド・CI・Lint の設計
 status: stable
-version: 1.0
+version: 1.1
 updated: 2026-10-26
 sources:
   - MGW-TD-0001（v1.0）
@@ -78,7 +78,7 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 
 | workflow | きっかけ | ジョブ |
 | :--- | :--- | :--- |
-| `ci.yml` | PR・main への push | `verify`（Node 24、`npm ci`、`npm run verify`）、`e2e`（Playwright の Chromium・WebKit を入れ、`npm run build` のあと `npm run test:e2e`） |
+| `ci.yml` | PR・main への push | `verify`（Node 24、`npm ci`、`npm run verify`）、`e2e`（Playwright のコンテナ `mcr.microsoft.com/playwright:v<@playwright/test と同じ版>-noble` の中で、`npm run build` のあと `npm run test:e2e`。ブラウザを入れる手順が終わらないことがあったため、入れずに済むコンテナを使う） |
 | `pages.yml` | main への push | `verify`・`e2e` と同じ確認のあと、`dist/` と `prototype/` を GitHub Pages に公開 |
 
 - 今の `pages.yml`（試作だけを公開）は、土台の WS でこの形に置き換える。
@@ -96,6 +96,13 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 
 ## 8. Lint（`eslint.config.js`）
 
-- `@eslint/js` の推奨と `typescript-eslint` の推奨（型を使うもの）。
+- `@eslint/js` の推奨と `typescript-eslint` の推奨（型を使わないもの）。型を使う規則は、ソースの断片を `lintText` で lint して層の決まりを確かめる単体テスト（MGW-TC-0030-04）では使えないため、入れない。型の誤りは `tsc --noEmit`（`npm run build`）で見つける。
 - 層の決まり（MGW-TD-0001 §4）を `no-restricted-globals`・`no-restricted-properties`・`no-restricted-imports` で書く。
-- `tsconfig.json`：`strict: true`、`noUncheckedIndexedAccess: true`、`target: ES2022`。
+- `tsconfig.json`：`strict: true`、`noUncheckedIndexedAccess: true`、`noUnusedLocals`・`noUnusedParameters`、`verbatimModuleSyntax`、`target: ES2022`。
+
+## 9. 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-26 | §6：e2e は Playwright のコンテナで動かす。§8：typescript-eslint は型を使わない推奨にした（どちらも MGW-TASK-0001 の実装に合わせる） |
