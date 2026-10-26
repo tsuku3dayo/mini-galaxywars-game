@@ -2,13 +2,15 @@
 id: MGW-TS-0001
 type: technology-stack
 title: 技術スタック
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §3
   - doc/specification.md (v1.2) §13〜§15、§22〜§24
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:06:38+09:00
 ---
 
 # 技術スタック

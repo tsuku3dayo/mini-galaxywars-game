@@ -2,13 +2,15 @@
 id: MGW-ADR-0007
 type: architecture-decision
 title: アプリ名と見た目（「ギャラクシーウォーズミニ」）
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §8
   - doc/specification.md (v1.2) §1
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:06:38+09:00
 ---
 
 # MGW-ADR-0007 アプリ名と見た目

@@ -2,13 +2,15 @@
 id: MGW-ADR-0003
 type: architecture-decision
 title: 公開先と公開の仕方（GitHub Pages・GitHub Actions）
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §3
   - doc/specification.md (v1.2) §24
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:06:38+09:00
 ---
 
 # MGW-ADR-0003 公開先と公開の仕方

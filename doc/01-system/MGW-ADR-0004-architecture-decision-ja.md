@@ -2,13 +2,15 @@
 id: MGW-ADR-0004
 type: architecture-decision
 title: PWA の更新（「更新」ボタン）と起動の復旧
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §7
   - doc/specification.md (v1.2) §10、§23、§25
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:06:38+09:00
 ---
 
 # MGW-ADR-0004 PWA の更新と起動の復旧
