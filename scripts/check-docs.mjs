@@ -197,11 +197,17 @@ for (const [id, doc] of docs) {
 
 // ---- 確認 ID ----
 const definedChecks = new Map(); // 確認 ID → 'auto' | 'manual'
+// 確認 ID は test-case の表の行で決める。行に「手動」があれば手動、なければ自動。
+// 自動の行には、確かめるファイル（tests/・e2e/・scripts/ の下）を書く。
+const TEST_FILE_RE = /\b(?:tests|e2e|scripts)\/[\w./-]+\.(?:[cm]?[jt]sx?)\b/;
 for (const doc of docs.values()) {
   if (doc.code !== 'TC') continue;
   for (const line of doc.body.split(/\r?\n/)) {
     for (const m of line.matchAll(CHECK_ID_RE)) {
-      if (!definedChecks.has(m[0])) definedChecks.set(m[0], line.includes('手動') ? 'manual' : 'auto');
+      if (definedChecks.has(m[0])) continue;
+      const manual = line.includes('手動');
+      const file = manual ? null : (line.match(TEST_FILE_RE)?.[0] ?? null);
+      definedChecks.set(m[0], { kind: manual ? 'manual' : 'auto', file, tc: m[0].slice(0, -3), doc: doc.file });
     }
   }
 }
@@ -220,15 +226,36 @@ for (const file of codeFiles) {
   }
 }
 const checksInAc = new Set();
+const tcInAc = new Set(); // attested-computation が扱っている test-case
 for (const doc of docs.values()) {
-  if (doc.code === 'AC') for (const m of doc.body.matchAll(CHECK_ID_RE)) checksInAc.add(m[0]);
+  if (doc.code !== 'AC') continue;
+  const text = `${(doc.data.sources ?? []).join('\n')}\n${doc.body}`;
+  for (const m of text.matchAll(CHECK_ID_RE)) checksInAc.add(m[0]);
+  for (const m of text.matchAll(ID_RE)) if (m[1] === 'TC') tcInAc.add(m[0]);
 }
-for (const [check, kind] of definedChecks) {
-  if (kind === 'auto' && !checksInCode.has(check))
-    errors.push(`確認 ID ${check}（自動）がテストのコードにありません`);
-  if (kind === 'manual' && !checksInAc.has(check))
-    errors.push(`確認 ID ${check}（手動）が attested-computation にありません`);
+// テストのコード・記録がまだないもの（未実装・未記録）は、--strict（リリース）のときだけエラーにする
+const STRICT = process.argv.includes('--strict');
+let pendingAuto = 0;
+let pendingManual = 0;
+for (const [check, c] of definedChecks) {
+  if (c.kind === 'auto') {
+    if (!c.file) {
+      errors.push(`${c.doc}: 確認 ID ${check}（自動）に確かめるファイルが書いてありません`);
+    } else if (existsSync(join(ROOT, c.file))) {
+      if (!readFileSync(join(ROOT, c.file), 'utf8').includes(check))
+        errors.push(`確認 ID ${check}（自動）が ${c.file} にありません`);
+    } else if (STRICT) {
+      errors.push(`確認 ID ${check}（自動）の ${c.file} がありません`);
+    } else {
+      pendingAuto++;
+    }
+  } else if (!checksInAc.has(check)) {
+    if (tcInAc.has(c.tc) || STRICT) errors.push(`確認 ID ${check}（手動）が attested-computation にありません`);
+    else pendingManual++;
+  }
 }
+if (pendingAuto + pendingManual > 0)
+  console.log(`未実装の確認 ID：自動 ${pendingAuto} 件（テストのファイルがまだない）、手動 ${pendingManual} 件（記録がまだない）`);
 
 // ---- 結果 ----
 for (const w of warnings) console.log(`注意: ${w}`);
