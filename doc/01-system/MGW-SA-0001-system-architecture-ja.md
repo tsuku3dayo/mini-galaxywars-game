@@ -2,13 +2,15 @@
 id: MGW-SA-0001
 type: system-architecture
 title: システム構成
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.1） §2、§3、§7
   - doc/specification.md (v1.1) §1.2、§5、§10、§13〜§24
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T15:48:01+09:00
 ---
 
 # システム構成

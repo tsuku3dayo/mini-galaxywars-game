@@ -2,12 +2,14 @@
 id: MGW-ADR-0001
 type: architecture-decision
 title: 層の決まり（core は DOM・時刻・乱数に触れない）
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - doc/specification.md (v1.1) §1.2、§10、§16
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T15:48:01+09:00
 ---
 
 # MGW-ADR-0001 層の決まり

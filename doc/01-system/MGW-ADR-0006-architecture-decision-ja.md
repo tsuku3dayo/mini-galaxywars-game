@@ -2,12 +2,14 @@
 id: MGW-ADR-0006
 type: architecture-decision
 title: TypeScript の版（6.0 系を使う）
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - doc/specification.md (v1.1) §13
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T15:48:01+09:00
 ---
 
 # MGW-ADR-0006 TypeScript の版
