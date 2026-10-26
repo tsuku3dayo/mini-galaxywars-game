@@ -1,0 +1,101 @@
+---
+id: MGW-TD-0007
+type: technical-design
+title: PWA・起動の復旧・ビルド・CI・Lint の設計
+status: draft
+version: 1.0
+updated: 2026-10-26
+sources:
+  - MGW-TD-0001（v1.0）
+  - MGW-TS-0001（v1.1）
+  - MGW-ADR-0003（v1.1）
+  - MGW-ADR-0004（v1.1）
+  - MGW-ADR-0005（v1.1）
+  - MGW-ADR-0006（v1.0）
+  - MGW-ADR-0007（v1.1）
+  - MGW-GUI-0001（v1.0）
+  - MGW-GUI-0007（v1.0）
+  - MGW-US-0001（v1.0）
+  - MGW-US-0002（v1.0）
+  - MGW-US-0003（v1.0）
+  - MGW-US-0004（v1.0）
+  - MGW-US-0022（v1.0）
+  - doc/specification.md (v1.3) §13〜§15、§23〜§25
+verified: null
+---
+
+# MGW-TD-0007 PWA・起動の復旧・ビルド・CI・Lint の設計
+
+## 1. ビルド（`vite.config.ts`）
+
+- `base: '/mini-galaxywars-game/'`。
+- vite-plugin-pwa：
+
+| 設定 | 値 |
+| :--- | :--- |
+| `registerType` | `'prompt'`（MGW-ADR-0004） |
+| `workbox.cacheId` | `'mini-galaxywars'`（MGW-ADR-0005） |
+| `workbox.globPatterns` | `['**/*.{html,js,css,png,svg,webmanifest}']` |
+| `manifest.name`・`short_name` | `ギャラクシーウォーズミニ`・`GWミニ`（MGW-GUI-0001 §6） |
+| `manifest.display`・`orientation` | `standalone`・`portrait` |
+| `manifest.start_url`・`scope` | `/mini-galaxywars-game/` |
+| `manifest.icons` | 192・512 の PNG（`public/icons/`）、iPhone 用に 180 の `apple-touch-icon` |
+
+- `index.html` の head：`viewport-fit=cover`、`apple-mobile-web-app-capable`、`apple-mobile-web-app-status-bar-style = black-translucent`、`apple-mobile-web-app-title = GWミニ`（試作と同じ）。
+- 03 の試作は、公開の workflow で `dist/prototype/` に写して、いっしょに公開し続ける。
+
+## 2. 更新（`app/pwa.ts`）
+
+- `virtual:pwa-register` の `registerSW({ onNeedRefresh })` を使う。`onNeedRefresh` で「新しい版が待っている」印を立てる。
+- 印が立っていて、画面がタイトルかランキングのときだけ、更新の案内を出す（MGW-GUI-0007）。
+- 「更新」で `updateSW(true)`（待っている Service Worker に切り替えて再読み込み）。
+
+## 3. 起動の復旧（`public/boot.js`）
+
+- `index.html` の head で、モジュールより先に普通の `<script src="boot.js">` として読む。
+- 8 秒のタイマーを始める。`main.ts` は画面を出したら `window.__mgwBooted()` を呼び、タイマーを止める。
+- 8 秒たったら、`#app` の代わりに復旧の画面（MGW-GUI-0007 §2）を出す。
+  - 再読み込み：`location.reload()`。
+  - キャッシュを消して再読み込み：`navigator.serviceWorker.getRegistrations()` のうち scope が `/mini-galaxywars-game/` のものを `unregister()`、`caches.keys()` のうち `mini-galaxywars` で始まるものを消して、`location.reload()`。localStorage には触れない。
+- ES5 の範囲で書く（古い端末でも、このファイルだけは動くように）。
+
+## 4. dist の検査（`scripts/check-dist.mjs`）
+
+| 確かめること | US |
+| :--- | :--- |
+| `dist/` の HTML・JS・CSS・マニフェストに、`http://`・`https://` で始まる外部の URL がない（`https://tsuku3dayo.github.io/` と XML の名前空間を除く） | MGW-US-0002 |
+| `manifest.webmanifest` の `name`・`short_name`・`scope`・`start_url` | MGW-US-0002 |
+| `sw.js` があり、キャッシュの名前に `mini-galaxywars` を含む | MGW-US-0002 |
+| `index.html` の資源の参照が `/mini-galaxywars-game/` で始まる | MGW-US-0001 |
+| `boot.js` がある | MGW-US-0004 |
+| `.mp3`・`.wav`・`.ogg` などの音のファイルがない | MGW-US-0023 |
+
+## 5. npm のスクリプト
+
+MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `check:dist` → `check:docs`。
+
+## 6. CI（`.github/workflows/`）
+
+| workflow | きっかけ | ジョブ |
+| :--- | :--- | :--- |
+| `ci.yml` | PR・main への push | `verify`（Node 24、`npm ci`、`npm run verify`）、`e2e`（Playwright の Chromium・WebKit を入れ、`npm run build` のあと `npm run test:e2e`） |
+| `pages.yml` | main への push | `verify`・`e2e` と同じ確認のあと、`dist/` と `prototype/` を GitHub Pages に公開 |
+
+- 今の `pages.yml`（試作だけを公開）は、土台の WS でこの形に置き換える。
+
+## 7. E2E（`playwright.config.ts`）
+
+| project | 端末 | 使い道 |
+| :--- | :--- | :--- |
+| `pc-chromium` | Desktop Chrome（1280 × 800） | PC の操作（キー・マウス）、画面、保存 |
+| `iphone11-webkit` | `devices['iPhone 11']` | タッチ、操作空間、大きさ |
+| `iphonese-webkit` | `devices['iPhone SE']` | はみ出さないこと（MGW-US-0022） |
+
+- `webServer` は `npm run preview`（`vite preview`、base 付き）。
+- 文字の幅に頼るテストは書かない（CI と手元でフォントが違うため）。
+
+## 8. Lint（`eslint.config.js`）
+
+- `@eslint/js` の推奨と `typescript-eslint` の推奨（型を使うもの）。
+- 層の決まり（MGW-TD-0001 §4）を `no-restricted-globals`・`no-restricted-properties`・`no-restricted-imports` で書く。
+- `tsconfig.json`：`strict: true`、`noUncheckedIndexedAccess: true`、`target: ES2022`。
