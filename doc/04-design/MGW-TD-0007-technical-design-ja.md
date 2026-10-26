@@ -78,7 +78,7 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 
 | workflow | きっかけ | ジョブ |
 | :--- | :--- | :--- |
-| `ci.yml` | PR・main への push | `verify`（Node 24、`npm ci`、`npm run verify`）、`e2e`（Playwright の Chromium・WebKit を入れ、`npm run build` のあと `npm run test:e2e`） |
+| `ci.yml` | PR・main への push | `verify`（Node 24、`npm ci`、`npm run verify`）、`e2e`（Playwright のコンテナ `mcr.microsoft.com/playwright:v<@playwright/test と同じ版>-noble` の中で、`npm run build` のあと `npm run test:e2e`。ブラウザを入れる手順が終わらないことがあったため、入れずに済むコンテナを使う） |
 | `pages.yml` | main への push | `verify`・`e2e` と同じ確認のあと、`dist/` と `prototype/` を GitHub Pages に公開 |
 
 - 今の `pages.yml`（試作だけを公開）は、土台の WS でこの形に置き換える。
@@ -105,4 +105,4 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 | 版 | 日付 | 内容 |
 | :--- | :--- | :--- |
 | 1.0 | 2026-10-26 | 初版 |
-| 1.1 | 2026-10-26 | §8：typescript-eslint は型を使わない推奨にした（MGW-TASK-0001 の実装に合わせる） |
+| 1.1 | 2026-10-26 | §6：e2e は Playwright のコンテナで動かす。§8：typescript-eslint は型を使わない推奨にした（どちらも MGW-TASK-0001 の実装に合わせる） |
