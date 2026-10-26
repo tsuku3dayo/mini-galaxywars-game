@@ -2,13 +2,15 @@
 id: MGW-EP-0003
 type: epic
 title: 流れと HUD
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §2
   - doc/specification.md (v1.3) §3.5、§6.3、§7、§8、§18
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-EP-0003 流れと HUD

@@ -2,13 +2,15 @@
 id: MGW-EP-0004
 type: epic
 title: タッチ操作と iPhone
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §3、§7
   - doc/specification.md (v1.3) §1.2、§2、§4、§10、§20
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-EP-0004 タッチ操作と iPhone

@@ -2,14 +2,16 @@
 id: MGW-US-0025
 type: user-story
 title: ランキングに登録する
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0006（v1.0）
   - doc/specification.md (v1.3) §7、§9、§21
   - MGW-ADR-0005（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-US-0025 ランキングに登録する

@@ -2,7 +2,7 @@
 id: MGW-US-0002
 type: user-story
 title: オフラインで遊べる・ホーム画面に置ける
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -11,7 +11,9 @@ sources:
   - MGW-ADR-0004（v1.1）
   - MGW-ADR-0005（v1.1）
   - MGW-ADR-0007（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-US-0002 オフラインで遊べる・ホーム画面に置ける

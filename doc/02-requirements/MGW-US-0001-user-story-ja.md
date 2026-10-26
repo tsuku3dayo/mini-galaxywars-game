@@ -2,14 +2,16 @@
 id: MGW-US-0001
 type: user-story
 title: 公開 URL で開ける
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0001（v1.0）
   - doc/specification.md (v1.3) §13〜§15、§24
   - MGW-ADR-0003（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-US-0001 公開 URL で開ける

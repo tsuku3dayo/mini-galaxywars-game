@@ -2,14 +2,16 @@
 id: MGW-US-0029
 type: user-story
 title: 表示方式を切り替える
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0007（v1.0）
   - doc/specification.md (v1.3) §1.1、§19
   - MGW-ADR-0005（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-US-0029 表示方式を切り替える

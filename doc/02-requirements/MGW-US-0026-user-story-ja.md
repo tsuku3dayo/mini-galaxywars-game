@@ -2,13 +2,15 @@
 id: MGW-US-0026
 type: user-story
 title: ランキングを見る
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0006（v1.0）
   - doc/specification.md (v1.3) §9、§18
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-US-0026 ランキングを見る

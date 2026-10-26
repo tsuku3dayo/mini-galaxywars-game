@@ -2,13 +2,15 @@
 id: MGW-US-0008
 type: user-story
 title: UFO が 2 段で動く
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0002（v1.0）
   - doc/specification.md (v1.3) §2.1、§3.2、§11
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-US-0008 UFO が 2 段で動く

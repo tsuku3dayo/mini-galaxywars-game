@@ -2,7 +2,7 @@
 id: MGW-EP-0001
 type: epic
 title: 土台（公開・PWA）
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -10,7 +10,9 @@ sources:
   - MGW-ADR-0003（v1.1）
   - MGW-ADR-0004（v1.1）
   - doc/specification.md (v1.3) §10、§23〜§25
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-EP-0001 土台（公開・PWA）

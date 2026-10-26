@@ -2,13 +2,15 @@
 id: MGW-EP-0007
 type: epic
 title: 表示方式
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §2
   - doc/specification.md (v1.3) §1.1、§19
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-EP-0007 表示方式

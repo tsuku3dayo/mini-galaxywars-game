@@ -2,13 +2,15 @@
 id: MGW-US-0031
 type: user-story
 title: 60 fps で動く
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0004（v1.0）
   - doc/specification.md (v1.3) §10
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T16:22:35+09:00
 ---
 
 # MGW-US-0031 60 fps で動く
