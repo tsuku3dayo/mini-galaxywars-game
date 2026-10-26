@@ -7,7 +7,7 @@ version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0006（v1.0）
-  - doc/specification.md (v1.2) §7、§9、§21
+  - doc/specification.md (v1.3) §7、§9、§21
   - MGW-ADR-0005（v1.1）
 verified: null
 ---
@@ -28,7 +28,7 @@ verified: null
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | スコアが上位 10 件に入るとき、名前を入れて登録できる | E2E |
+| 1 | クリアかゲームオーバーでゲームが終わり、スコアが上位 10 件に入るとき、名前を入れて登録できる | E2E |
 | 2 | 記録するのは、スコア・プレイヤー名・日時 | 単体 |
 | 3 | localStorage の `galaxy-wars-scores` に、スコアの高い順で上位 10 件だけを残す | 単体 |
 | 4 | ページを読み込み直しても、記録が残っている | E2E |

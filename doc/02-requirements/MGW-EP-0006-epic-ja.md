@@ -8,7 +8,7 @@ updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.2） §2
   - MGW-ADR-0005（v1.1）
-  - doc/specification.md (v1.2) §9、§21
+  - doc/specification.md (v1.3) §9、§21
 verified: null
 ---
 
