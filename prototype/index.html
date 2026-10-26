@@ -16,6 +16,8 @@
   :root { --bar: 44px; --fg: #fff; --bg: #000; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); overflow: hidden; overscroll-behavior: none; }
+  /* iOS のホーム画面のアプリで、ページが少しスクロールすると押せる位置がずれるため、ページ自体を動かさない */
+  body { position: fixed; inset: 0; }
   body { font: bold 16px ui-monospace, Menlo, Consolas, monospace; -webkit-text-size-adjust: 100%;
          -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   #probe { position: fixed; visibility: hidden; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
@@ -166,12 +168,27 @@ function layout() {
   control.hidden = !touch;
   control.style.width = W * scale + 'px';
   control.style.height = CTRL * scale + 'px';
-  const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
-  $('metrics').textContent =
-    `${innerWidth}×${innerHeight} ×${scale.toFixed(3)} dpr${dpr}\n` +
-    `安全 上${i.t} 下${i.b} 左${i.l} 右${i.r} ${standalone ? 'ホーム画面' : 'ブラウザ'}\n` +
-    `画面 ${Math.round(W * scale)}×${Math.round((H + (touch ? CTRL : 0)) * scale)}`;
+  showMetrics();
 }
+function showMetrics() {
+  const i = insets();
+  const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+  const vv = window.visualViewport;
+  $('metrics').textContent =
+    `試作 v2  ${innerWidth}×${innerHeight} ×${scale.toFixed(3)} dpr${dpr}\n` +
+    `安全 上${i.t} 下${i.b} 左${i.l} 右${i.r} ${standalone ? 'ホーム画面' : 'ブラウザ'}\n` +
+    `画面 ${Math.round(W * scale)}×${Math.round((H + (touch ? CTRL : 0)) * scale)}  ずれ ${Math.round(scrollY)}/${vv ? Math.round(vv.offsetTop) : '-'}`;
+}
+// キーボードを閉じたあとなどにページがスクロールしたままになると、押せる位置がずれる。0 に戻す
+function pinScroll() {
+  if (document.activeElement === $('nameInput')) return;
+  if (scrollY !== 0 || document.documentElement.scrollTop !== 0 || document.body.scrollTop !== 0) {
+    scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+  }
+}
+addEventListener('scroll', pinScroll);
+if (window.visualViewport) { visualViewport.addEventListener('scroll', pinScroll); visualViewport.addEventListener('resize', pinScroll); }
+setInterval(showMetrics, 500);
 addEventListener('resize', layout);
 addEventListener('orientationchange', () => setTimeout(layout, 300));
 $('howto').innerHTML = touch ? 'なぞって移動 タップで発射<br>触れ続けると加速' : '←→/マウスで移動 SPACEで発射<br>押し続けると加速';
@@ -208,7 +225,7 @@ $('protoBtn').onclick = () => { $('protoMenu').hidden = false; };
 $('pauseBtn').onclick = () => togglePause();
 $('resumeBtn').onclick = () => togglePause();
 $('nameInput').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, ''); });
-$('nameInput').addEventListener('blur', () => setTimeout(layout, 100));
+$('nameInput').addEventListener('blur', () => setTimeout(() => { pinScroll(); layout(); }, 100));
 
 function fillRanking(full) {
   const names = ['ABCDEFGH', 'PLAYER', 'WWWWWWWW', 'GALAXY', 'A', 'MMMMMMMM', 'GW MINI', 'TEST1234', 'Z', 'NONAME'];

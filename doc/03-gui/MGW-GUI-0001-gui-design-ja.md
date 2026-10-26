@@ -60,7 +60,8 @@ verified: null
 ## 4. 安全領域とスクロール
 
 - `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` とし、上のバーと操作空間に安全領域ぶんの余白を付ける（MGW-US-0022）。
-- ページはスクロールさせない（`overflow: hidden`、`overscroll-behavior: none`）。
+- ページはスクロールさせない（`overflow: hidden`、`overscroll-behavior: none`、`body` を `position: fixed`）。
+- それでもスクロールしたら（キーボードを閉じたあとなど）、すぐ 0 に戻す。iOS のホーム画面のアプリでは、ページが少しスクロールしたままだと、ボタンの押せる位置が見た目より下にずれる（試作で見つかった。§8）。
 - ゲーム画面と操作空間では、拡大・長押しのメニュー・文字の選択が起きないようにする（`touch-action: none`、`-webkit-touch-callout: none`、`user-select: none`）。
 - ソフトウェアキーボードを使うのは、名前の入力（MGW-GUI-0004）だけ。キーボードが出ても枠の大きさを計算し直さず、入力欄がキーボードに隠れないようにする。
 
@@ -98,4 +99,8 @@ verified: null
 
 ## 8. 試作での確認
 
-（試作を iPhone 11 で触った結果を、ここに書く）
+試作：`https://tsuku3dayo.github.io/mini-galaxywars-game/prototype/`、端末：iPhone 11（Safari・ホーム画面のアプリ）
+
+| 日付 | 試作 | 結果 | 対応 |
+| :--- | :--- | :--- | :--- |
+| 2026-10-26 | v1 | ホーム画面のアプリで、「Pause」「RESUME」の押せる位置がボタンより少し下にずれた。ほかの点（指で隠れない・ボタンの押しやすさ・1 画面に収まる・キーボード・安全領域・名前「GWミニ」・文字）は OK | §4 に「ページを動かさない・スクロールしたら 0 に戻す」を足し、試作 v2 で直した。もう一度確かめる |
