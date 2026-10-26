@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<!-- 03 画面設計の試作（大きさと操作だけ。ゲームのルール・保存・音は作らない。07 の実装では使わない） -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GWミニ">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>ギャラクシーウォーズミニ（試作）</title>
+<style>
+  :root { --bar: 44px; --fg: #fff; --bg: #000; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); overflow: hidden; overscroll-behavior: none; }
+  body { font: bold 16px ui-monospace, Menlo, Consolas, monospace; -webkit-text-size-adjust: 100%;
+         -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  #probe { position: fixed; visibility: hidden; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  #app { position: fixed; inset: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+         display: flex; flex-direction: column; align-items: center; }
+  #topbar { width: 100%; height: var(--bar); flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; }
+  #metrics { font-size: 11px; font-weight: normal; color: #8f8; white-space: pre; line-height: 1.2; }
+  #stage { position: relative; flex: none; }
+  #game { display: block; width: 100%; height: 100%; touch-action: none; image-rendering: pixelated; }
+  #control { flex: none; touch-action: none; border-top: 1px dashed #666; display: flex; align-items: center; justify-content: space-between;
+             padding: 0 12px; color: #aaa; font-size: 16px; background: #111; }
+  .overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+             text-align: center; padding: 16px; }
+  .overlay[hidden], [hidden] { display: none !important; }
+  .dim { background: rgba(0,0,0,.75); }
+  .solid { background: #000; }
+  button { font: inherit; font-size: 18px; color: var(--fg); background: #000; border: 2px solid var(--fg); min-height: 44px; min-width: 44px;
+           padding: 6px 16px; touch-action: manipulation; }
+  button:active { background: var(--fg); color: #000; }
+  .col { display: flex; flex-direction: column; gap: 12px; align-items: stretch; min-width: 60%; }
+  .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .big { font-size: 28px; letter-spacing: 2px; }
+  .huge { font-size: 40px; letter-spacing: 3px; }
+  .small { font-size: 14px; font-weight: normal; color: #ccc; }
+  table { border-collapse: collapse; font-size: 15px; }
+  td, th { padding: 2px 5px; text-align: left; white-space: nowrap; }
+  input[type=text] { font: inherit; font-size: 20px; width: 12ch; padding: 8px; color: #fff; background: #000; border: 2px solid #fff; text-transform: uppercase;
+                     -webkit-user-select: text; user-select: text; }
+  #update { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            padding: 8px; background: #222; border-top: 2px solid #fff; }
+  #protoMenu .col button { font-size: 16px; }
+  #boot { position: fixed; inset: 0; background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+          font: 16px -apple-system, system-ui, sans-serif; padding: 24px; }
+  #boot button { font: 16px -apple-system, system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<div id="probe"></div>
+<div id="app">
+  <div id="topbar"><span id="metrics"></span><button id="pauseBtn" hidden>Pause</button></div>
+  <div id="stage">
+    <canvas id="game"></canvas>
+
+    <!-- MGW-GUI-0002 タイトル -->
+    <div id="title" class="overlay solid">
+      <div class="small">HIGH 03000</div>
+      <div class="big">ギャラクシーウォーズ<br>ミニ</div>
+      <div class="col">
+        <button id="startBtn">START</button>
+        <button data-go="ranking">RANKING</button>
+        <button data-show="settings">SETTINGS</button>
+      </div>
+      <div class="small" id="howto"></div>
+      <div class="small">原作 1979 ユニバーサル／タイトー<br>非公式の再現作品</div>
+      <button id="protoBtn" class="small" style="font-size:14px;border-style:dashed">試作メニュー</button>
+    </div>
+
+    <!-- MGW-GUI-0005 ランキング -->
+    <div id="ranking" class="overlay solid" hidden>
+      <div class="big">RANKING</div>
+      <table id="rankTable"></table>
+      <div id="rankEmpty" hidden>まだ記録がありません</div>
+      <div class="row"><button>書き出し</button><button>読み込み</button></div>
+      <button data-go="title">TITLE</button>
+    </div>
+
+    <!-- MGW-GUI-0006 設定 -->
+    <div id="settings" class="overlay solid" hidden>
+      <div class="big">SETTINGS</div>
+      <div style="text-align:left">表示方式<br>
+        <label><input type="radio" name="mode" checked> 擬似カラーセロハン</label><br>
+        <label><input type="radio" name="mode"> ピクセルパーフェクト</label>
+      </div>
+      <button data-hide="settings">閉じる</button>
+    </div>
+
+    <!-- MGW-GUI-0003 表示 -->
+    <div id="pause" class="overlay dim" hidden><div class="huge">PAUSE</div><button id="resumeBtn">RESUME</button></div>
+    <div id="clear" class="overlay" hidden><div class="huge">GOOD!!</div><div class="big">STAGE CLEAR</div><button data-go="title">TITLE</button></div>
+    <div id="over" class="overlay" hidden><div class="huge">GAME OVER</div><button data-go="title">TITLE</button></div>
+
+    <!-- MGW-GUI-0004 名前の入力（上半分に置く） -->
+    <div id="entry" class="overlay dim" hidden style="justify-content:flex-start;padding-top:40px">
+      <div class="big">NEW RECORD!</div>
+      <div>3RD 01250</div>
+      <div>名前を入れてください</div>
+      <input id="nameInput" type="text" value="PLAYER" maxlength="8" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="done">
+      <div class="small">英数字 8 文字まで</div>
+      <div class="row"><button data-go="ranking">登録</button><button data-go="title">スキップ</button></div>
+    </div>
+
+    <!-- 試作メニュー（試作だけ） -->
+    <div id="protoMenu" class="overlay solid" hidden>
+      <div>試作メニュー</div>
+      <div class="col">
+        <button data-proto="clear">クリアの表示</button>
+        <button data-proto="over">ゲームオーバーの表示</button>
+        <button data-proto="entry">名前の入力</button>
+        <button data-proto="rank10">ランキング（10 件）</button>
+        <button data-proto="rank0">ランキング（記録なし）</button>
+        <button data-proto="update">更新の案内</button>
+        <button data-proto="boot">起動の復旧</button>
+        <button data-hide="protoMenu">閉じる</button>
+      </div>
+    </div>
+
+    <!-- MGW-GUI-0007 更新の案内 -->
+    <div id="update" hidden><span>新しい版があります</span><button data-hide="update">更新</button></div>
+  </div>
+  <!-- 操作空間（タッチ端末だけ） -->
+  <div id="control"><span>◀</span><span>なぞって移動 ・ タップで発射</span><span>▶</span></div>
+</div>
+
+<!-- MGW-GUI-0007 起動の復旧 -->
+<div id="boot" hidden>
+  <div style="font-size:20px;font-weight:bold">起動できませんでした</div>
+  <button data-hide="boot">再読み込み</button>
+  <button data-hide="boot">キャッシュを消して再読み込み</button>
+  <div>ランキングは消えません</div>
+</div>
+
+<script>
+'use strict';
+const W = 480, H = 640, CTRL = 96, BAR = 44;
+const $ = (id) => document.getElementById(id);
+const canvas = $('game'), ctx = canvas.getContext('2d');
+const stage = $('stage'), control = $('control');
+const touch = matchMedia('(pointer: coarse)').matches;
+let scale = 1, dpr = 1;
+
+// ---- 大きさの合わせ方（MGW-GUI-0001 §3） ----
+function insets() {
+  const s = getComputedStyle($('probe'));
+  return { t: parseFloat(s.paddingTop), r: parseFloat(s.paddingRight), b: parseFloat(s.paddingBottom), l: parseFloat(s.paddingLeft) };
+}
+function layout() {
+  if (document.activeElement === $('nameInput')) return; // キーボードが出ても計算し直さない
+  const i = insets();
+  const availW = innerWidth - i.l - i.r;
+  const availH = innerHeight - i.t - i.b - BAR;
+  const logicalH = H + (touch ? CTRL : 0);
+  scale = Math.min(availW / W, availH / logicalH);
+  dpr = devicePixelRatio || 1;
+  stage.style.width = W * scale + 'px';
+  stage.style.height = H * scale + 'px';
+  canvas.width = Math.round(W * scale * dpr);
+  canvas.height = Math.round(H * scale * dpr);
+  control.hidden = !touch;
+  control.style.width = W * scale + 'px';
+  control.style.height = CTRL * scale + 'px';
+  const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+  $('metrics').textContent =
+    `${innerWidth}×${innerHeight} ×${scale.toFixed(3)} dpr${dpr}\n` +
+    `安全 上${i.t} 下${i.b} 左${i.l} 右${i.r} ${standalone ? 'ホーム画面' : 'ブラウザ'}\n` +
+    `画面 ${Math.round(W * scale)}×${Math.round((H + (touch ? CTRL : 0)) * scale)}`;
+}
+addEventListener('resize', layout);
+addEventListener('orientationchange', () => setTimeout(layout, 300));
+$('howto').innerHTML = touch ? 'なぞって移動 タップで発射<br>触れ続けると加速' : '←→/マウスで移動 SPACEで発射<br>押し続けると加速';
+
+// ---- 画面の切り替え（試作なので、ハッシュは見た目だけ） ----
+const screens = ['title', 'ranking', 'settings', 'pause', 'clear', 'over', 'entry', 'protoMenu'];
+let current = 'title';
+function go(name) {
+  for (const s of screens) $(s).hidden = true;
+  $('update').hidden = true;
+  current = name;
+  $('pauseBtn').hidden = name !== 'play';
+  if (name !== 'play') $(name).hidden = false;
+  location.hash = '#/' + (name === 'play' ? 'play' : name === 'ranking' ? 'ranking' : 'title');
+  if (name === 'play') reset();
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.go) go(b.dataset.go);
+  if (b.dataset.show) $(b.dataset.show).hidden = false;
+  if (b.dataset.hide) $(b.dataset.hide).hidden = true;
+  const p = b.dataset.proto;
+  if (p) {
+    $('protoMenu').hidden = true;
+    if (p === 'clear' || p === 'over') { go('play'); state = 'end'; $(p).hidden = false; }
+    if (p === 'entry') { go('play'); state = 'end'; $('entry').hidden = false; }
+    if (p === 'rank10' || p === 'rank0') { fillRanking(p === 'rank10'); go('ranking'); }
+    if (p === 'update') { go('title'); $('update').hidden = false; }
+    if (p === 'boot') $('boot').hidden = false;
+  }
+});
+$('startBtn').onclick = () => go('play');
+$('protoBtn').onclick = () => { $('protoMenu').hidden = false; };
+$('pauseBtn').onclick = () => togglePause();
+$('resumeBtn').onclick = () => togglePause();
+$('nameInput').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, ''); });
+$('nameInput').addEventListener('blur', () => setTimeout(layout, 100));
+
+function fillRanking(full) {
+  const names = ['ABCDEFGH', 'PLAYER', 'WWWWWWWW', 'GALAXY', 'A', 'MMMMMMMM', 'GW MINI', 'TEST1234', 'Z', 'NONAME'];
+  const t = $('rankTable');
+  t.innerHTML = '<tr><th>RANK</th><th>SCORE</th><th>NAME</th><th>DATE</th></tr>' + (full ? names.map((n, k) => {
+    const r = k + 1, suf = r === 1 ? 'ST' : r === 2 ? 'ND' : r === 3 ? 'RD' : 'TH';
+    return `<tr><td>${String(r).padStart(2, ' ')}${suf}</td><td>${String(9950 - k * 850).padStart(5, '0')}</td><td>${n}</td><td>2026-10-${String(26 - k).padStart(2, '0')}</td></tr>`;
+  }).join('') : '');
+  t.hidden = !full; $('rankEmpty').hidden = full;
+}
+fillRanking(true);
+
+// ---- 操作（MGW-GUI-0003 §3）：位置と発射・噴射だけ。当たり判定はない ----
+let state = 'ready', paused = false;
+let lx = W / 2, mx = W / 2, my = 596, target = W / 2, boost = false, keys = {}, pointerDown = false;
+function reset() { state = 'ready'; paused = false; lx = mx = target; my = 596; boost = false; }
+function togglePause() { if (current !== 'play' || state === 'end') return; paused = !paused; $('pause').hidden = !paused; }
+function toLogicalX(clientX) { const r = stage.getBoundingClientRect(); return Math.max(24, Math.min(W - 24, (clientX - r.left) / scale)); }
+for (const el of [canvas, control]) {
+  el.addEventListener('pointerdown', (e) => { if (current !== 'play' || paused) return; pointerDown = true; el.setPointerCapture(e.pointerId); target = toLogicalX(e.clientX); });
+  el.addEventListener('pointermove', (e) => { if (!pointerDown && e.pointerType !== 'mouse') return; target = toLogicalX(e.clientX); });
+  el.addEventListener('pointerup', () => { if (!pointerDown) return; pointerDown = false; if (state === 'ready') state = 'flying'; });
+  el.addEventListener('pointercancel', () => { pointerDown = false; });
+}
+addEventListener('keydown', (e) => {
+  keys[e.code] = true;
+  if (current !== 'play') return;
+  if (e.code === 'KeyP' || e.code === 'Escape') togglePause();
+  if (e.code === 'Space' && state === 'ready' && !paused) state = 'flying';
+  if (e.code === 'Space') e.preventDefault();
+});
+addEventListener('keyup', (e) => { keys[e.code] = false; });
+document.addEventListener('visibilitychange', () => { if (document.hidden && current === 'play' && !paused && state !== 'end') togglePause(); });
+
+function update(dt) {
+  if (current !== 'play' || paused || state === 'end') return;
+  const dir = (keys.ArrowRight || keys.KeyD ? 1 : 0) - (keys.ArrowLeft || keys.KeyA ? 1 : 0);
+  if (dir) target = Math.max(24, Math.min(W - 24, (state === 'ready' ? lx : mx) + dir * 40));
+  if (state === 'ready') {
+    lx += Math.sign(target - lx) * Math.min(Math.abs(target - lx), 480 * dt); mx = lx; my = 596;
+  } else {
+    boost = pointerDown || keys.Space;
+    const vx = boost ? 240 : 120, vy = boost ? 280 : 180;
+    mx += Math.sign(target - mx) * Math.min(Math.abs(target - mx), vx * dt);
+    my -= vy * dt;
+    if (my < 48) { reset(); lx = mx; }
+  }
+}
+
+// ---- 描画（仮の図形） ----
+function draw(t) {
+  ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+  // 領域の目安（試作だけ）
+  ctx.fillStyle = 'rgba(255,64,192,.10)'; ctx.fillRect(0, 48, W, 72);
+  ctx.fillStyle = 'rgba(64,255,96,.10)'; ctx.fillRect(0, 580, W, 60);
+  ctx.strokeStyle = '#333'; ctx.beginPath(); for (const y of [48, 120, 580, 612]) { ctx.moveTo(0, y); ctx.lineTo(W, y); } ctx.stroke();
+  // HUD
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 18px ui-monospace, Menlo, monospace'; ctx.textBaseline = 'top';
+  ctx.fillText('SCORE 00150', 12, 6); ctx.textAlign = 'right'; ctx.fillText('HIGH 03000', W - 12, 6); ctx.textAlign = 'left';
+  for (let k = 0; k < 2; k++) ctx.fillRect(W - 28 - k * 24, 32, 16, 6);
+  // UFO
+  const off = (t / 20) % W;
+  for (let k = 0; k < 4; k++) { ufo((k * 120 + off) % W, 76); ufo(W - ((k * 120 + off + 60) % W), 108); }
+  // 光線
+  ctx.strokeStyle = '#fff'; ctx.beginPath(); for (let k = 0; k < 16; k++) ctx.lineTo(196 + (k % 2 ? 4 : -4), 130 + k * 6); ctx.stroke();
+  // 隕石
+  for (const [x, y] of [[80, 200], [240, 200], [400, 200], [160, 380], [320, 584]]) { ctx.beginPath(); ctx.arc(x, y, 14, 0, 7); ctx.fill(); }
+  // 発射台とミサイル
+  ctx.fillRect(lx - 24, 604, 48, 8); ctx.fillRect(lx - 12, 600, 24, 4);
+  ctx.beginPath(); ctx.moveTo(mx, my - 12); ctx.lineTo(mx + 6, my + 12); ctx.lineTo(mx - 6, my + 12); ctx.fill();
+  if (state === 'flying' && boost && Math.floor(t / 60) % 2) { ctx.fillStyle = '#f80'; ctx.fillRect(mx - 3, my + 12, 6, 10); }
+  if (state === 'ready' && current === 'play') { ctx.fillStyle = '#888'; ctx.font = '16px ui-monospace, monospace'; ctx.textAlign = 'center'; ctx.fillText(touch ? 'なぞって位置を決め、離すと発射' : 'SPACE で発射', W / 2, 640 - 24 - 80); ctx.textAlign = 'left'; }
+}
+function ufo(x, y) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(x, y, 18, 7, 0, 0, 7); ctx.fill(); ctx.fillRect(x - 10, y + 5, 4, 5); ctx.fillRect(x + 6, y + 5, 4, 5); }
+
+let last = performance.now();
+function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; update(dt); draw(now); requestAnimationFrame(frame); }
+layout(); go({ '#/play': 'play', '#/ranking': 'ranking' }[location.hash] || 'title'); requestAnimationFrame(frame);
+</script>
+</body>
+</html>
