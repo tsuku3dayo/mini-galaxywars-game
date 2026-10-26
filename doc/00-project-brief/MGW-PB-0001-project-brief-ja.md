@@ -2,14 +2,16 @@
 id: MGW-PB-0001
 type: project-brief
 title: ギャラクシーウォーズミニ プロジェクト概要
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-26
 sources:
   - doc/specification.md (v1.1) §1〜§25
   - doc/requests/2026-10-26-stage1-only.md
   - doc/workflow.txt
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-26T15:31:38+09:00
 ---
 
 # ギャラクシーウォーズミニ プロジェクト概要
