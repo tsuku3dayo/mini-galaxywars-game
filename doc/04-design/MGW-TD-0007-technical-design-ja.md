@@ -3,7 +3,7 @@ id: MGW-TD-0007
 type: technical-design
 title: PWA・起動の復旧・ビルド・CI・Lint の設計
 status: stable
-version: 1.0
+version: 1.1
 updated: 2026-10-26
 sources:
   - MGW-TD-0001（v1.0）
@@ -96,6 +96,13 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 
 ## 8. Lint（`eslint.config.js`）
 
-- `@eslint/js` の推奨と `typescript-eslint` の推奨（型を使うもの）。
+- `@eslint/js` の推奨と `typescript-eslint` の推奨（型を使わないもの）。型を使う規則は、ソースの断片を `lintText` で lint して層の決まりを確かめる単体テスト（MGW-TC-0030-04）では使えないため、入れない。型の誤りは `tsc --noEmit`（`npm run build`）で見つける。
 - 層の決まり（MGW-TD-0001 §4）を `no-restricted-globals`・`no-restricted-properties`・`no-restricted-imports` で書く。
-- `tsconfig.json`：`strict: true`、`noUncheckedIndexedAccess: true`、`target: ES2022`。
+- `tsconfig.json`：`strict: true`、`noUncheckedIndexedAccess: true`、`noUnusedLocals`・`noUnusedParameters`、`verbatimModuleSyntax`、`target: ES2022`。
+
+## 9. 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-26 | §8：typescript-eslint は型を使わない推奨にした（MGW-TASK-0001 の実装に合わせる） |
