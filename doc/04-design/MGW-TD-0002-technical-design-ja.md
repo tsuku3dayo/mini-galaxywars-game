@@ -2,7 +2,7 @@
 id: MGW-TD-0002
 type: technical-design
 title: core の設計（定数・状態・ステップ・当たり判定・得点・音の計画）
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -25,7 +25,7 @@ sources:
   - MGW-US-0023（v1.0）
   - MGW-US-0030（v1.0）
   - MGW-GUI-0003（v1.0）
-  - doc/specification.md (v1.3) §2、§3、§5、§6、§7、§11、§17、§22
+  - doc/specification.md (v1.4) §2、§3、§5、§6、§7、§11、§17、§22
   - doc/requests/2026-10-26-spec-1.4-design-values.md
 verified: null
 ---
@@ -33,7 +33,7 @@ verified: null
 # MGW-TD-0002 core の設計
 
 `src/core/` は、状態と入力を受け取って次の状態を返す関数だけを持つ。DOM・時刻・乱数には触れない（MGW-ADR-0001）。
-★ の付いた値は仕様書になく、ここで決めたもの。仕様書 v1.4 に足す（doc/requests/2026-10-26-spec-1.4-design-values.md）。
+★ の付いた値は仕様書 v1.3 になく、ここで決めて仕様書 v1.4 に足したもの（doc/requests/2026-10-26-spec-1.4-design-values.md）。
 
 ## 1. 座標と単位
 

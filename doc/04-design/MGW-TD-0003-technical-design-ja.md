@@ -2,7 +2,7 @@
 id: MGW-TD-0003
 type: technical-design
 title: render の設計（描く順番・ドット絵・フォント・擬似カラー）
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -18,7 +18,7 @@ sources:
   - MGW-US-0028（v1.0）
   - MGW-US-0029（v1.0）
   - MGW-ADR-0007（v1.1）
-  - doc/specification.md (v1.3) §2、§19
+  - doc/specification.md (v1.4) §2、§19
 verified: null
 ---
 

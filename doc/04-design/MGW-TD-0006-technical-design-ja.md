@@ -2,7 +2,7 @@
 id: MGW-TD-0006
 type: technical-design
 title: storage の設計（ランキング・設定・JSON）
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -15,7 +15,7 @@ sources:
   - MGW-US-0026（v1.0）
   - MGW-US-0027（v1.0）
   - MGW-US-0029（v1.0）
-  - doc/specification.md (v1.3) §9、§21
+  - doc/specification.md (v1.4) §9、§21
   - doc/requests/2026-10-26-spec-1.4-design-values.md
 verified: null
 ---

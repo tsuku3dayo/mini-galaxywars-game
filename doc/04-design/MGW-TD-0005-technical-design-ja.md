@@ -2,7 +2,7 @@
 id: MGW-TD-0005
 type: technical-design
 title: audio の設計（Web Audio の合成）
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -10,7 +10,7 @@ sources:
   - MGW-TD-0002（v1.0）
   - MGW-US-0023（v1.0）
   - MGW-US-0024（v1.0）
-  - doc/specification.md (v1.3) §3.1、§22
+  - doc/specification.md (v1.4) §3.1、§22
 verified: null
 ---
 

@@ -2,7 +2,7 @@
 id: MGW-TD-0007
 type: technical-design
 title: PWA・起動の復旧・ビルド・CI・Lint の設計
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -20,7 +20,7 @@ sources:
   - MGW-US-0003（v1.0）
   - MGW-US-0004（v1.0）
   - MGW-US-0022（v1.0）
-  - doc/specification.md (v1.3) §13〜§15、§23〜§25
+  - doc/specification.md (v1.4) §13〜§15、§23〜§25
 verified: null
 ---
 

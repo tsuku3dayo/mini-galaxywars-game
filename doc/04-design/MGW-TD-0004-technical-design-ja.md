@@ -2,7 +2,7 @@
 id: MGW-TD-0004
 type: technical-design
 title: app の設計（ルーティング・画面・入力・ループ・テスト用の入口）
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -27,7 +27,7 @@ sources:
   - MGW-US-0025（v1.0）
   - MGW-US-0030（v1.0）
   - MGW-US-0031（v1.0）
-  - doc/specification.md (v1.3) §4、§7、§18、§20
+  - doc/specification.md (v1.4) §4、§7、§18、§20
 verified: null
 ---
 

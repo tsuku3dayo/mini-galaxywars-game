@@ -2,7 +2,7 @@
 id: MGW-TD-0001
 type: technical-design
 title: 全体の設計（モジュール・データの流れ・画面との対応）
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
@@ -17,7 +17,7 @@ sources:
   - MGW-GUI-0005（v1.0）
   - MGW-GUI-0006（v1.0）
   - MGW-GUI-0007（v1.0）
-  - doc/specification.md (v1.3) §16〜§18
+  - doc/specification.md (v1.4) §16〜§18
 verified: null
 ---
 

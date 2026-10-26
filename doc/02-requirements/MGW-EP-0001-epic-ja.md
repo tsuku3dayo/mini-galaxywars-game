@@ -9,7 +9,7 @@ sources:
   - MGW-PB-0001（v1.2） §3、§7
   - MGW-ADR-0003（v1.1）
   - MGW-ADR-0004（v1.1）
-  - doc/specification.md (v1.3) §10、§23〜§25
+  - doc/specification.md (v1.4) §10、§23〜§25
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:22:35+09:00
