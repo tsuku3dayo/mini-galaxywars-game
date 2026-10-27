@@ -3,8 +3,8 @@ id: MGW-TD-0007
 type: technical-design
 title: PWA・起動の復旧・ビルド・CI・Lint の設計
 status: stable
-version: 1.1
-updated: 2026-10-26
+version: 1.2
+updated: 2026-10-27
 sources:
   - MGW-TD-0001（v1.0）
   - MGW-TS-0001（v1.1）
@@ -49,6 +49,8 @@ verified: null
 - `virtual:pwa-register` の `registerSW({ onNeedRefresh })` を使う。`onNeedRefresh` で「新しい版が待っている」印を立てる。
 - 印が立っていて、画面がタイトルかランキングのときだけ、更新の案内を出す（MGW-GUI-0007）。
 - 「更新」で `updateSW(true)`（待っている Service Worker に切り替えて再読み込み）。
+- 新しい版を確かめるのは、読み込んだときと、画面が見えたとき（`visibilitychange` で `visible`、オンラインのとき `registration.update()`）。iPhone のホーム画面のアプリは閉じずに前に戻ってくることが多く、そのときは読み込み直さないため。
+- 古い版の画面がすべて閉じられると、待っていた版は次に開いたときに自動で使われる（Service Worker の決まり）。このときは案内を出さずに新しい版で動く。
 
 ## 3. 起動の復旧（`public/boot.js`）
 
@@ -106,3 +108,4 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 | :--- | :--- | :--- |
 | 1.0 | 2026-10-26 | 初版 |
 | 1.1 | 2026-10-26 | §6：e2e は Playwright のコンテナで動かす。§8：typescript-eslint は型を使わない推奨にした（どちらも MGW-TASK-0001 の実装に合わせる） |
+| 1.2 | 2026-10-27 | §2：画面が見えたときにも新しい版を確かめる。待っていた版が次に開いたときに使われることを書いた（WS-0001 の手動テストで、iPhone に「更新」の案内が出なかったため） |

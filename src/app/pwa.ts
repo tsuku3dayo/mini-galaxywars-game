@@ -17,10 +17,24 @@ export function setupPwa(onNeedRefresh: () => void): PwaUpdater {
         waiting = true;
         onNeedRefresh();
       },
+      onRegisteredSW(_url, registration) {
+        if (registration) checkOnResume(registration);
+      },
     });
   }
   return {
     isWaiting: () => waiting,
     apply: () => void applyUpdate(true),
   };
+}
+
+// iPhone のホーム画面のアプリは、閉じずに前に戻ってくることが多く、そのときは読み込み直さない。
+// 画面が見えたときにも新しい版を確かめる（MGW-TD-0007 §2）
+function checkOnResume(registration: ServiceWorkerRegistration): void {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible' || !navigator.onLine) return;
+    registration.update().catch(() => {
+      // 確かめられなくても、今の版のまま動かす
+    });
+  });
 }
