@@ -46,14 +46,30 @@ body {
 }
 
 #stage {
+  /* 大きさ（480 × 640 × 倍率）は app/layout.ts が決める（MGW-GUI-0001 §3） */
   position: relative;
   flex: none;
-  /* 仮の大きさ。倍率の計算（MGW-GUI-0001 §3）は MGW-TASK-0008 で app/layout.ts が受け持つ */
-  width: min(100%, 480px);
-  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+/* ゲーム画面。拡大でぼやけないようにし、拡大・長押しのメニューを出さない（MGW-GUI-0001 §4） */
+#game {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  touch-action: none;
+}
+
+body:not([data-screen='play']) #game,
+body[data-screen='play'] #screen-title {
+  display: none;
 }
 
 .screen {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -97,6 +113,19 @@ button:active {
 
 #update-banner[hidden] {
   display: none;
+}
+
+/* デバッグ表示（?debug=1 のとき。MGW-GUI-0003 §5） */
+#debug-panel {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  font: 12px/1.2 ui-monospace, Menlo, Consolas, monospace;
+  color: #0f0;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 4px;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .app-name {
