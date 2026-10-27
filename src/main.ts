@@ -9,6 +9,7 @@ import { createLoop } from './app/loop';
 import { createStepStats } from './app/step-stats';
 import { setupPwa } from './app/pwa';
 import { watchRoute, type Screen } from './app/router';
+import { createPlayOverlay } from './app/screens/play';
 import { createRankingScreen } from './app/screens/ranking';
 import { createTitleScreen } from './app/screens/title';
 import { createUpdateBanner } from './app/screens/update-banner';
@@ -48,6 +49,7 @@ addEventListener('keydown', (e) => {
     start();
   }
 });
+const overlay = createPlayOverlay(stage);
 const stats = createStepStats();
 const panel = isDebug ? createDebugPanel(stage) : null;
 
@@ -79,6 +81,7 @@ function draw(): void {
   setData('score', state?.score ?? 0);
   setData('high', state ? displayHighScore(state) : 0);
   setData('lives', state?.lives ?? 0);
+  overlay.update(state);
   panel?.update(stats, state?.status ?? '');
 }
 

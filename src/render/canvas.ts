@@ -1,7 +1,8 @@
 // 描く順番・倍率（MGW-TD-0003 §1・§2）。GameState を読むだけで、書き換えない
 import { EXPLOSION_STEPS, FIELD_HEIGHT, FIELD_WIDTH, LAUNCHER_Y, MISSILE_H, UFO_W } from '../core/config';
 import type { GameState } from '../core/types';
-import { BACKFIRE, BEAM, bake, EXPLOSION, LAUNCHER, METEOR, MISSILE, UFO, type Sprite } from './sprites';
+import { HUD_CHAR, HUD_LEFT, HUD_LIVES_Y, HUD_RIGHT, HUD_TEXT_Y, hudModel, LIFE_ICON_GAP } from './hud';
+import { BACKFIRE, BEAM, bake, EXPLOSION, FONT, GLYPH_CELL, LAUNCHER, LIFE_ICON, METEOR, MISSILE, UFO, type Sprite } from './sprites';
 
 export interface View {
   mode: 'cellophane' | 'pixel';
@@ -31,8 +32,19 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
     beam: BEAM.map(make),
     backfire: make(BACKFIRE),
     explosion: EXPLOSION.map(make),
+    lifeIcon: make(LIFE_ICON),
   };
+  const glyphs = new Map(Object.entries(FONT).map(([ch, rows]) => [ch, bake({ w: rows[0]!.length, h: rows.length, rows })]));
   let pixelScale = 1;
+
+  /** HUD の文字（5 × 7 のドット文字を 2 倍。1 文字 16 × 16） */
+  const text = (s: string, x: number, y: number) => {
+    const scale = HUD_CHAR / GLYPH_CELL;
+    [...s].forEach((ch, i) => {
+      const glyph = glyphs.get(ch);
+      if (glyph) ctx.drawImage(glyph, x + i * HUD_CHAR, y, glyph.width * scale, glyph.height * scale);
+    });
+  };
 
   /** 中心 (x, y) に絵を置く。ドットの境目がそろうよう、左上を論理 1 px に丸める */
   const put = (b: Baked, x: number, y: number) => {
@@ -79,7 +91,17 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
         const frame = state.explosion.steps > EXPLOSION_STEPS / 2 ? 0 : 1;
         put(art.explosion[frame]!, state.explosion.x, state.explosion.y);
       }
-      // 3. HUD は MGW-TASK-0011、4. 擬似カラー・5. 被弾フラッシュは MGW-TASK-0020 で足す
+      // 3. HUD（SCORE・HIGH・残機のアイコン）
+      if (view.showHud) {
+        const hud = hudModel(state);
+        text(hud.score, HUD_LEFT, HUD_TEXT_Y);
+        text(hud.high, HUD_RIGHT - hud.high.length * HUD_CHAR, HUD_TEXT_Y);
+        const icon = art.lifeIcon;
+        for (let i = 0; i < hud.lifeIcons; i++) {
+          ctx.drawImage(icon.image, HUD_RIGHT - icon.sprite.w - i * (icon.sprite.w + LIFE_ICON_GAP), HUD_LIVES_Y);
+        }
+      }
+      // 4. 擬似カラー・5. 被弾フラッシュは MGW-TASK-0020 で足す
     },
   };
 }
