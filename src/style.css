@@ -43,6 +43,21 @@ body {
   width: 100%;
   height: var(--bar);
   flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Pause はプレイ中だけ（終わったあとは出さない） */
+#pause-button {
+  font-size: 18px;
+  padding: 0 12px;
+}
+
+body:not([data-screen='play']) #pause-button,
+body[data-status='cleared'] #pause-button,
+body[data-status='gameOver'] #pause-button {
+  display: none;
 }
 
 #stage {
@@ -141,8 +156,14 @@ button:active,
   display: none;
 }
 
-#overlay-message .button {
+#overlay-message .button,
+#overlay-message button {
   pointer-events: auto;
+}
+
+/* 一時停止の間は、うしろを暗くする */
+#overlay-message.dim {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .message-main,

@@ -37,6 +37,9 @@ test.describe('プレイ', () => {
     await advance(page, 1);
     const body = page.locator('body');
     const message = page.locator('#overlay-message');
+    // 「TITLE」は 3 秒たつまで出さない（クリアの直後に確かめる）
+    const titleButton = message.getByRole('link', { name: 'TITLE' });
+    await expect(titleButton).toBeHidden({ timeout: 1000 });
     await expect(body).toHaveAttribute('data-status', 'cleared');
     await expect(body).toHaveAttribute('data-overlay', 'clear');
     await expect(message.locator('.message-main')).toHaveText('GOOD!!');
@@ -46,8 +49,6 @@ test.describe('プレイ', () => {
     await advance(page, 10);
     expect((await getState(page)).stepCount).toBe(stepCount);
     // 3 秒たつと「TITLE」が出て、タイトルに戻れる（ランキング登録への分かれ道は MGW-TASK-0018）
-    const titleButton = message.getByRole('link', { name: 'TITLE' });
-    await expect(titleButton).toBeHidden();
     await expect(titleButton).toBeVisible({ timeout: 6000 });
     await titleButton.click();
     await expect(body).toHaveAttribute('data-screen', 'title');
@@ -58,7 +59,8 @@ test.describe('プレイ', () => {
     // 始めの 1 秒は READY を出し、そのあと消す
     const message = page.locator('#overlay-message');
     await freeze(page, true);
-    await advance(page, 0);
+    // 開いてから止めるまでの時間に頼らないよう、最初の状態に戻してから見る
+    await setState(page, { stepCount: 0 });
     await expect(message.locator('.message-main')).toHaveText('READY');
     await advance(page, 120);
     await expect(message).toBeHidden();

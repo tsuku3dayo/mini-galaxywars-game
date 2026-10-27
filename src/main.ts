@@ -1,6 +1,6 @@
 // 起動（MGW-TD-0001）。画面とゲームを組み立てる
 import './style.css';
-import { displayHighScore, newGame, step } from './core/game';
+import { displayHighScore, newGame, step, togglePause } from './core/game';
 import type { GameState, StepInput } from './core/types';
 import { createDebugPanel, exposeDebug, isDebug, setData } from './app/debug';
 import { createInputEngine } from './app/input';
@@ -9,7 +9,7 @@ import { createLoop } from './app/loop';
 import { createStepStats } from './app/step-stats';
 import { setupPwa } from './app/pwa';
 import { watchRoute, type Screen } from './app/router';
-import { createPlayOverlay } from './app/screens/play';
+import { createPauseButton, createPlayOverlay } from './app/screens/play';
 import { createRankingScreen } from './app/screens/ranking';
 import { createTitleScreen } from './app/screens/title';
 import { createUpdateBanner } from './app/screens/update-banner';
@@ -49,7 +49,26 @@ addEventListener('keydown', (e) => {
     start();
   }
 });
-const overlay = createPlayOverlay(stage);
+// 一時停止（MGW-GUI-0003 §4）。Pause・RESUME・P・Esc、タブが隠れたとき
+const toggle = () => {
+  if (!state) return;
+  state = togglePause(state);
+  // 押していたキー・指を忘れる（再開したとたんに噴射し続けないように）
+  input.reset();
+  draw();
+};
+createPauseButton(document.getElementById('topbar')!, toggle);
+const overlay = createPlayOverlay(stage, toggle);
+addEventListener('keydown', (e) => {
+  if (screen === 'play' && (e.code === 'KeyP' || e.code === 'Escape') && !e.repeat) {
+    e.preventDefault();
+    toggle();
+  }
+});
+document.addEventListener('visibilitychange', () => {
+  const s = state?.status;
+  if (document.visibilityState === 'hidden' && (s === 'ready' || s === 'playing' || s === 'respawn')) toggle();
+});
 const stats = createStepStats();
 const panel = isDebug ? createDebugPanel(stage) : null;
 
@@ -91,6 +110,8 @@ const loop = createLoop((steps, now) => {
 });
 
 watchLayout(app, stage, (layout) => {
+  // 上のバーはゲーム画面と同じ幅にし、Pause をゲーム画面の右端にそろえる
+  document.getElementById('topbar')!.style.width = `${layout.stageW}px`;
   renderer.resize(layout.scale, devicePixelRatio || 1);
   draw();
 });
