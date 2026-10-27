@@ -4,7 +4,7 @@ import type { SoundCommand } from '../core/sound-plan';
 export type AudioState = 'running' | 'suspended' | 'unavailable';
 
 export interface Synthesizer {
-  /** resume()。iPhone では、最初のタッチの中で呼ぶ */
+  /** resume()。iPhone では、最初のタッチの中で呼ぶ。失敗しても投げない（state() が unavailable になる） */
   unlock(): Promise<void>;
   play(commands: SoundCommand[]): void;
   /** 鳴っている音（ジェット音）を止める */
@@ -136,8 +136,18 @@ export function createSynthesizer(make: () => AudioContext = () => new AudioCont
     },
   };
 
+  // 有効にできなかったら、鳴らせないものとして扱う（ゲームは進める。MGW-TD-0004 §7）
+  let failed = false;
   return {
-    unlock: () => ctx.resume(),
+    unlock: () =>
+      ctx.resume().then(
+        () => {
+          failed = false;
+        },
+        () => {
+          failed = true;
+        },
+      ),
     play(commands) {
       // 止まっている（iPhone で有効にする前など）ときは鳴らさない。ジェット音だけは止める
       if (ctx.state !== 'running') {
@@ -147,6 +157,6 @@ export function createSynthesizer(make: () => AudioContext = () => new AudioCont
       for (const c of commands) sounds[c](ctx.currentTime);
     },
     stopAll: jetOff,
-    state: () => (ctx.state === 'running' ? 'running' : 'suspended'),
+    state: () => (failed ? 'unavailable' : ctx.state === 'running' ? 'running' : 'suspended'),
   };
 }
