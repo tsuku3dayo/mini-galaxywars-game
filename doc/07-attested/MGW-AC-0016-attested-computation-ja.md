@@ -2,13 +2,15 @@
 id: MGW-AC-0016
 type: attested-computation
 title: iPhone で音を有効にすることの確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0016（v1.0）
   - MGW-TC-0024（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T18:20:13+09:00
 ---
 
 # MGW-AC-0016 iPhone で音を有効にすることの確認
