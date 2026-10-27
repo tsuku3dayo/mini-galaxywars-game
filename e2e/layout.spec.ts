@@ -10,16 +10,19 @@ test.describe('大きさ', () => {
     const check = async () => {
       const box = (await canvas.boundingBox())!;
       const viewport = page.viewportSize()!;
+      // タッチ端末では、ゲーム画面の下に操作空間（論理 96）がある
+      const control = await page.locator('#control-area').boundingBox();
+      const bottom = control ? control.y + control.height : box.y + box.height;
       // 3:4 を保つ
       expect(box.width / box.height).toBeCloseTo(3 / 4, 2);
       // 上のバー（44）の下に置き、画面からはみ出さない。左右は中央
       expect(box.y).toBeCloseTo(44, 0);
-      expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 0.5);
+      expect(bottom).toBeLessThanOrEqual(viewport.height + 0.5);
       expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 0.5);
       expect(Math.abs(box.x - (viewport.width - box.x - box.width))).toBeLessThan(1);
       // どちらかの辺が使える広さいっぱい
       const fillsWidth = Math.abs(box.width - viewport.width) < 1;
-      const fillsHeight = Math.abs(box.y + box.height - viewport.height) < 1;
+      const fillsHeight = Math.abs(bottom - viewport.height) < 1;
       expect(fillsWidth || fillsHeight).toBe(true);
       // Canvas の画素も 3:4 で、表示の大きさ × devicePixelRatio
       const pixels = await canvas.evaluate((c: HTMLCanvasElement) => ({ w: c.width, h: c.height, dpr: devicePixelRatio }));
@@ -30,7 +33,9 @@ test.describe('大きさ', () => {
 
     // 窓の大きさが変わっても、3:4 を保って合わせ直す
     await page.setViewportSize({ width: 600, height: 500 });
-    await expect.poll(async () => (await canvas.boundingBox())!.height).toBeCloseTo(456, 0);
+    // 使える高さ 500 − 44 = 456 を、ゲーム画面 640（タッチ端末は操作空間 96 を足して 736）で分ける
+    const touch = (await page.locator('body').getAttribute('data-touch')) === 'true';
+    await expect.poll(async () => (await canvas.boundingBox())!.height).toBeCloseTo(touch ? (456 * 640) / 736 : 456, 0);
     await check();
   });
 });

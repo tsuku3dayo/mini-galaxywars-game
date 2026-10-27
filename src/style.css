@@ -48,6 +48,33 @@ body {
   justify-content: flex-end;
 }
 
+/* 操作空間（タッチ端末だけ。MGW-GUI-0003 §2）。拡大・長押しのメニュー・文字の選択をさせない */
+#control-area {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border-top: 2px solid var(--fg);
+  font-size: 16px;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#control-area[hidden] {
+  display: none;
+}
+
+/* 枠はどの画面でも空けておき、中身はプレイ中だけ出す */
+body:not([data-screen='play']) #control-area > * {
+  visibility: hidden;
+}
+
+body:not([data-screen='play']) #control-area {
+  border-top-color: transparent;
+}
+
 /* Pause はプレイ中だけ（終わったあとは出さない） */
 #pause-button {
   font-size: 18px;

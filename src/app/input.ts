@@ -1,4 +1,4 @@
-// キー・ポインター → StepInput（MGW-TD-0004 §4）。タッチの操作空間は MGW-TASK-0013、P・Esc は MGW-TASK-0012 で足す
+// キー・ポインター → StepInput（MGW-TD-0004 §4、MGW-GUI-0003 §3）。P・Esc は main.ts の一時停止
 import { FIELD_WIDTH } from '../core/config';
 import type { GameStatus, StepInput } from '../core/types';
 
@@ -12,7 +12,11 @@ export interface InputEngine {
 const LEFT = new Set(['ArrowLeft', 'KeyA']);
 const RIGHT = new Set(['ArrowRight', 'KeyD']);
 
-export function createInputEngine(field: HTMLElement): InputEngine {
+/**
+ * field（ゲーム画面）と、surfaces（操作空間など）のどれを触っても同じに扱う。
+ * x はいつもゲーム画面の左右を基準にする（操作空間はゲーム画面と同じ幅・同じ位置に置く）
+ */
+export function createInputEngine(field: HTMLElement, surfaces: HTMLElement[] = []): InputEngine {
   let left = false;
   let right = false;
   let space = false;
@@ -47,23 +51,30 @@ export function createInputEngine(field: HTMLElement): InputEngine {
     left = right = space = pointerDown = false;
   });
 
-  field.addEventListener('pointerdown', (e) => {
-    pointerDown = true;
-    pointerX = toLogicalX(e.clientX);
-    field.setPointerCapture(e.pointerId);
-    e.preventDefault();
-  });
-  field.addEventListener('pointermove', (e) => {
-    pointerX = toLogicalX(e.clientX);
-  });
   const release = (e: PointerEvent) => {
     if (!pointerDown) return;
     pointerDown = false;
     // 離したときに発射する（ready のときだけ使われる）
     if (e.type === 'pointerup') launchPending = true;
   };
-  field.addEventListener('pointerup', release);
-  field.addEventListener('pointercancel', release);
+  for (const surface of [field, ...surfaces]) {
+    surface.addEventListener('pointerdown', (e) => {
+      pointerDown = true;
+      pointerX = toLogicalX(e.clientX);
+      // 指が枠の外へ出ても追う
+      try {
+        surface.setPointerCapture(e.pointerId);
+      } catch {
+        // 捕まえられなくても、枠の中では動く
+      }
+      e.preventDefault();
+    });
+    surface.addEventListener('pointermove', (e) => {
+      pointerX = toLogicalX(e.clientX);
+    });
+    surface.addEventListener('pointerup', release);
+    surface.addEventListener('pointercancel', release);
+  }
 
   return {
     takeStepInput(status) {

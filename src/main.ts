@@ -31,7 +31,9 @@ let state: GameState | null = null;
 let frozen = false;
 
 const renderer = createRenderer(canvas);
-const input = createInputEngine(canvas);
+const control = document.getElementById('control-area')!;
+// 操作空間とゲーム画面のどちらでも操作できる（MGW-GUI-0003 §3）
+const input = createInputEngine(canvas, [control]);
 const touch = matchMedia('(pointer: coarse)').matches;
 setData('touch', String(touch));
 
@@ -109,7 +111,7 @@ const loop = createLoop((steps, now) => {
   draw();
 });
 
-watchLayout(app, stage, (layout) => {
+watchLayout(app, stage, control, touch, (layout) => {
   // 上のバーはゲーム画面と同じ幅にし、Pause をゲーム画面の右端にそろえる
   document.getElementById('topbar')!.style.width = `${layout.stageW}px`;
   renderer.resize(layout.scale, devicePixelRatio || 1);
