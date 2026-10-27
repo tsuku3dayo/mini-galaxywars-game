@@ -33,8 +33,20 @@ let state: GameState | null = null;
 let frozen = false;
 
 const renderer = createRenderer(canvas);
-// 音（MGW-TD-0005）。iPhone で有効にする（resume）のは MGW-TASK-0016
+// 音（MGW-TD-0005）
 const synth = createSynthesizer();
+/** 音を有効にする（MGW-TD-0004 §7）。iPhone ではタッチ・クリック・キーの中で呼ばないと有効にならない */
+const unlockAudio = () => {
+  if (synth.state() !== 'suspended') return;
+  void synth.unlock().then(() => setData('audio', synth.state()));
+};
+setData('audio', synth.state());
+// プレイ中に触れたとき・キーを押したときも、止まっていれば有効にし直す（iPhone で裏に回したあとなど）
+for (const type of ['pointerdown', 'keydown'] as const) {
+  addEventListener(type, () => {
+    if (screen === 'play') unlockAudio();
+  });
+}
 const control = document.getElementById('control-area')!;
 // 操作空間とゲーム画面のどちらでも操作できる（MGW-GUI-0003 §3）
 const input = createInputEngine(canvas, [control]);
@@ -43,6 +55,8 @@ setData('touch', String(touch));
 
 // タイトル（MGW-GUI-0002）。「START」か Space で #/play へ
 const start = () => {
+  // 「START」の click・Space の中で音を有効にする（MGW-GUI-0002 §2）
+  unlockAudio();
   location.hash = '#/play';
 };
 const title = createTitleScreen(document.getElementById('screen-title')!, touch, start);

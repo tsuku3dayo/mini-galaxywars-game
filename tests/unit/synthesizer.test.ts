@@ -136,6 +136,16 @@ describe('音の合成（MGW-TD-0005）', () => {
     expect(() => broken.play(['miss'])).not.toThrow();
   });
 
+  it('有効にできなかった（resume が失敗した）ときは、投げずに unavailable になり、鳴らさない', async () => {
+    const fake = fakeContext('suspended');
+    fake.ctx.resume = () => Promise.reject(new Error('not allowed'));
+    const synth = createSynthesizer(() => fake.ctx as unknown as AudioContext);
+    await expect(synth.unlock()).resolves.toBeUndefined();
+    expect(synth.state()).toBe('unavailable');
+    synth.play(['extend']);
+    expect(oscillators(fake.nodes)).toHaveLength(0);
+  });
+
   it('ノイズは決まった式で作る（同じ種なら同じ、-1〜1 の範囲）', () => {
     const a = noiseSamples(1000);
     expect(noiseSamples(1000)).toEqual(a);
