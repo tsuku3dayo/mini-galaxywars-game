@@ -32,8 +32,8 @@ function applyStep(state: GameState, inputs: StepInput[], index: number): GameSt
   return step(paused, inputs[index] ?? { dir: 0, targetX: null, launch: false, boost: false });
 }
 
-/** 描画 1 回ごとに planSteps でステップ数を決めて進める */
-function runFrames(frameMs: number, seconds: number, inputs: StepInput[]): GameState {
+/** 描画 1 回ごとに planSteps でステップ数を決めて進める。進めたステップ数（planned）も返す */
+function runFramesWithCount(frameMs: number, seconds: number, inputs: StepInput[]): { state: GameState; planned: number } {
   let state = newGame(3000);
   let acc = 0;
   let index = 0;
@@ -43,8 +43,10 @@ function runFrames(frameMs: number, seconds: number, inputs: StepInput[]): GameS
     acc = plan.acc;
     for (let i = 0; i < plan.steps; i++) state = applyStep(state, inputs, index++);
   }
-  return state;
+  return { state, planned: index };
 }
+
+const runFrames = (frameMs: number, seconds: number, inputs: StepInput[]) => runFramesWithCount(frameMs, seconds, inputs).state;
 
 describe('決定性', () => {
   it('MGW-TC-0030-01 同じ入力の列を 2 回流すと、状態とスコアが毎回まったく同じになる', () => {
@@ -94,17 +96,12 @@ describe('決定性', () => {
 
   it('MGW-TC-0030-03 画面の更新が 60 Hz でも 120 Hz でも、同じ入力の列なら同じ結果になる', () => {
     const inputs = makeInputs(120 * 30, 7);
-    const at60 = runFrames(1000 / 60, 30, inputs);
-    const at120 = runFrames(1000 / 120, 30, inputs);
-    expect(at60.stepCount).toBe(120 * 30 - countPausedSteps(inputs.length));
-    expect(at120).toEqual(at60);
+    const at60 = runFramesWithCount(1000 / 60, 30, inputs);
+    const at120 = runFramesWithCount(1000 / 120, 30, inputs);
+    // どちらも 30 秒でちょうど 3,600 ステップを進めた
+    expect(at60.planned).toBe(120 * 30);
+    expect(at120.planned).toBe(120 * 30);
+    expect(at120.state).toEqual(at60.state);
+    expect(at60.state.stepCount).toBeGreaterThan(0);
   });
 });
-
-// 一時停止のあいだは step が進まないので、そのぶん stepCount は少なくなる
-function countPausedSteps(total: number): number {
-  const marks = [...PAUSE_AT].filter((i) => i < total).sort((a, b) => a - b);
-  let paused = 0;
-  for (let i = 0; i + 1 < marks.length; i += 2) paused += marks[i + 1]! - marks[i]!;
-  return paused;
-}

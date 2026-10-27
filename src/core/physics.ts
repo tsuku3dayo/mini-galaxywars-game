@@ -1,4 +1,4 @@
-// 動きと当たり判定（MGW-TD-0002 §6）。当たり判定は MGW-TASK-0007 で足す
+// 動きと当たり判定（MGW-TD-0002 §6）
 import {
   BEAM_H,
   BEAM_MAX,
@@ -7,10 +7,13 @@ import {
   CEILING_Y,
   FIELD_HEIGHT,
   FIELD_WIDTH,
+  LAUNCHER_H,
   LAUNCHER_KEY_SPEED,
   LAUNCHER_POINTER_SPEED,
+  LAUNCHER_W,
   LAUNCHER_X_MAX,
   LAUNCHER_X_MIN,
+  LAUNCHER_Y,
   METEOR_HIT,
   METEOR_LANE_COUNT,
   METEOR_LANE_GAP,
@@ -21,12 +24,15 @@ import {
   METEOR_SPEED_RIGHT,
   METEOR_X_MAX,
   METEOR_X_MIN,
+  MISSILE_H,
   MISSILE_LATERAL_HIGH,
   MISSILE_LATERAL_LOW,
   MISSILE_SPEED_BOOST,
   MISSILE_SPEED_NORMAL,
+  MISSILE_W,
   MISSILE_X_MAX,
   MISSILE_X_MIN,
+  REFLECT_HALF_W,
   STEPS_PER_SECOND,
   UFO_H,
   UFO_SPEEDS,
@@ -123,6 +129,17 @@ export function moveMeteor(m: Meteor): Meteor {
 
 export const meteorBox = (m: Meteor): Box => ({ x: m.x, y: m.y, w: METEOR_HIT, h: METEOR_HIT });
 export const beamBox = (b: Beam): Box => ({ x: b.x, y: b.y, w: BEAM_W, h: BEAM_H });
+export const missileBox = (m: { x: number; y: number }): Box => ({ x: m.x, y: m.y, w: MISSILE_W, h: MISSILE_H });
+export const launcherBox = (x: number): Box => ({ x, y: LAUNCHER_Y, w: LAUNCHER_W, h: LAUNCHER_H });
+
+/**
+ * 光線を弾くか（MGW-TD-0002 §6.3）。光線の中心 x がミサイルの中心から ±2 px 以内で、
+ * 前のステップで光線の下端がミサイルの先端より上にあった（正面の上から来た）とき
+ */
+export function canReflect(beam: Beam, missile: { x: number; y: number }, prevBeamY: number, prevMissileY: number): boolean {
+  if (beam.reflected || Math.abs(beam.x - missile.x) > REFLECT_HALF_W) return false;
+  return prevBeamY + BEAM_H / 2 <= prevMissileY - MISSILE_H / 2;
+}
 
 /** 光線を動かす。画面の外に出たもの、弾いていないのに隕石に重なったもの（盾）は消す */
 export function moveBeams(beams: Beam[], meteors: Meteor[]): Beam[] {
