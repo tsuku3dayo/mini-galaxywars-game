@@ -40,14 +40,25 @@ function readInsets(app: HTMLElement): Insets {
 
 const typing = () => document.activeElement instanceof HTMLInputElement;
 
-/** 画面の大きさに合わせて #stage の大きさを決め、変わるたびに onLayout を呼ぶ。スクロールしたら 0 に戻す */
-export function watchLayout(app: HTMLElement, stage: HTMLElement, onLayout: (layout: Layout) => void): void {
-  // タッチの操作空間は MGW-TASK-0013 で足す。それまでは PC と同じ大きさにする
+/**
+ * 画面の大きさに合わせて #stage と操作空間（タッチ端末だけ）の大きさを決め、変わるたびに onLayout を呼ぶ。
+ * スクロールしたら 0 に戻す
+ */
+export function watchLayout(
+  app: HTMLElement,
+  stage: HTMLElement,
+  control: HTMLElement,
+  touch: boolean,
+  onLayout: (layout: Layout) => void,
+): void {
+  control.hidden = !touch;
   const apply = () => {
     if (typing()) return;
-    const layout = computeLayout({ innerWidth, innerHeight, insets: readInsets(app), touch: false });
+    const layout = computeLayout({ innerWidth, innerHeight, insets: readInsets(app), touch });
     stage.style.width = `${layout.stageW}px`;
     stage.style.height = `${layout.stageH}px`;
+    control.style.width = `${layout.stageW}px`;
+    control.style.height = `${layout.controlH}px`;
     onLayout(layout);
   };
   const resetScroll = () => {

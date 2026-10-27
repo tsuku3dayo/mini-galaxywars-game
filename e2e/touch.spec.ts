@@ -1,0 +1,104 @@
+import { expect, test, type Locator, type Page } from '@playwright/test';
+import { clearField, getState, openPlay } from './helpers';
+
+// タッチの操作（MGW-GUI-0003 §3）。なぞる動きは Playwright のタッチでは作れないので、指（pointerType: touch）の
+// ポインターイベントを送る。タップは page.touchscreen.tap を使う
+
+/** 論理 x（0〜480）を、ゲーム画面の左右を基準にした画面の x にする */
+async function clientX(page: Page, x: number): Promise<number> {
+  const box = (await page.locator('#game').boundingBox())!;
+  return box.x + (x / 480) * box.width;
+}
+
+async function centerY(target: Locator): Promise<number> {
+  const box = (await target.boundingBox())!;
+  return box.y + box.height / 2;
+}
+
+/** 指のポインターイベントを送る */
+async function finger(target: Locator, type: 'pointerdown' | 'pointermove' | 'pointerup', x: number, y: number): Promise<void> {
+  await target.dispatchEvent(type, { pointerType: 'touch', pointerId: 7, isPrimary: true, clientX: x, clientY: y, bubbles: true });
+}
+
+const control = (page: Page) => page.locator('#control-area');
+const field = (page: Page) => page.locator('#game');
+
+test.describe('タッチ操作と操作空間', () => {
+  test('MGW-TC-0021-01 タッチ端末では、フィールドの下に高さ 96 の操作空間が出る', async ({ page, isMobile }) => {
+    await openPlay(page);
+    if (!isMobile) {
+      // PC では出さない
+      await expect(control(page)).toBeHidden();
+      return;
+    }
+    await expect(control(page)).toBeVisible();
+    await expect(control(page)).toContainText('なぞって移動 ・ タップで発射');
+    const stage = (await field(page).boundingBox())!;
+    const area = (await control(page).boundingBox())!;
+    // ゲーム画面のすぐ下に、同じ幅で、論理 96（ゲーム画面の 640 に対して）の高さ
+    expect(area.y).toBeCloseTo(stage.y + stage.height, 0);
+    expect(area.width).toBeCloseTo(stage.width, 0);
+    expect(area.x).toBeCloseTo(stage.x, 0);
+    expect(area.height).toBeCloseTo((stage.height * 96) / 640, 0);
+  });
+
+  test.describe('タッチ端末', () => {
+    test.skip(({ isMobile }) => !isMobile, 'タッチ端末だけ');
+
+    test('MGW-TC-0021-02 操作空間かプレイ空間をなぞると、発射台（発射後はミサイル）が指の x を追う', async ({ page }) => {
+      await openPlay(page);
+      await clearField(page);
+      for (const target of [control(page), field(page)]) {
+        const y = await centerY(target);
+        // 前提：発射前で、発射台は真ん中
+        await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
+        await finger(target, 'pointerdown', await clientX(page, 240), y);
+        await finger(target, 'pointermove', await clientX(page, 100), y);
+        await expect.poll(async () => (await getState(page)).launcherX).toBeCloseTo(100, 0);
+        await finger(target, 'pointermove', await clientX(page, 400), y);
+        await expect.poll(async () => (await getState(page)).launcherX).toBeCloseTo(400, 0);
+        // 発射台を真ん中に戻してから離す（離すと発射するので、次の確かめのために戻す）
+        await finger(target, 'pointermove', await clientX(page, 240), y);
+        await expect.poll(async () => (await getState(page)).launcherX).toBeCloseTo(240, 0);
+        await finger(target, 'pointerup', await clientX(page, 240), y);
+        await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
+        // 発射後はミサイルが指の x を追う
+        await finger(target, 'pointerdown', await clientX(page, 240), y);
+        await finger(target, 'pointermove', await clientX(page, 160), y);
+        await expect.poll(async () => (await getState(page)).missile.x).toBeCloseTo(160, 0);
+        await finger(target, 'pointerup', await clientX(page, 160), y);
+        // 次の場所で確かめるため、新しいゲームにする
+        await openPlay(page);
+        await clearField(page);
+      }
+    });
+
+    test('MGW-TC-0021-03 操作空間かプレイ空間をタップすると発射する', async ({ page }) => {
+      for (const target of [control, field]) {
+        await openPlay(page);
+        await clearField(page);
+        const box = (await target(page).boundingBox())!;
+        await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height * 0.8);
+        await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
+        expect((await getState(page)).missile.isLaunched).toBe(true);
+      }
+    });
+
+    test('MGW-TC-0021-04 指を触れ続けている間は、加速噴射になる', async ({ page }) => {
+      await openPlay(page);
+      await clearField(page);
+      const y = await centerY(control(page));
+      const x = await clientX(page, 240);
+      // タップで発射
+      await finger(control(page), 'pointerdown', x, y);
+      await finger(control(page), 'pointerup', x, y);
+      await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
+      expect((await getState(page)).missile.isBoosting).toBe(false);
+      // 触れている間は噴射、離すと止まる
+      await finger(control(page), 'pointerdown', x, y);
+      await expect.poll(async () => (await getState(page)).missile.isBoosting).toBe(true);
+      await finger(control(page), 'pointerup', x, y);
+      await expect.poll(async () => (await getState(page)).missile.isBoosting).toBe(false);
+    });
+  });
+});
