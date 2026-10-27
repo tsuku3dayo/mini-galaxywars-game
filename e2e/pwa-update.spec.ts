@@ -21,6 +21,36 @@ test.describe('更新の案内', () => {
     await expect(banner.getByRole('button', { name: '更新' })).toBeVisible();
   });
 
+  test('MGW-TC-0003-01 アプリが前に戻ってきたとき（画面が見えたとき）にも、新しい版を確かめる', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Service Worker は Chromium だけ（e2e/offline.spec.ts と同じ）');
+    await page.addInitScript(() => {
+      const w = window as unknown as { __updateChecks: number };
+      w.__updateChecks = 0;
+      const original = ServiceWorkerRegistration.prototype.update;
+      ServiceWorkerRegistration.prototype.update = function (this: ServiceWorkerRegistration) {
+        w.__updateChecks++;
+        return original.call(this);
+      };
+    });
+    await page.goto('./');
+    await page.evaluate(async () => {
+      await navigator.serviceWorker.ready;
+    });
+    const checks = () => page.evaluate(() => (window as unknown as { __updateChecks: number }).__updateChecks);
+    expect(await checks()).toBe(0);
+
+    // ホームに戻って、また開いたときと同じ知らせを送る（登録が終わって見張りが付くまでくり返す）
+    await expect
+      .poll(async () => {
+        await page.evaluate(() => {
+          Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' });
+          document.dispatchEvent(new Event('visibilitychange'));
+        });
+        return checks();
+      })
+      .toBeGreaterThan(0);
+  });
+
   test('MGW-TC-0003-02 「更新」を押すと、新しい版に切り替わって再読み込みされる', async ({ page }) => {
     await page.goto('./?debug=1#/title');
     await simulateUpdate(page);
