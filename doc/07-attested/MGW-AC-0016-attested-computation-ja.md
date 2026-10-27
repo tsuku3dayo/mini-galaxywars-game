@@ -2,7 +2,7 @@
 id: MGW-AC-0016
 type: attested-computation
 title: iPhone で音を有効にすることの確認
-status: draft
+status: review
 version: 1.0
 updated: 2026-10-27
 sources:
@@ -30,11 +30,13 @@ verified: null
 
 画面：この TASK は画面を変えていない。
 
-## 2. 手動の確認（WS-0005 の終わりに書く）
+## 2. 手動の確認（WS-0005 の終わり、2026-10-27、オーナー、iPhone 11・PC）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0024-01 | iPhone で、最初のタッチ（「START」など）のあとから音が鳴る | 未実施（WS-0005 の終わりに確かめる） |
+| MGW-TC-0024-01 | iPhone で、最初のタッチ（「START」など）のあとから音が鳴る | OK（消音スイッチを切った iPhone のホーム画面の本物の「GWミニ」で、START のあとからジェット音・破壊音・爆発音が聞こえた） |
+
+- 版の切り替え：PR #36 をマージする前に、PC と iPhone で前の版を開いておいた。公開のあと、どちらも「更新」で切り替わった。
 
 ## 3. 設計と違う作りにしたこと
 
@@ -43,4 +45,5 @@ verified: null
 
 ## 4. 確認できなかったこと
 
-- 「START」で本当に音が有効になる（`data-audio=running`）ことは E2E では確かめられなかった。ヘッドレスの Chromium は `resume` しても `suspended` のまま、E2E の WebKit（Windows）には AudioContext がない。§2 の手動で、iPhone と PC で聞いて確かめる。
+- 「START」で本当に音が有効になる（`data-audio=running`）ことは E2E では確かめられなかった。ヘッドレスの Chromium は `resume` しても `suspended` のまま、E2E の WebKit（Windows）には AudioContext がない。§2 の手動で、iPhone と PC で聞いて確かめた。
+- Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。
