@@ -74,6 +74,9 @@ export function createInputEngine(field: HTMLElement, surfaces: HTMLElement[] = 
     });
     surface.addEventListener('pointerup', release);
     surface.addEventListener('pointercancel', release);
+    // iPhone では user-select・touch-action だけでは、長押しの虫めがね・メニュー、2 回タップの拡大が止まらない。
+    // 指の標準の動きを止める（ゲームの操作はポインターイベントで受けるので、止めても動く）
+    surface.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
   }
 
   return {

@@ -84,6 +84,27 @@ test.describe('タッチ操作と操作空間', () => {
       }
     });
 
+    test('MGW-TC-0022-05 指を触れたときの標準の動き（長押しの虫めがね・メニュー、2 回タップの拡大）を止めている', async ({ page }) => {
+      await openPlay(page);
+      // iPhone の虫めがねそのものは E2E では出せないので、touchstart の既定の動きが止められていることを見る
+      // （WebKit では Touch を作れないので、同じ名前のイベントを送る。止める処理は指の中身を見ない）
+      for (const selector of ['#control-area', '#control-area span', '#game']) {
+        const prevented = await page.locator(selector).first().evaluate((el) => {
+          const event = new Event('touchstart', { bubbles: true, cancelable: true });
+          el.dispatchEvent(event);
+          return event.defaultPrevented;
+        });
+        expect(prevented, selector).toBe(true);
+      }
+      // 2 本指の拡大（Safari の gesturestart）も止める
+      const pinch = await page.evaluate(() => {
+        const event = new Event('gesturestart', { bubbles: true, cancelable: true });
+        document.body.dispatchEvent(event);
+        return event.defaultPrevented;
+      });
+      expect(pinch).toBe(true);
+    });
+
     test('MGW-TC-0021-04 指を触れ続けている間は、加速噴射になる', async ({ page }) => {
       await openPlay(page);
       await clearField(page);

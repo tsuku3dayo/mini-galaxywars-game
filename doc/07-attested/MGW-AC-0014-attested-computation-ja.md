@@ -43,6 +43,7 @@ E2E の合計：`71 passed`、`16 skipped`。`npm run verify`（単体テスト 
 ## 3. 設計と違う作りにしたこと
 
 - 大きさ・安全領域・スクロールを 0 に戻す処理は、MGW-TASK-0008（`layout.ts`）と MGW-TASK-0013（操作空間）で作ってあったので、この TASK では作りを変えていない。確認 ID のテストと、安全領域をまねたテストを足した。
+- WS-0004 の手動テストで、iPhone のホーム画面のアプリで操作空間の文字の上を長押しすると、虫めがね（文字を選ぶときの拡大鏡）が出た（MGW-TC-0022-05 が NG）。`user-select: none`・`touch-action: none` だけでは iPhone の指の標準の動きが止まらなかった。ゲーム画面と操作空間で `touchstart` の既定の動きを止め、Safari の 2 本指の拡大（`gesturestart`）も止めた（fix/TASK-0014-ios-touch-gestures）。ゲームの操作はポインターイベントで受けているので、タップ・なぞる・噴射は変わらない（`touch.spec.ts` が通る）。止めていることは E2E（`touch.spec.ts` の MGW-TC-0022-05）で確かめ、直す前の作りでは落ちることも確かめた。
 
 ## 4. 確認できなかったこと
 

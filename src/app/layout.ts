@@ -65,6 +65,8 @@ export function watchLayout(
     if (typing()) return;
     if (scrollX !== 0 || scrollY !== 0) scrollTo(0, 0);
   };
+  // iPhone の Safari は user-scalable=no でも 2 本指で拡大できるので、拡大の動きを止める（MGW-GUI-0001 §4）
+  document.addEventListener('gesturestart', (e) => e.preventDefault());
   addEventListener('resize', apply);
   addEventListener('orientationchange', apply);
   addEventListener('scroll', resetScroll);
