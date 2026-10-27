@@ -29,8 +29,8 @@ describe('当たり判定', () => {
     expect(next.lives).toBe(2);
     expect(next.flashSteps).toBe(FLASH_STEPS);
     expect(next.explosion).toEqual({ x: next.missile.x, y: next.missile.y, steps: EXPLOSION_STEPS });
-    // 待ちはこのステップから数える
-    expect(next.waitSteps).toBe(MISS_RESPAWN - 1);
+    // 待ちは次のステップから数える
+    expect(next.waitSteps).toBe(MISS_RESPAWN);
     // 触れていなければミスにならない
     expect(step(playing(meteor.x + 40, meteor.y + 21, { meteors: [meteor] }), NO_INPUT).status).toBe('playing');
   });
