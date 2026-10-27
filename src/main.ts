@@ -2,10 +2,11 @@
 import './style.css';
 import { displayHighScore, newGame, step } from './core/game';
 import type { GameState, StepInput } from './core/types';
-import { createDebugPanel, createStepStats, exposeDebug, isDebug, setData } from './app/debug';
+import { createDebugPanel, exposeDebug, isDebug, setData } from './app/debug';
 import { createInputEngine } from './app/input';
 import { watchLayout } from './app/layout';
 import { createLoop } from './app/loop';
+import { createStepStats } from './app/step-stats';
 import { setupPwa } from './app/pwa';
 import { watchRoute, type Screen } from './app/router';
 import { createUpdateBanner } from './app/screens/update-banner';
