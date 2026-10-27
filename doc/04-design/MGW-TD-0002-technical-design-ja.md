@@ -3,7 +3,7 @@ id: MGW-TD-0002
 type: technical-design
 title: core の設計（定数・状態・ステップ・当たり判定・得点・音の計画）
 status: stable
-version: 1.1
+version: 1.2
 updated: 2026-10-27
 sources:
   - MGW-TD-0001（v1.0）
@@ -168,7 +168,7 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
    3. ミサイル・発射台 × 光線（弾いていないもの）→ 弾く範囲なら弾く（MGW-US-0012）。そうでなければミス。発射台に当たってもミス★。
 7. **最上部を抜けたか**：playing でミサイルの下端（y + 12）が 48 より上 → respawn（`waitReason = 'exit'`、`waitSteps = 120`）。光線を撃つのも止める。
 8. **光線を撃つ**（ready・playing のとき）：`beamTimer -= 1`。0 になったら 90 に戻し、画面の光線（弾いたものを除く）が上限より少なければ、§6.2 の UFO が撃つ。
-9. **待ち**（respawn）：`waitSteps -= 1`。0 になったら、残機が 0 なら gameOver、そうでなければ ready（発射台は x = 240★、ミサイルを乗せる）。
+9. **待ち**（respawn）：`waitSteps -= 1`（このステップで待ちに入ったときは減らさず、次のステップから数える。ちょうど 240・120 ステップで戻る）。0 になったら、残機が 0 なら gameOver、そうでなければ ready（発射台は x = 240★、ミサイルを乗せる）。
 10. **永久パターン防止**（ready・playing・respawn のとき）：`idleSteps += 1`。10,800 に着いたら残機が 2 以上なら 1 にする。18,000 に着いたら gameOver。
 
 ### 6.1 ミスのとき
@@ -235,3 +235,4 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 | :--- | :--- | :--- |
 | 1.0 | 2026-10-26 | 初版 |
 | 1.1 | 2026-10-27 | §2：`REGIONS`・`LAUNCHER_START_X` を足した。§4：`planSteps` で超えた分を捨てるときは積み上げを 0 にし、足し算の誤差の余裕を持つ（どちらも MGW-TASK-0005 の実装に合わせる） |
+| 1.2 | 2026-10-27 | §6 の 9：待ちに入ったステップでは `waitSteps` を減らさない（ちょうど 2 秒・1 秒で戻るように。MGW-TASK-0009 の実装に合わせる） |

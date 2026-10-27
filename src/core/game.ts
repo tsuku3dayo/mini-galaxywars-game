@@ -6,6 +6,8 @@ import {
   EXIT_RESPAWN,
   EXPLOSION_STEPS,
   FLASH_STEPS,
+  IDLE_LIMIT_1,
+  IDLE_LIMIT_2,
   INITIAL_LIVES,
   LAUNCHER_START_X,
   METEOR_COUNT,
@@ -128,8 +130,8 @@ export function step(state: GameState, input: StepInput): GameState {
     }
   }
 
-  // 9. 待ち（遊べるように先に作った。確認は MGW-TASK-0009）
-  if (s.status === 'respawn') {
+  // 9. 待ち。このステップで待ちに入ったときは減らさず、次のステップから数える（ちょうど 2 秒・1 秒で戻る）
+  if (s.status === 'respawn' && state.status === 'respawn') {
     s.waitSteps -= 1;
     if (s.waitSteps <= 0) {
       s.waitSteps = 0;
@@ -144,7 +146,15 @@ export function step(state: GameState, input: StepInput): GameState {
     }
   }
 
-  // 10. 永久パターン防止は MGW-TASK-0009 で足す
+  // 10. 永久パターン防止（仕様書 §3.5）。0 に戻すのは UFO を倒したときだけ（checkHits）
+  s.idleSteps += 1;
+  if (s.status !== 'cleared' && s.status !== 'gameOver') {
+    if (s.idleSteps === IDLE_LIMIT_1 && s.lives >= 2) s.lives = 1;
+    if (s.idleSteps >= IDLE_LIMIT_2) {
+      s.status = 'gameOver';
+      s.missile = { ...s.missile, isBoosting: false };
+    }
+  }
   return s;
 }
 
