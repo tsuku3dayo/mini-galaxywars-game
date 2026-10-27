@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newGame, step } from '../../src/core/game';
 import { addScore } from '../../src/core/scoring';
+import { planSounds } from '../../src/core/sound-plan';
 import type { GameState } from '../../src/core/types';
 import { NO_INPUT } from './helpers';
 
@@ -29,6 +30,16 @@ describe('増機', () => {
     // ちょうど 3,000 でも増える。届かなければ増えない
     expect(addScore({ ...newGame(0), score: 2900 }, 100)).toEqual({ score: 3000, lives: 4, extended: true });
     expect(addScore({ ...newGame(0), score: 2850 }, 100)).toEqual({ score: 2950, lives: 3, extended: false });
+  });
+
+  it('MGW-TC-0019-04 増えたときに増機音が鳴る', () => {
+    const prev = aboutToScore100({ score: 2950 });
+    const next = step(prev, NO_INPUT);
+    expect(next.lives).toBe(4);
+    expect(planSounds(prev, next)).toContain('extend');
+    // 増えないときは鳴らない
+    const quiet = aboutToScore100({ score: 100 });
+    expect(planSounds(quiet, step(quiet, NO_INPUT))).not.toContain('extend');
   });
 
   it('MGW-TC-0019-03 増機は 1 回だけ', () => {
