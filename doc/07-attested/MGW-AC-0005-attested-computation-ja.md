@@ -2,7 +2,7 @@
 id: MGW-AC-0005
 type: attested-computation
 title: core の土台（定数・状態・ステップ・決定性）の確認
-status: draft
+status: review
 version: 1.0
 updated: 2026-10-27
 sources:

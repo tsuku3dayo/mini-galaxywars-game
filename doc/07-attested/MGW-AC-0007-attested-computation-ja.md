@@ -2,7 +2,7 @@
 id: MGW-AC-0007
 type: attested-computation
 title: 当たり判定・光線弾き・得点の確認
-status: draft
+status: review
 version: 1.0
 updated: 2026-10-27
 sources:
