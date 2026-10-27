@@ -5,6 +5,13 @@ import { setupPwa } from './app/pwa';
 import { watchRoute, type Screen } from './app/router';
 import { createUpdateBanner } from './app/screens/update-banner';
 
+declare global {
+  interface Window {
+    /** public/boot.js が用意する。起動を知らせる */
+    __mgwBooted?: () => void;
+  }
+}
+
 const stage = document.getElementById('stage')!;
 let screen: Screen = 'title';
 let updateWaiting = false;
@@ -30,6 +37,9 @@ watchRoute((next) => {
   setData('screen', screen);
   banner.refresh(screen, updateWaiting);
 });
+
+// 画面を出したので、boot.js の復旧のタイマーを止める（MGW-TD-0007 §3）
+window.__mgwBooted?.();
 
 exposeDebug({
   simulateUpdate() {

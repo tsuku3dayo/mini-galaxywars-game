@@ -63,6 +63,12 @@ if (!existsSync(swPath)) {
   check(readFileSync(swPath, 'utf8').includes('mini-galaxywars'), 'sw.js のキャッシュの名前に mini-galaxywars がありません');
 }
 
+// 起動の復旧のスクリプトがあり、index.html がアプリ本体より先に読む（MGW-US-0004）
+check(existsSync(join(DIST, 'boot.js')), 'boot.js がありません');
+const bootAt = index.indexOf(`${BASE}boot.js`);
+const moduleAt = index.indexOf('type="module"');
+check(bootAt >= 0 && (moduleAt < 0 || bootAt < moduleAt), 'index.html がアプリ本体より先に boot.js を読んでいません');
+
 for (const e of errors) console.error(`エラー: ${e}`);
 console.log(`check:dist — エラー ${errors.length} 件`);
 process.exit(errors.length > 0 ? 1 : 0);

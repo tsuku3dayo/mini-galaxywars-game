@@ -17,7 +17,8 @@ export default tseslint.config(
   },
   {
     files: ['public/**/*.js'],
-    languageOptions: { globals: globals.browser, sourceType: 'script' },
+    // boot.js は古い端末でも動くように ES5 で書く（MGW-TD-0007 §3）
+    languageOptions: { globals: globals.browser, sourceType: 'script', ecmaVersion: 5 },
   },
   {
     files: ['src/core/**/*.ts'],
