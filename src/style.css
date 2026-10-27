@@ -123,6 +123,46 @@ button:active,
   display: none;
 }
 
+/* プレイ画面の中央の表示（MGW-GUI-0003 §4）。ゲームの操作をじゃましない（TITLE だけ押せる） */
+#overlay-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  pointer-events: none;
+}
+
+#overlay-message[hidden],
+#overlay-message [hidden] {
+  display: none;
+}
+
+#overlay-message .button {
+  pointer-events: auto;
+}
+
+.message-main,
+.message-sub {
+  margin: 0;
+  letter-spacing: 4px;
+}
+
+.message-main {
+  font-size: 32px;
+}
+
+.message-sub {
+  font-size: 22px;
+}
+
+body:not([data-screen='play']) #overlay-message {
+  display: none;
+}
+
 /* デバッグ表示（?debug=1 のとき。MGW-GUI-0003 §5） */
 #debug-panel {
   position: absolute;
