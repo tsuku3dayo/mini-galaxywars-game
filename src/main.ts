@@ -1,7 +1,6 @@
 // 起動（MGW-TD-0001）。画面とゲームは WS-0002 以降で組み立てる
 import './style.css';
 import { exposeDebug, isDebug, setData } from './app/debug';
-import { setupDiag } from './app/diag';
 import { setupPwa } from './app/pwa';
 import { watchRoute, type Screen } from './app/router';
 import { createUpdateBanner } from './app/screens/update-banner';
@@ -16,9 +15,6 @@ declare global {
 const stage = document.getElementById('stage')!;
 let screen: Screen = 'title';
 let updateWaiting = false;
-
-// 一時的な診断の表示（src/app/diag.ts）
-setupDiag();
 
 const updater = setupPwa(() => {
   updateWaiting = true;
