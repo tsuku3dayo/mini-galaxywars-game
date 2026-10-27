@@ -63,6 +63,13 @@ if (!existsSync(swPath)) {
   check(readFileSync(swPath, 'utf8').includes('mini-galaxywars'), 'sw.js のキャッシュの名前に mini-galaxywars がありません');
 }
 
+// MGW-TC-0023-09 音のファイルを使わず、Web Audio で合成する
+const AUDIO_FILE = /\.(?:mp3|wav|ogg|m4a|aac|flac|opus|webm)$/i;
+const appFiles = walk(DIST).filter((p) => !relative(DIST, p).startsWith('prototype'));
+for (const file of appFiles.filter((p) => AUDIO_FILE.test(p))) errors.push(`音のファイルがあります: ${relative(DIST, file)}`);
+const bundles = appFiles.filter((p) => p.endsWith('.js')).map((p) => readFileSync(p, 'utf8'));
+check(bundles.some((js) => js.includes('AudioContext') && js.includes('createOscillator')), 'Web Audio で音を合成するコードがありません');
+
 // 起動の復旧のスクリプトがあり、index.html がアプリ本体より先に読む（MGW-US-0004）
 check(existsSync(join(DIST, 'boot.js')), 'boot.js がありません');
 const bootAt = index.indexOf(`${BASE}boot.js`);

@@ -14,6 +14,8 @@ import { createRankingScreen } from './app/screens/ranking';
 import { createTitleScreen } from './app/screens/title';
 import { createUpdateBanner } from './app/screens/update-banner';
 import { createRenderer } from './render/canvas';
+import { createSynthesizer } from './audio/synthesizer';
+import { planSounds, type SoundCommand } from './core/sound-plan';
 
 declare global {
   interface Window {
@@ -31,6 +33,8 @@ let state: GameState | null = null;
 let frozen = false;
 
 const renderer = createRenderer(canvas);
+// 音（MGW-TD-0005）。iPhone で有効にする（resume）のは MGW-TASK-0016
+const synth = createSynthesizer();
 const control = document.getElementById('control-area')!;
 // 操作空間とゲーム画面のどちらでも操作できる（MGW-GUI-0003 §3）
 const input = createInputEngine(canvas, [control]);
@@ -54,7 +58,10 @@ addEventListener('keydown', (e) => {
 // 一時停止（MGW-GUI-0003 §4）。Pause・RESUME・P・Esc、タブが隠れたとき
 const toggle = () => {
   if (!state) return;
-  state = togglePause(state);
+  const next = togglePause(state);
+  // 止めたらジェット音も止め、再開して噴射していればまた鳴らす
+  synth.play(planSounds(state, next));
+  state = next;
   // 押していたキー・指を忘れる（再開したとたんに噴射し続けないように）
   input.reset();
   draw();
@@ -89,9 +96,16 @@ const banner = createUpdateBanner(stage, () => {
   updater.apply();
 });
 
+/** ステップを進め、ステップごとに決めた音をまとめて鳴らす（MGW-TD-0001 §2） */
 function runSteps(count: number, fixed?: StepInput): number {
   let done = 0;
-  for (; done < count && state; done++) state = step(state, fixed ?? input.takeStepInput(state.status));
+  const sounds: SoundCommand[] = [];
+  for (; done < count && state; done++) {
+    const next = step(state, fixed ?? input.takeStepInput(state.status));
+    sounds.push(...planSounds(state, next));
+    state = next;
+  }
+  if (sounds.length > 0) synth.play(sounds);
   return done;
 }
 
@@ -102,6 +116,7 @@ function draw(): void {
   setData('score', state?.score ?? 0);
   setData('high', state ? displayHighScore(state) : 0);
   setData('lives', state?.lives ?? 0);
+  setData('audio', synth.state());
   overlay.update(state);
   panel?.update(stats, state?.status ?? '');
 }
@@ -130,6 +145,7 @@ watchRoute((next) => {
     loop.start();
   } else {
     loop.stop();
+    synth.stopAll();
     state = null;
   }
   draw();
