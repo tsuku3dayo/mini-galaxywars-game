@@ -37,18 +37,16 @@ test.describe('更新の案内', () => {
       await navigator.serviceWorker.ready;
     });
     const checks = () => page.evaluate(() => (window as unknown as { __updateChecks: number }).__updateChecks);
-    expect(await checks()).toBe(0);
+    // 登録の直後に 1 回確かめる。これで見張りも付いている
+    await expect.poll(checks).toBeGreaterThan(0);
+    const before = await checks();
 
-    // ホームに戻って、また開いたときと同じ知らせを送る（登録が終わって見張りが付くまでくり返す）
-    await expect
-      .poll(async () => {
-        await page.evaluate(() => {
-          Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' });
-          document.dispatchEvent(new Event('visibilitychange'));
-        });
-        return checks();
-      })
-      .toBeGreaterThan(0);
+    // ホームに戻って、また開いたときと同じ知らせを送る
+    await page.evaluate(() => {
+      Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' });
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await expect.poll(checks).toBeGreaterThan(before);
   });
 
   test('MGW-TC-0003-02 「更新」を押すと、新しい版に切り替わって再読み込みされる', async ({ page }) => {

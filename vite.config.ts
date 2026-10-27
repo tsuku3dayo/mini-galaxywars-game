@@ -6,6 +6,10 @@ const BASE = '/mini-galaxywars-game/';
 
 export default defineConfig({
   base: BASE,
+  // 一時的な診断の表示（src/app/diag.ts）で、どの版が動いているかを見分ける
+  define: {
+    __BUILD_ID__: JSON.stringify(`${(process.env.GITHUB_SHA ?? 'local').slice(0, 7)} ${new Date().toISOString().slice(5, 16)}Z`),
+  },
   build: {
     target: 'es2022',
   },
