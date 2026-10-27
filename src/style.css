@@ -62,8 +62,10 @@ body {
   touch-action: none;
 }
 
+/* 画面はハッシュで切り替える（MGW-TD-0004 §1） */
 body:not([data-screen='play']) #game,
-body[data-screen='play'] #screen-title {
+body:not([data-screen='title']) #screen-title,
+body:not([data-screen='ranking']) #screen-ranking {
   display: none;
 }
 
@@ -79,7 +81,12 @@ body[data-screen='play'] #screen-title {
   padding: 16px;
 }
 
-button {
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   font: inherit;
   font-size: 18px;
   color: var(--fg);
@@ -91,7 +98,8 @@ button {
   touch-action: manipulation;
 }
 
-button:active {
+button:active,
+.button:active {
   background: var(--fg);
   color: var(--bg);
 }
@@ -131,4 +139,49 @@ button:active {
 .app-name {
   font-size: 28px;
   letter-spacing: 2px;
+  margin: 0;
+}
+
+/* タイトル画面（MGW-GUI-0002） */
+#screen-title {
+  justify-content: space-evenly;
+}
+
+.title-high {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  margin: 0;
+}
+
+.title-ufos {
+  display: flex;
+  gap: 24px;
+}
+
+.title-ufos canvas {
+  width: 48px;
+  height: 36px;
+  image-rendering: pixelated;
+}
+
+.title-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 180px;
+}
+
+.title-guide,
+.title-credit {
+  margin: 0;
+}
+
+.title-credit {
+  line-height: 1.5;
+}
+
+#screen-ranking h2 {
+  font-size: 28px;
+  margin: 0;
 }
