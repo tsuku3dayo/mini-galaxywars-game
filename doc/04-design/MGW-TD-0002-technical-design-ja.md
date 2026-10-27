@@ -3,8 +3,8 @@ id: MGW-TD-0002
 type: technical-design
 title: core の設計（定数・状態・ステップ・当たり判定・得点・音の計画）
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-27
 sources:
   - MGW-TD-0001（v1.0）
   - MGW-ADR-0001（v1.0）
@@ -48,11 +48,13 @@ verified: null
 | :--- | :--- | :--- | :--- |
 | `FIELD_WIDTH`・`FIELD_HEIGHT` | 480・640 | §11 | |
 | `CEILING_Y` | 48 | §2.1 | HUD 帯の下端 |
+| `REGIONS` | HUD 帯 0–48・UFO 通過領域 48–120・隕石往復領域 120–580・発射台待機領域 580–612 | §2.1 | 縦の領域（上端・下端） |
 | `STEPS_PER_SECOND` | 120 | §5.1 | |
 | `MAX_STEPS_PER_FRAME` | 12 | §5.1 | |
 | `LAUNCHER_W`・`LAUNCHER_H` | 48・16 | §3.1 | |
 | `LAUNCHER_Y` | 608 ★ | | 発射台の中心（上端 600・下端 616。ミサイルの下の部分が発射台に差し込まれた形） |
 | `LAUNCHER_X_MIN`・`LAUNCHER_X_MAX` | 24・456 ★ | | 画面の端で止まる |
+| `LAUNCHER_START_X` | 240 | | 初めと出直しのときの発射台の x（§5、§6 の 9） |
 | `LAUNCHER_KEY_SPEED` | 240 px/秒 ★ | | キーでの発射台の横の速さ |
 | `LAUNCHER_POINTER_SPEED` | 480 px/秒 ★ | | 指・マウスの x へ近づく速さの上限（試作で確かめた値） |
 | `MISSILE_W`・`MISSILE_H` | 12・24 | §3.1 | |
@@ -138,7 +140,7 @@ export interface StepInput {
 | `step(state, input): GameState` | 1 ステップ進める。新しいオブジェクトを返し、引数は変えない |
 | `togglePause(state): GameState` | ready・playing・respawn → paused（`pausedFrom` に元を残す）、paused → 元に戻す。cleared・gameOver では何もしない |
 | `displayHighScore(state): number` | `max(highScore, score)` |
-| `planSteps(acc, elapsedMs): { steps, acc }`（`timestep.ts`） | 積み上げ時間に経過時間を足し、1/120 秒ごとに 1 ステップ。最大 12。超えた分は捨てる |
+| `planSteps(acc, elapsedMs): { steps, acc }`（`timestep.ts`） | 積み上げ時間に経過時間を足し、1/120 秒ごとに 1 ステップ。最大 12。超えた分は捨てる（積み上げを 0 にする）。60 Hz の足し算の誤差で 1 ステップ足りなくならないよう、比べるときに 1e-6 ms の余裕を持つ |
 | `planSounds(prev, next): SoundCommand[]`（`sound-plan.ts`） | §8 |
 
 ## 5. 初めの状態
@@ -226,3 +228,10 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 - 得点・600 点・増機・残機・待ち・ゲームオーバー・クリア・永久パターン防止・一時停止（MGW-US-0013、0016〜0020）
 - 音の計画（MGW-US-0023）
 - 同じ入力の列から同じ結果、60 Hz と 120 Hz の描画で同じ結果、`planSteps` の上限（MGW-US-0030）
+
+## 10. 改訂履歴
+
+| 版 | 日付 | 内容 |
+| :--- | :--- | :--- |
+| 1.0 | 2026-10-26 | 初版 |
+| 1.1 | 2026-10-27 | §2：`REGIONS`・`LAUNCHER_START_X` を足した。§4：`planSteps` で超えた分を捨てるときは積み上げを 0 にし、足し算の誤差の余裕を持つ（どちらも MGW-TASK-0005 の実装に合わせる） |
