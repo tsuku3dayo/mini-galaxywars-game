@@ -2,13 +2,15 @@
 id: MGW-AC-0010
 type: attested-computation
 title: タイトル画面とルーティングの確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0010（v1.0）
   - MGW-TC-0014（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T16:35:41+09:00
 ---
 
 # MGW-AC-0010 タイトル画面とルーティングの確認

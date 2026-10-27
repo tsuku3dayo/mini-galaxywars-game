@@ -2,7 +2,7 @@
 id: MGW-AC-0009
 type: attested-computation
 title: 残機・待ち・クリア・ゲームオーバー・増機・永久パターン防止（core）の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
@@ -11,7 +11,9 @@ sources:
   - MGW-TC-0017（v1.0）
   - MGW-TC-0019（v1.0）
   - MGW-TC-0020（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T16:35:41+09:00
 ---
 
 # MGW-AC-0009 残機・待ち・クリア・ゲームオーバー・増機・永久パターン防止（core）の確認
