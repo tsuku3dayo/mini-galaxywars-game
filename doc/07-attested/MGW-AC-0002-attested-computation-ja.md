@@ -2,9 +2,9 @@
 id: MGW-AC-0002
 type: attested-computation
 title: GitHub Pages への公開の確認
-status: draft
+status: review
 version: 1.0
-updated: 2026-10-26
+updated: 2026-10-27
 sources:
   - MGW-TASK-0002（v1.0）
   - MGW-TC-0001（v1.0）
@@ -20,12 +20,12 @@ verified: null
 
 この TASK に自動の確認 ID はない。手元で `npm run verify` が通ることを確かめた。
 
-## 2. 手動の確認（WS-0001 の終わりに書く）
+## 2. 手動の確認（WS-0001 の終わり、2026-10-27）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0001-01 | main へのマージのあと、Actions の Pages の実行が成功し、公開 URL を開くと新しい版になっている | 未実施（WS-0001 の終わりに確かめる） |
-| MGW-TC-0001-03 | PC のブラウザと iPhone の Safari で公開 URL を開き、タイトル画面が出る | 未実施（WS-0001 の終わりに確かめる） |
+| MGW-TC-0001-01 | main へのマージのあと、Actions の Pages の実行が成功し、公開 URL を開くと新しい版になっている | OK。PR #13〜#18 のマージのたびに Pages の実行が成功し、公開中のファイルが新しい版になった（例：#13 のあと `boot.js` があり、#18 のあと診断の表示が消えた）。オーナーも OK と確かめた |
+| MGW-TC-0001-03 | PC のブラウザと iPhone の Safari で公開 URL を開き、タイトル画面が出る | OK（オーナー、PC と iPhone 11） |
 
 ## 3. 設計と違う作りにしたこと
 
@@ -33,4 +33,4 @@ verified: null
 
 ## 4. 確認できなかったこと
 
-なし（手動の確認は §2 のとおり WS-0001 の終わりに行う）。
+- Android の端末では開いていない（実機がない。MGW-TST-0001 §6.1）。
