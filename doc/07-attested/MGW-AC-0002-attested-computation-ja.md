@@ -2,13 +2,15 @@
 id: MGW-AC-0002
 type: attested-computation
 title: GitHub Pages への公開の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0002（v1.0）
   - MGW-TC-0001（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T13:19:56+09:00
 ---
 
 # MGW-AC-0002 GitHub Pages への公開の確認

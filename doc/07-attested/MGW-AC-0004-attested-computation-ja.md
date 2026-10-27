@@ -2,13 +2,15 @@
 id: MGW-AC-0004
 type: attested-computation
 title: 起動の復旧（boot.js）の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0004（v1.0）
   - MGW-TC-0004（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T13:19:56+09:00
 ---
 
 # MGW-AC-0004 起動の復旧（boot.js）の確認

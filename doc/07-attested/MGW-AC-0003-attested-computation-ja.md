@@ -2,14 +2,16 @@
 id: MGW-AC-0003
 type: attested-computation
 title: PWA（マニフェスト・オフライン・「更新」ボタン）の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0003（v1.0）
   - MGW-TC-0002（v1.0）
   - MGW-TC-0003（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T13:19:56+09:00
 ---
 
 # MGW-AC-0003 PWA（マニフェスト・オフライン・「更新」ボタン）の確認
