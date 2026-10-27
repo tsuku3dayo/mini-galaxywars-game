@@ -1,6 +1,6 @@
 {
   "name": "ギャラクシーウォーズミニ（試作）",
-  "short_name": "GWミニ",
+  "short_name": "GW試作",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
