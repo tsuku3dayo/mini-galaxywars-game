@@ -2,13 +2,15 @@
 id: MGW-AC-0004
 type: attested-computation
 title: 起動の復旧（boot.js）の確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0004（v1.0）
   - MGW-TC-0004（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T13:19:56+09:00
 ---
 
 # MGW-AC-0004 起動の復旧（boot.js）の確認
@@ -32,7 +34,7 @@ E2E の合計：`22 passed`、`2 skipped`（15.5 秒）。boot-recovery.spec.ts 
 
 ## 2. 手動の確認
 
-この TASK の確認 ID には手動のものはない。
+この TASK の確認 ID には手動のものはない。WS-0001 の終わりの手動テストでは、復旧の画面を出す場面（起動の失敗）は起きなかった。
 
 ## 3. 設計と違う作りにしたこと
 

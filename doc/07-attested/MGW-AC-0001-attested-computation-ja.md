@@ -2,14 +2,16 @@
 id: MGW-AC-0001
 type: attested-computation
 title: プロジェクトの骨組みと CI の確認
-status: draft
+status: stable
 version: 1.0
-updated: 2026-10-26
+updated: 2026-10-27
 sources:
   - MGW-TASK-0001（v1.0）
   - MGW-TC-0030（v1.0）
   - MGW-TC-0001（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T13:19:56+09:00
 ---
 
 # MGW-AC-0001 プロジェクトの骨組みと CI の確認
@@ -29,11 +31,11 @@ verified: null
 - `npm run test:e2e`：テストはまだない（`--pass-with-no-tests`）。preview のサーバーが起動し、終了コード 0
 - CI（PR #9）：verify（24 秒）・e2e（42 秒）ともに成功
 
-## 2. 手動の確認（WS-0001 の終わりに書く）
+## 2. 手動の確認（WS-0001 の終わり、2026-10-27）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0001-02 | PR の画面に verify と e2e の結果が出る。失敗したものはマージの前に赤で分かる | 未実施（WS-0001 の終わりに確かめる） |
+| MGW-TC-0001-02 | PR の画面に verify と e2e の結果が出る。失敗したものはマージの前に赤で分かる | OK。PR #12〜#18 のすべてで、PR の画面に verify と e2e の結果が出た（`gh pr checks` でも同じ）。オーナーも OK と確かめた |
 
 ## 3. 設計と違う作りにしたこと
 
@@ -43,4 +45,4 @@ verified: null
 
 ## 4. 確認できなかったこと
 
-なし（手動の確認は §2 のとおり WS-0001 の終わりに行う）。
+- 「失敗したものが赤で分かる」場面は、WS-0001 の PR では起きなかった（どの PR も CI は通った）。赤の表示は GitHub の決まった表示に任せている。手元では、E2E が失敗すると `npm run test:e2e` が終了コード 1 になることを確かめた（MGW-TASK-0004 の作業中）。
