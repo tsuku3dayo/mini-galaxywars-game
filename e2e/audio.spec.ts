@@ -9,18 +9,26 @@ async function startAndScore(page: Page) {
   await expect(body).toHaveAttribute('data-screen', 'play');
   await expect(body).toHaveAttribute('data-status', 'ready');
   await freeze(page, true);
-  const ufo = ((await getState(page)).ufos as { x: number; y: number }[])[5]!;
+  // 狙う UFO（下段の id 5）だけを残す。ほかの UFO に当たって点が変わらないように
+  const ufos = ((await getState(page)).ufos as { id: number; x: number; y: number; isAlive: boolean }[]).map((u) => ({ ...u, isAlive: u.id === 5 }));
+  const ufo = ufos[5]!;
   await setState(page, {
     status: 'playing',
+    ufos,
     meteors: [],
     beams: [],
     beamTimer: 1e9,
     missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: true },
   });
+  // 前提：生きている UFO は 1 機
+  expect(((await getState(page)).ufos as { isAlive: boolean }[]).filter((u) => u.isAlive)).toHaveLength(1);
   // 噴射（ジェット音）と UFO の破壊音の場面を通る
   await advance(page, 1, { boost: true });
   await advance(page, 30, { boost: true });
-  await expect(body).toHaveAttribute('data-score', '100');
+  // 1 機倒して点が入った（どの部位に当たったかは見ない。残り 1 機の UFO は速く動くため）
+  const after = await getState(page);
+  expect(after.killCount).toBe(1);
+  expect(Number(after.score)).toBeGreaterThan(0);
   await freeze(page, false);
   // 止めていたループを戻すと、ゲームは進み続ける
   const before = Number((await getState(page)).stepCount);
