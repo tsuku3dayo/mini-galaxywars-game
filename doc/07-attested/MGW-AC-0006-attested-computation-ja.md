@@ -2,7 +2,7 @@
 id: MGW-AC-0006
 type: attested-computation
 title: 発射台・ミサイル・UFO・隕石・光線の動きの確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
@@ -12,7 +12,9 @@ sources:
   - MGW-TC-0008（v1.0）
   - MGW-TC-0009（v1.0）
   - MGW-TC-0010（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T14:36:24+09:00
 ---
 
 # MGW-AC-0006 発射台・ミサイル・UFO・隕石・光線の動きの確認
