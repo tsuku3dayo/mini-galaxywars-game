@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  var TIMEOUT_MS = 8000;
+  var TIMEOUT_MS = 8000; // 仕様書 §23
   var SCOPE_PATH = '/mini-galaxywars-game/';
   var CACHE_PREFIX = 'mini-galaxywars';
 
