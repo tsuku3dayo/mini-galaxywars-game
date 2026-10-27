@@ -1,19 +1,41 @@
 // newGame・step・togglePause（MGW-TD-0002 §4〜§6）
 import {
   BEAM_INTERVAL,
+  BEAM_SPEED,
   CEILING_Y,
   EXIT_RESPAWN,
+  EXPLOSION_STEPS,
+  FLASH_STEPS,
   INITIAL_LIVES,
   LAUNCHER_START_X,
   METEOR_COUNT,
   METEOR_PATH_LENGTH,
+  MISS_RESPAWN,
   MISSILE_H,
   MISSILE_READY_Y,
+  STEPS_PER_SECOND,
   UFO_ROW_Y,
   UFO_START_X,
 } from './config';
-import { beamLimit, meteorAt, moveBeams, moveLauncher, moveMeteor, moveMissile, moveUfos, newBeam, pickShooter } from './physics';
-import type { GameState, Missile, StepInput, UFO } from './types';
+import {
+  beamBox,
+  beamLimit,
+  canReflect,
+  launcherBox,
+  meteorAt,
+  meteorBox,
+  missileBox,
+  moveBeams,
+  moveLauncher,
+  moveMeteor,
+  moveMissile,
+  moveUfos,
+  newBeam,
+  overlaps,
+  pickShooter,
+} from './physics';
+import { addScore, hitPart, killPoints } from './scoring';
+import type { Beam, GameState, Missile, StepInput, UFO } from './types';
 
 const readyMissile = (x: number): Missile => ({ x, y: MISSILE_READY_Y, isLaunched: false, isBoosting: false });
 
@@ -79,7 +101,13 @@ export function step(state: GameState, input: StepInput): GameState {
     s.missile = { ...s.missile, ...moveMissile(s.missile.x, s.missile.y, input), isBoosting: input.boost };
   }
 
-  // 6. 当たり判定は MGW-TASK-0007 で足す
+  // 6. 当たり判定（隕石 → UFO → 光線。ミスかクリアが決まったら、残りは調べない）
+  if (s.status === 'ready' || s.status === 'playing') {
+    const result = checkHits(s, state.missile.y);
+    if (result === 'miss') miss(s);
+    if (result === 'clear') s.status = 'cleared';
+    if (result !== null) s.missile = { ...s.missile, isBoosting: false };
+  }
 
   // 7. 最上部を抜けた（ミスではない）
   if (s.status === 'playing' && s.missile.y + MISSILE_H / 2 < CEILING_Y) {
@@ -118,6 +146,58 @@ export function step(state: GameState, input: StepInput): GameState {
 
   // 10. 永久パターン防止は MGW-TASK-0009 で足す
   return s;
+}
+
+/** 当たり判定（MGW-TD-0002 §6 の 6、§6.3、§7）。s を書き換え、ミス・クリアを返す */
+function checkHits(s: GameState, prevMissileY: number): 'miss' | 'clear' | null {
+  const mBox = missileBox(s.missile);
+
+  // 1. ミサイル × 隕石（発射前も）
+  if (s.meteors.some((m) => overlaps(mBox, meteorBox(m)))) return 'miss';
+
+  // 2. ミサイル × UFO。下から当たるので、下段を先に調べる
+  const targets = s.ufos.filter((u) => u.isAlive).sort((a, b) => b.row - a.row || a.id - b.id);
+  for (const ufo of targets) {
+    const hit = hitPart(mBox, ufo);
+    if (!hit) continue;
+    const points = killPoints(hit.part, hit.points, s.killCount);
+    s.ufos = s.ufos.map((u) => (u.id === ufo.id ? { ...u, isAlive: false } : u));
+    Object.assign(s, addScore(s, points));
+    s.killCount += 1;
+    s.idleSteps = 0;
+    s.lastKill = { part: hit.part, points };
+    if (s.killCount === s.ufos.length) return 'clear';
+  }
+
+  // 3. ミサイル・発射前の発射台 × 光線（弾いていないもの）
+  const beams: Beam[] = [];
+  for (let i = 0; i < s.beams.length; i++) {
+    const beam = s.beams[i]!;
+    const bBox = beamBox(beam);
+    const onMissile = !beam.reflected && overlaps(bBox, mBox);
+    const onLauncher = !beam.reflected && s.status === 'ready' && overlaps(bBox, launcherBox(s.launcherX));
+    if (!onMissile && !onLauncher) {
+      beams.push(beam);
+    } else if (onMissile && canReflect(beam, s.missile, beam.y - beam.vy / STEPS_PER_SECOND, prevMissileY)) {
+      beams.push({ ...beam, vy: -BEAM_SPEED, reflected: true });
+    } else {
+      // 当たった光線は消える
+      s.beams = [...beams, ...s.beams.slice(i + 1)];
+      return 'miss';
+    }
+  }
+  s.beams = beams;
+  return null;
+}
+
+/** ミスのとき（MGW-TD-0002 §6.1） */
+function miss(s: GameState): void {
+  s.lives -= 1;
+  s.status = 'respawn';
+  s.waitReason = 'miss';
+  s.waitSteps = MISS_RESPAWN;
+  s.flashSteps = FLASH_STEPS;
+  s.explosion = { x: s.missile.x, y: s.missile.y, steps: EXPLOSION_STEPS };
 }
 
 /** ready・playing・respawn ⇔ paused。cleared・gameOver では何もしない */
