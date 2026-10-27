@@ -2,7 +2,7 @@
 id: MGW-AC-0010
 type: attested-computation
 title: タイトル画面とルーティングの確認
-status: draft
+status: review
 version: 1.0
 updated: 2026-10-27
 sources:

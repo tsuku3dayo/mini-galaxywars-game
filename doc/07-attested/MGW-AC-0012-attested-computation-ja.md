@@ -2,7 +2,7 @@
 id: MGW-AC-0012
 type: attested-computation
 title: 一時停止の確認
-status: draft
+status: review
 version: 1.0
 updated: 2026-10-27
 sources:
@@ -31,7 +31,9 @@ verified: null
 
 ## 2. 手動の確認
 
-この TASK の確認 ID には手動のものはない。
+この TASK の確認 ID には手動のものはない。§4 のついでに、WS-0003 の終わり（2026-10-27、オーナー、iPhone 11）に次を確かめた。
+
+- ホーム画面の本物の「GWミニ」で遊び始め、閉じずにホーム画面に戻ってから開き直すと、`PAUSE` と「RESUME」が出ていた（OK）。
 
 ## 3. 設計と違う作りにしたこと
 
@@ -43,4 +45,5 @@ verified: null
 
 ## 4. 確認できなかったこと
 
-- iPhone のホーム画面のアプリを本当に裏に回したときは、E2E では確かめていない（`visibilitychange` の知らせを送って確かめた）。WS-0003 の終わりの手動テストで、ついでに見る。
+- iPhone のホーム画面のアプリを本当に裏に回したときは、E2E では確かめていない（`visibilitychange` の知らせを送って確かめた）。§2 のとおり、手動で確かめた。
+- Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。
