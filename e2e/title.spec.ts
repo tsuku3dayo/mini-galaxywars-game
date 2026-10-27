@@ -1,0 +1,74 @@
+import { expect, test } from '@playwright/test';
+
+test.describe('タイトル画面とルーティング', () => {
+  test('MGW-TC-0014-01 起動すると #/title のタイトル画面に、アプリ名「ギャラクシーウォーズミニ」と「START」が出る', async ({ page, isMobile }) => {
+    await page.goto('./');
+    const title = page.locator('#screen-title');
+    await expect(page.locator('body')).toHaveAttribute('data-screen', 'title');
+    await expect(title.locator('.app-name')).toHaveText('ギャラクシーウォーズミニ');
+    await expect(title.getByRole('button', { name: 'START' })).toBeVisible();
+    await expect(title.getByRole('link', { name: 'RANKING' })).toBeVisible();
+    await expect(title).toContainText('HIGH 00000');
+    await expect(title).toContainText('原作 1979 ユニバーサル／タイトー');
+    await expect(title).toContainText('非公式の再現作品');
+    // 操作の案内は端末に合わせる
+    await expect(title).toContainText(isMobile ? 'なぞって移動 タップで発射' : '←→/マウスで移動 SPACEで発射');
+    // ゲーム画面の枠の中に収まる
+    const stage = (await page.locator('#stage').boundingBox())!;
+    for (const part of await title.locator('h1, button, a, p').all()) {
+      const box = (await part.boundingBox())!;
+      expect(box.y).toBeGreaterThanOrEqual(stage.y - 0.5);
+      expect(box.y + box.height).toBeLessThanOrEqual(stage.y + stage.height + 0.5);
+    }
+  });
+
+  test('MGW-TC-0014-02 「START」（または Space）で #/play に移り、発射前（Ready）から始まる', async ({ page, isMobile }) => {
+    await page.goto('./');
+    await page.locator('#screen-title').getByRole('button', { name: 'START' }).click();
+    await expect(page).toHaveURL(/#\/play$/);
+    const body = page.locator('body');
+    await expect(body).toHaveAttribute('data-screen', 'play');
+    await expect(body).toHaveAttribute('data-status', 'ready');
+
+    if (!isMobile) {
+      // Space でも始まる。同じ Space で発射はしない
+      await page.goto('./#/title');
+      await expect(body).toHaveAttribute('data-screen', 'title');
+      await page.keyboard.press('Space');
+      await expect(body).toHaveAttribute('data-screen', 'play');
+      await expect(body).toHaveAttribute('data-status', 'ready');
+      await page.waitForTimeout(300);
+      await expect(body).toHaveAttribute('data-status', 'ready');
+    }
+  });
+
+  test('MGW-TC-0014-03 #/title・#/play・#/ranking のハッシュで画面が切り替わる', async ({ page }) => {
+    const body = page.locator('body');
+    await page.goto('./#/ranking');
+    await expect(body).toHaveAttribute('data-screen', 'ranking');
+    await expect(page.locator('#screen-ranking h2')).toHaveText('RANKING');
+    await expect(page.locator('#screen-ranking')).toContainText('まだ記録がありません');
+    await expect(page.locator('#screen-title')).toBeHidden();
+    await expect(page.locator('#game')).toBeHidden();
+
+    await page.evaluate(() => (location.hash = '#/play'));
+    await expect(body).toHaveAttribute('data-screen', 'play');
+    await expect(page.locator('#game')).toBeVisible();
+    await expect(page.locator('#screen-ranking')).toBeHidden();
+
+    await page.evaluate(() => (location.hash = '#/title'));
+    await expect(body).toHaveAttribute('data-screen', 'title');
+    await expect(page.locator('#screen-title')).toBeVisible();
+    await expect(page.locator('#game')).toBeHidden();
+    // プレイを離れたら、状態はなくなる
+    await expect(body).toHaveAttribute('data-status', '');
+
+    // タイトルの RANKING とランキングの TITLE でも行き来できる。知らないハッシュはタイトル
+    await page.locator('#screen-title').getByRole('link', { name: 'RANKING' }).click();
+    await expect(body).toHaveAttribute('data-screen', 'ranking');
+    await page.locator('#screen-ranking').getByRole('link', { name: 'TITLE' }).click();
+    await expect(body).toHaveAttribute('data-screen', 'title');
+    await page.evaluate(() => (location.hash = '#/unknown'));
+    await expect(body).toHaveAttribute('data-screen', 'title');
+  });
+});

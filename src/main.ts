@@ -9,6 +9,8 @@ import { createLoop } from './app/loop';
 import { createStepStats } from './app/step-stats';
 import { setupPwa } from './app/pwa';
 import { watchRoute, type Screen } from './app/router';
+import { createRankingScreen } from './app/screens/ranking';
+import { createTitleScreen } from './app/screens/title';
 import { createUpdateBanner } from './app/screens/update-banner';
 import { createRenderer } from './render/canvas';
 
@@ -29,6 +31,23 @@ let frozen = false;
 
 const renderer = createRenderer(canvas);
 const input = createInputEngine(canvas);
+const touch = matchMedia('(pointer: coarse)').matches;
+setData('touch', String(touch));
+
+// タイトル（MGW-GUI-0002）。「START」か Space で #/play へ
+const start = () => {
+  location.hash = '#/play';
+};
+const title = createTitleScreen(document.getElementById('screen-title')!, touch, start);
+// ランキングの 1 位は MGW-TASK-0017 のあとで読む。それまでは 0
+title.refresh(0);
+createRankingScreen(document.getElementById('screen-ranking')!);
+addEventListener('keydown', (e) => {
+  if (screen === 'title' && e.code === 'Space' && !e.repeat) {
+    e.preventDefault();
+    start();
+  }
+});
 const stats = createStepStats();
 const panel = isDebug ? createDebugPanel(stage) : null;
 
