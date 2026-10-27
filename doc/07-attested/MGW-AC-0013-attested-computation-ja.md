@@ -2,13 +2,15 @@
 id: MGW-AC-0013
 type: attested-computation
 title: タッチ操作と操作空間の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0013（v1.0）
   - MGW-TC-0021（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T17:34:51+09:00
 ---
 
 # MGW-AC-0013 タッチ操作と操作空間の確認

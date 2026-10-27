@@ -2,14 +2,16 @@
 id: MGW-AC-0014
 type: attested-computation
 title: iPhone の大きさ・安全領域・60 fps の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0014（v1.0）
   - MGW-TC-0022（v1.0）
   - MGW-TC-0031（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T17:34:51+09:00
 ---
 
 # MGW-AC-0014 iPhone の大きさ・安全領域・60 fps の確認
