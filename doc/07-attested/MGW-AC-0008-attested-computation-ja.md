@@ -2,7 +2,7 @@
 id: MGW-AC-0008
 type: attested-computation
 title: 描画と PC でのプレイ画面の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
@@ -13,7 +13,9 @@ sources:
   - MGW-TC-0009（v1.0）
   - MGW-TC-0011（v1.0）
   - MGW-TC-0030（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T14:36:24+09:00
 ---
 
 # MGW-AC-0008 描画と PC でのプレイ画面の確認

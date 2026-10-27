@@ -2,14 +2,16 @@
 id: MGW-AC-0005
 type: attested-computation
 title: core の土台（定数・状態・ステップ・決定性）の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-27
 sources:
   - MGW-TASK-0005（v1.0）
   - MGW-TC-0005（v1.0）
   - MGW-TC-0030（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-27T14:36:24+09:00
 ---
 
 # MGW-AC-0005 core の土台（定数・状態・ステップ・決定性）の確認
