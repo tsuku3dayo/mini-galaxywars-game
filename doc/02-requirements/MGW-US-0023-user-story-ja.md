@@ -3,14 +3,14 @@ id: MGW-US-0023
 type: user-story
 title: 効果音が鳴る
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-28
 sources:
   - MGW-EP-0005（v1.0）
-  - doc/specification.md (v1.4) §3.1、§12、§22
+  - doc/specification.md (v1.5) §3.1、§12、§22
 verified:
   by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  at: 2026-10-28T11:33:39+09:00
 ---
 
 # MGW-US-0023 効果音が鳴る
@@ -38,7 +38,7 @@ verified:
 ## 仕様書 §12 の受け入れ基準との対応
 
 - ボタン押下による加速噴射時に音とバックファイアが発生し、横移動が高速化すること（音の部分）
-- 3,000点到達時に増機音が鳴り、発射台アイコンが増加すること（音の部分）
+- 1,000点到達時に増機音が鳴り、発射台アイコンが増加すること（音の部分）
 
 ## メモ
 

@@ -11,7 +11,7 @@ sources:
   - MGW-US-0021（v1.0）
   - MGW-US-0022（v1.0）
   - MGW-ADR-0007（v1.1）
-  - doc/specification.md (v1.4) §1.2、§2、§18
+  - doc/specification.md (v1.5) §1.2、§2、§18
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:52:10+09:00

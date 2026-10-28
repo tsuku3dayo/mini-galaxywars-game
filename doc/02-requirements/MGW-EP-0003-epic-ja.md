@@ -3,14 +3,14 @@ id: MGW-EP-0003
 type: epic
 title: 流れと HUD
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-28
 sources:
   - MGW-PB-0001（v1.2） §2
-  - doc/specification.md (v1.4) §3.5、§6.3、§7、§8、§18
+  - doc/specification.md (v1.5) §3.5、§6.3、§7、§8、§18
 verified:
   by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  at: 2026-10-28T11:33:39+09:00
 ---
 
 # MGW-EP-0003 流れと HUD
@@ -30,7 +30,7 @@ verified:
 | 3-3 | MGW-US-0016 | ミスのあとに再登場し、残機がなくなると終わる |
 | 3-4 | MGW-US-0017 | 1 面をクリアする |
 | 3-5 | MGW-US-0018 | 一時停止する |
-| 3-6 | MGW-US-0019 | 3,000 点で発射台が増える |
+| 3-6 | MGW-US-0019 | 1,000 点で発射台が増える |
 | 3-7 | MGW-US-0020 | 永久パターンを防ぐ |
 
 ## 終わりの条件

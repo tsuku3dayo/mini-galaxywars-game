@@ -17,7 +17,7 @@ sources:
   - MGW-GUI-0005（v1.0）
   - MGW-GUI-0006（v1.0）
   - MGW-GUI-0007（v1.0）
-  - doc/specification.md (v1.4) §16〜§18
+  - doc/specification.md (v1.5) §16〜§18
 verified: null
 ---
 

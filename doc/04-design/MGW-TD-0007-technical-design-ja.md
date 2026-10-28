@@ -20,7 +20,7 @@ sources:
   - MGW-US-0003（v1.0）
   - MGW-US-0004（v1.0）
   - MGW-US-0022（v1.0）
-  - doc/specification.md (v1.4) §13〜§15、§23〜§25
+  - doc/specification.md (v1.5) §13〜§15、§23〜§25
 verified: null
 ---
 

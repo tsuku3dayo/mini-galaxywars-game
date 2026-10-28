@@ -20,12 +20,12 @@ sources:
   - MGW-US-0016（v1.0）
   - MGW-US-0017（v1.0）
   - MGW-US-0018（v1.0）
-  - MGW-US-0019（v1.0）
+  - MGW-US-0019（v1.1）
   - MGW-US-0021（v1.0）
   - MGW-US-0028（v1.0）
   - MGW-US-0030（v1.0）
   - MGW-US-0031（v1.0）
-  - doc/specification.md (v1.4) §2、§3、§4、§7、§8、§19、§20
+  - doc/specification.md (v1.5) §2、§3、§4、§7、§8、§19、§20
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:52:10+09:00
