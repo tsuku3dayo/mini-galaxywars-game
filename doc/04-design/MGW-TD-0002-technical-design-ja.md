@@ -20,12 +20,12 @@ sources:
   - MGW-US-0016（v1.0）
   - MGW-US-0017（v1.0）
   - MGW-US-0018（v1.0）
-  - MGW-US-0019（v1.0）
+  - MGW-US-0019（v1.1）
   - MGW-US-0020（v1.0）
-  - MGW-US-0023（v1.0）
+  - MGW-US-0023（v1.1）
   - MGW-US-0030（v1.0）
   - MGW-GUI-0003（v1.0）
-  - doc/specification.md (v1.4) §2、§3、§5、§6、§7、§11、§17、§22
+  - doc/specification.md (v1.5) §2、§3、§5、§6、§7、§11、§17、§22
   - doc/requests/2026-10-26-spec-1.4-design-values.md
 verified: null
 ---

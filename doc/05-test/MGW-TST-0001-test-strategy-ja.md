@@ -10,7 +10,7 @@ sources:
   - MGW-TD-0001（v1.0）
   - MGW-TD-0004（v1.0）
   - MGW-TD-0007（v1.3）
-  - doc/specification.md (v1.4) §10、§12、§24、§25
+  - doc/specification.md (v1.5) §10、§12、§24、§25
 verified: null
 ---
 

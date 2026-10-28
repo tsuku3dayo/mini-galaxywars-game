@@ -8,9 +8,9 @@ updated: 2026-10-26
 sources:
   - MGW-TD-0001（v1.0）
   - MGW-TD-0002（v1.2）
-  - MGW-US-0023（v1.0）
+  - MGW-US-0023（v1.1）
   - MGW-US-0024（v1.0）
-  - doc/specification.md (v1.4) §3.1、§22
+  - doc/specification.md (v1.5) §3.1、§22
 verified: null
 ---
 
