@@ -2,13 +2,15 @@
 id: MGW-AC-0021
 type: attested-computation
 title: 表示方式の設定の確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-28
 sources:
   - MGW-TASK-0021（v1.0）
   - MGW-TC-0029（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T16:15:15+09:00
 ---
 
 # MGW-AC-0021 表示方式の設定の確認
@@ -31,11 +33,13 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 画面：iPhone SE の幅で、タイトル（START・RANKING・SETTINGS）、設定、ピクセルパーフェクトのプレイ画面のスクリーンショットを見た。iPhone（WebKit）の標準のラジオボタンは、黒い背景で選んでいない方が白く塗られて見え、どちらを選んでいるか分かりにくかったので、丸を CSS で描くようにした（選んだ方だけ中が白い）。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0007 の終わり、2026-10-28、オーナー、iPhone 11・PC）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0029-02 | ピクセルパーフェクトで、色が重ならず、拡大したドットがぼやけない | 未実施（WS の終わりに確かめる） |
+| MGW-TC-0029-02 | ピクセルパーフェクトで、色が重ならず、拡大したドットがぼやけない | OK（PC） |
+
+あわせて、iPhone のホーム画面の本物の「GWミニ」で、設定でどちらを選んでいるかが分かり、指で選びやすいことを見てもらい、OK だった。
 
 ## 3. 設計と違う作りにしたこと
 
