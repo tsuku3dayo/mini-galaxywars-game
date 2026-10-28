@@ -50,7 +50,7 @@ export function killPoints(part: UfoPart, basePoints: number, killCount: number)
   return part === 'prong' && killCount === BONUS_KILL_INDEX ? BONUS_POINTS : basePoints;
 }
 
-/** 得点を足し、3,000 点に届いたら 1 回だけ増機する。スコアは 99,999 で止める */
+/** 得点を足し、1,000 点に届いたら 1 回だけ増機する。スコアは 99,999 で止める */
 export function addScore(state: GameState, points: number): Pick<GameState, 'score' | 'lives' | 'extended'> {
   const score = Math.min(SCORE_MAX, state.score + points);
   const extend = !state.extended && score >= EXTEND_SCORE;

@@ -27,17 +27,17 @@ test.describe('HUD', () => {
     await expect(body).toHaveAttribute('data-score', '150');
   });
 
-  test('MGW-TC-0019-02 スコアが 3,000 点に届くと、残機が 1 基増え、HUD の発射台のアイコンが 1 つ増える', async ({ page }) => {
+  test('MGW-TC-0019-02 スコアが 1,000 点に届くと、残機が 1 基増え、HUD の発射台のアイコンが 1 つ増える', async ({ page }) => {
     await openPlay(page);
     await freeze(page, true);
     await clearField(page);
     expect(await lifeIcons(page)).toBe(3);
     // 次のステップで下段の UFO（id 5）の下部中央（100 点）に当たるように置く
     const ufo = ((await getState(page)).ufos as { x: number; y: number }[])[5]!;
-    await setState(page, { score: 2950, status: 'playing', missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false } });
+    await setState(page, { score: 950, status: 'playing', missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false } });
     await advance(page, 1);
     const body = page.locator('body');
-    await expect(body).toHaveAttribute('data-score', '3050');
+    await expect(body).toHaveAttribute('data-score', '1050');
     await expect(body).toHaveAttribute('data-lives', '4');
     expect(await lifeIcons(page)).toBe(4);
   });

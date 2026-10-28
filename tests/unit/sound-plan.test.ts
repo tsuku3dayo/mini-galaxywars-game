@@ -43,7 +43,7 @@ describe('音の計画', () => {
 
   it('MGW-TC-0023-05 増機すると増機音が鳴る', () => {
     const ufo = newGame(0).ufos[5]!;
-    const prev: GameState = { ...flying(), score: 2950, missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false } };
+    const prev: GameState = { ...flying(), score: 950, missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false } };
     const { next, sounds } = soundsOf(prev);
     expect(next.extended).toBe(true);
     expect(sounds).toEqual(['ufoDestroyed', 'extend']);
