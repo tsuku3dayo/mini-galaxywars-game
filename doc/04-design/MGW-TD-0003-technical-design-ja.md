@@ -8,10 +8,10 @@ updated: 2026-10-28
 sources:
   - MGW-TD-0001（v1.0）
   - MGW-TD-0002（v1.4）
-  - MGW-GUI-0001（v1.1）
+  - MGW-GUI-0001（v1.2）
   - MGW-GUI-0003（v1.1）
   - MGW-GUI-0006（v1.0）
-  - MGW-US-0005（v1.0）
+  - MGW-US-0005（v1.1）
   - MGW-US-0007（v1.1）
   - MGW-US-0009（v1.1）
   - MGW-US-0015（v1.1）

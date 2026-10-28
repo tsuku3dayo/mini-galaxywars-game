@@ -15,7 +15,7 @@ test.describe('プレイ', () => {
       ufos,
       killCount: 7,
       status: 'playing',
-      missile: { x: last.x, y: last.y + 21, isLaunched: true, isBoosting: false },
+      missile: { x: last.x, y: last.y + 20, isLaunched: true, isBoosting: false },
       meteors: [],
       beams: [],
       beamTimer: 1e9,

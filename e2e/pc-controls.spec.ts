@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { clearField, getState, openPlay } from './helpers';
+import { clearField, getState, openPlay, setState } from './helpers';
 
 // キー・マウスの操作は PC だけ（タッチは MGW-TASK-0013）
 test.describe('PC の操作', () => {
@@ -11,13 +11,16 @@ test.describe('PC の操作', () => {
     await openPlay(page);
     await clearField(page);
 
+    // 横の速さは 60 px/秒なので、端の近くから動かして、端で止まることを見る
     for (const [right, left] of [
       ['ArrowRight', 'ArrowLeft'],
       ['KeyD', 'KeyA'],
     ] as const) {
+      await setState(page, { launcherX: 420 });
       await page.keyboard.down(right);
       await expect.poll(() => launcherX(page)).toBe(456);
       await page.keyboard.up(right);
+      await setState(page, { launcherX: 60 });
       await page.keyboard.down(left);
       await expect.poll(() => launcherX(page)).toBe(24);
       await page.keyboard.up(left);
@@ -26,11 +29,13 @@ test.describe('PC の操作', () => {
     expect(state.missile).toMatchObject({ x: 24, y: 596, isLaunched: false });
 
     // マウスの x を追い、端で止まる
+    // 指・マウスへ近づく速さは 120 px/秒
     const box = (await page.locator('#game').boundingBox())!;
+    await setState(page, { launcherX: 400 });
     await page.mouse.move(box.x + box.width - 1, box.y + box.height / 2);
     await expect.poll(() => launcherX(page)).toBe(456);
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await expect.poll(() => launcherX(page)).toBeCloseTo(240, 0);
+    await page.mouse.move(box.x + box.width * 0.75, box.y + box.height / 2);
+    await expect.poll(() => launcherX(page)).toBeCloseTo(360, 0);
     expect((await getState(page)).missile.x).toBe(await launcherX(page));
   });
 

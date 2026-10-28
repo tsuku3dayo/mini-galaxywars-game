@@ -9,6 +9,7 @@ import {
   IDLE_LIMIT_1,
   IDLE_LIMIT_2,
   INITIAL_LIVES,
+  KILL_EFFECT_STEPS,
   LAUNCHER_START_X,
   METEOR_COUNT,
   METEOR_PATH_LENGTH,
@@ -71,6 +72,7 @@ export function newGame(highScore: number): GameState {
     flashSteps: 0,
     explosion: null,
     lastKill: null,
+    killEffect: null,
   };
 }
 
@@ -84,6 +86,7 @@ export function step(state: GameState, input: StepInput): GameState {
     stepCount: state.stepCount + 1,
     flashSteps: Math.max(0, state.flashSteps - 1),
     explosion: state.explosion && state.explosion.steps > 1 ? { ...state.explosion, steps: state.explosion.steps - 1 } : null,
+    killEffect: state.killEffect && state.killEffect.steps > 1 ? { ...state.killEffect, steps: state.killEffect.steps - 1 } : null,
   };
 
   // 2〜4. UFO・隕石・光線
@@ -103,10 +106,11 @@ export function step(state: GameState, input: StepInput): GameState {
     s.missile = { ...s.missile, ...moveMissile(s.missile.x, s.missile.y, input), isBoosting: input.boost };
   }
 
-  // 6. 当たり判定（隕石 → UFO → 光線。ミスかクリアが決まったら、残りは調べない）
+  // 6. 当たり判定（隕石 → UFO → 光線。ミス・UFO を倒した・クリアが決まったら、残りは調べない）
   if (s.status === 'ready' || s.status === 'playing') {
     const result = checkHits(s, state.missile.y);
     if (result === 'miss') miss(s);
+    if (result === 'kill') kill(s);
     if (result === 'clear') s.status = 'cleared';
     if (result !== null) s.missile = { ...s.missile, isBoosting: false };
   }
@@ -130,7 +134,7 @@ export function step(state: GameState, input: StepInput): GameState {
     }
   }
 
-  // 9. 待ち。このステップで待ちに入ったときは減らさず、次のステップから数える（ちょうど 2 秒・1 秒で戻る）
+  // 9. 待ち（ミス・最上部・UFO を倒したあと）。このステップで待ちに入ったときは減らさず、次のステップから数える（ちょうど 2 秒・1 秒で戻る）
   if (s.status === 'respawn' && state.status === 'respawn') {
     s.waitSteps -= 1;
     if (s.waitSteps <= 0) {
@@ -159,13 +163,13 @@ export function step(state: GameState, input: StepInput): GameState {
 }
 
 /** 当たり判定（MGW-TD-0002 §6 の 6、§6.3、§7）。s を書き換え、ミス・クリアを返す */
-function checkHits(s: GameState, prevMissileY: number): 'miss' | 'clear' | null {
+function checkHits(s: GameState, prevMissileY: number): 'miss' | 'kill' | 'clear' | null {
   const mBox = missileBox(s.missile);
 
   // 1. ミサイル × 隕石（発射前も）
   if (s.meteors.some((m) => overlaps(mBox, meteorBox(m)))) return 'miss';
 
-  // 2. ミサイル × UFO。下から当たるので、下段を先に調べる
+  // 2. ミサイル × UFO。下から当たるので、下段を先に調べる。ミサイルは当たったところで消えるので、倒せるのは 1 機だけ
   const targets = s.ufos.filter((u) => u.isAlive).sort((a, b) => b.row - a.row || a.id - b.id);
   for (const ufo of targets) {
     const hit = hitPart(mBox, ufo);
@@ -177,6 +181,8 @@ function checkHits(s: GameState, prevMissileY: number): 'miss' | 'clear' | null 
     s.idleSteps = 0;
     s.lastKill = { part: hit.part, points };
     if (s.killCount === s.ufos.length) return 'clear';
+    s.killEffect = { x: ufo.x, y: ufo.y, points, steps: KILL_EFFECT_STEPS };
+    return 'kill';
   }
 
   // 3. ミサイル・発射前の発射台 × 光線（弾いていないもの）
@@ -208,6 +214,14 @@ function miss(s: GameState): void {
   s.waitSteps = MISS_RESPAWN;
   s.flashSteps = FLASH_STEPS;
   s.explosion = { x: s.missile.x, y: s.missile.y, steps: EXPLOSION_STEPS };
+}
+
+/** UFO を倒したとき（MGW-TD-0002 §6.4）。ミサイルを消し、1 秒後に発射台を出す。残機は減らさない */
+function kill(s: GameState): void {
+  s.status = 'respawn';
+  s.waitReason = 'kill';
+  s.waitSteps = EXIT_RESPAWN;
+  s.missile = { ...s.missile, isLaunched: false };
 }
 
 /** ready・playing・respawn ⇔ paused。cleared・gameOver では何もしない */

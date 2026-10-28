@@ -17,8 +17,8 @@ function aboutToHitProng(killCount: number): GameState {
     status: 'playing',
     killCount,
     ufos: base.ufos.map((u) => (u.id < 4 && u.id >= 4 - killCount ? { ...u, isAlive: false } : u)),
-    // 右の突起（x +8〜14、y +4〜12）の下。1 ステップで UFO は左へ 0.67、ミサイルは上へ 1.5
-    missile: { x: target.x + 11, y: target.y + 12 + 12 + 1, isLaunched: true, isBoosting: false },
+    // 右の突起（x +8〜14、y +4〜12）の下端にミサイルの先端が接する。1 ステップで UFO は左へ約 0.17、ミサイルは上へ 0.375
+    missile: { x: target.x + 11, y: target.y + 12 + 12, isLaunched: true, isBoosting: false },
     meteors: [],
     beams: [],
     beamTimer: 1000,
@@ -65,7 +65,7 @@ describe('得点', () => {
     // 動かしたとき：4 機目の下部中央は 100 点
     const state = aboutToHitProng(3);
     const target = state.ufos[4]!;
-    const bottom = step({ ...state, missile: { ...state.missile, x: target.x, y: target.y + 21 } }, NO_INPUT);
+    const bottom = step({ ...state, missile: { ...state.missile, x: target.x, y: target.y + 20 } }, NO_INPUT);
     expect(bottom.lastKill).toEqual({ part: 'bottom', points: 100 });
   });
 });

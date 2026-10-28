@@ -34,7 +34,7 @@ test.describe('HUD', () => {
     expect(await lifeIcons(page)).toBe(3);
     // 次のステップで下段の UFO（id 5）の下部中央（100 点）に当たるように置く
     const ufo = ((await getState(page)).ufos as { x: number; y: number }[])[5]!;
-    await setState(page, { score: 950, status: 'playing', missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false } });
+    await setState(page, { score: 950, status: 'playing', missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: false } });
     await advance(page, 1);
     const body = page.locator('body');
     await expect(body).toHaveAttribute('data-score', '1050');

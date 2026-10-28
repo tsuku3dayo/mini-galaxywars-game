@@ -7,7 +7,7 @@ import { NO_INPUT, run } from './helpers';
 
 // 隕石が盾にならないよう、隕石を消した状態
 const noMeteors = (): GameState => ({ ...newGame(0), meteors: [] });
-const falling = (x: number, y: number): Beam => ({ x, y, vy: 180, reflected: false });
+const falling = (x: number, y: number): Beam => ({ x, y, vy: 90, reflected: false });
 
 describe('光線', () => {
   it('MGW-TC-0009-01 0.75 秒ごとに、ミサイル（発射前は発射台）との横の距離がいちばん近い UFO が、真下へ光線を 1 発撃つ', () => {
@@ -22,7 +22,7 @@ describe('光線', () => {
     expect(shooter).toBeDefined();
     const nearest = Math.min(...fired.ufos.map((u) => Math.abs(u.x - 240)));
     expect(Math.abs(shooter.x - 240)).toBe(nearest);
-    expect(beam).toMatchObject({ vy: 180, reflected: false });
+    expect(beam).toMatchObject({ vy: 90, reflected: false });
     // 次の光線も 0.75 秒あと
     expect(run(fired, 89).beams).toHaveLength(1);
     expect(run(fired, 90).beams).toHaveLength(2);
@@ -43,7 +43,7 @@ describe('光線', () => {
     const full: GameState = { ...noMeteors(), beams: three, beamTimer: 1 };
     expect(step(full, NO_INPUT).beams).toHaveLength(3);
     // 弾いた光線は数えない
-    const withReflected: GameState = { ...full, beams: [...three.slice(0, 2), { x: 60, y: 300, vy: -180, reflected: true }] };
+    const withReflected: GameState = { ...full, beams: [...three.slice(0, 2), { x: 60, y: 300, vy: -90, reflected: true }] };
     expect(step(withReflected, NO_INPUT).beams).toHaveLength(4);
     // 4 機以下なら 4 発まで
     const four: GameState = { ...full, ufos: full.ufos.map((u) => ({ ...u, isAlive: u.id < 4 })) };
@@ -52,22 +52,22 @@ describe('光線', () => {
     expect(step(fourFull, NO_INPUT).beams).toHaveLength(4);
   });
 
-  it('MGW-TC-0009-03 光線は 180 px/秒で落ちる', () => {
+  it('MGW-TC-0009-03 光線は 90 px/秒で落ちる', () => {
     const state: GameState = { ...noMeteors(), beams: [falling(20, 200)], beamTimer: 1000 };
-    expect(step(state, NO_INPUT).beams[0]!.y).toBeCloseTo(201.5, 9);
-    expect(run(state, 120).beams[0]!.y).toBeCloseTo(380, 9);
+    expect(step(state, NO_INPUT).beams[0]!.y).toBeCloseTo(200.75, 9);
+    expect(run(state, 120).beams[0]!.y).toBeCloseTo(290, 9);
     // 画面の下を出たら消える
-    expect(run({ ...state, beams: [falling(20, 639)] }, 1).beams).toHaveLength(0);
+    expect(run({ ...state, beams: [falling(20, 639.5)] }, 1).beams).toHaveLength(0);
   });
 
   it('MGW-TC-0009-04 光線は隕石に当たると消える（隕石が盾になる）', () => {
     // 段 0（y 136）の左端の隕石の真上に光線を置く
     const meteor = meteorAt(0);
-    const state: GameState = { ...newGame(0), meteors: [meteor], beams: [falling(meteor.x + 1.5, meteor.y - 19)], beamTimer: 1000 };
-    // 1 ステップで隕石は右へ 1.5、光線は下へ 1.5 進んで重なる（縦の端どうしの間が 18 → 16.5）
+    const state: GameState = { ...newGame(0), meteors: [meteor], beams: [falling(meteor.x, meteor.y - 18.5)], beamTimer: 1000 };
+    // 1 ステップで隕石は右へ 0.375、光線は下へ 0.75 進んで重なる（縦の中心どうしの間が 18.5 → 17.75。18 より近いと重なる）
     expect(step(state, NO_INPUT).beams).toHaveLength(0);
     // 横にずれていれば消えない
-    const apart: GameState = { ...state, beams: [falling(meteor.x + 40, meteor.y - 19)] };
+    const apart: GameState = { ...state, beams: [falling(meteor.x + 40, meteor.y - 18.5)] };
     expect(step(apart, NO_INPUT).beams).toHaveLength(1);
   });
 });

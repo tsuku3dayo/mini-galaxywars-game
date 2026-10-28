@@ -57,10 +57,12 @@ export interface GameState {
   idleSteps: number;
   /** respawn の残り */
   waitSteps: number;
-  waitReason: 'miss' | 'exit' | null;
+  waitReason: 'miss' | 'exit' | 'kill' | null;
   flashSteps: number;
   explosion: { x: number; y: number; steps: number } | null;
   lastKill: { part: UfoPart; points: number } | null;
+  /** 倒した UFO の位置の爆発と得点（MGW-TD-0002 §6.4）。steps は残り */
+  killEffect: { x: number; y: number; points: number; steps: number } | null;
 }
 
 export interface StepInput {

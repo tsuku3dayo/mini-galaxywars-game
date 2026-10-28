@@ -17,8 +17,13 @@ type Mgw = {
   advance(steps: number, input?: Record<string, unknown>): void;
 };
 
-/** プレイ画面を ?debug=1 で開き、発射前（ready）になるまで待つ */
+/**
+ * プレイ画面を ?debug=1 で開き、発射前（ready）になるまで待つ。
+ * すでにプレイ画面にいても新しいゲームから始めるよう、タイトルを通ってから開く
+ */
 export async function openPlay(page: Page): Promise<void> {
+  await page.goto('./?debug=1#/title');
+  await expect(page.locator('body')).toHaveAttribute('data-screen', 'title');
   await page.goto('./?debug=1#/play');
   await expect(page.locator('body')).toHaveAttribute('data-screen', 'play');
   await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
@@ -114,7 +119,7 @@ export async function endGame(page: Page, kind: 'clear' | 'gameOver', scoreBefor
       killCount: 7,
       score: scoreBefore,
       status: 'playing',
-      missile: { x: last.x, y: last.y + 21, isLaunched: true, isBoosting: false },
+      missile: { x: last.x, y: last.y + 20, isLaunched: true, isBoosting: false },
       meteors: [],
       beams: [],
       beamTimer: 1e9,

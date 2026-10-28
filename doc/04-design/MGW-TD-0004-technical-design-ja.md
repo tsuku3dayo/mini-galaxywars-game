@@ -9,7 +9,7 @@ sources:
   - MGW-TD-0001（v1.0）
   - MGW-TD-0002（v1.4）
   - MGW-ADR-0002（v1.0）
-  - MGW-GUI-0001（v1.1）
+  - MGW-GUI-0001（v1.2）
   - MGW-GUI-0002（v1.1）
   - MGW-GUI-0003（v1.1）
   - MGW-GUI-0004（v1.0）

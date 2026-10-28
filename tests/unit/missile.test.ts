@@ -10,26 +10,26 @@ function launchedAlone(): GameState {
 }
 
 describe('ミサイル', () => {
-  it('MGW-TC-0007-01 噴射しないときは、上昇 180 px/秒、横 120 px/秒で動き、バックファイアを描かない', () => {
+  it('MGW-TC-0007-01 噴射しないときは、上昇 45 px/秒、横 30 px/秒で動き、バックファイアを描かない', () => {
     const start = launchedAlone();
     const up = run(start, 60);
-    expect(start.missile.y - up.missile.y).toBeCloseTo(90, 9);
+    expect(start.missile.y - up.missile.y).toBeCloseTo(22.5, 9);
     const side = run(start, 60, input({ dir: 1 }));
-    expect(side.missile.x - start.missile.x).toBeCloseTo(60, 9);
+    expect(side.missile.x - start.missile.x).toBeCloseTo(15, 9);
     expect(side.missile.isBoosting).toBe(false);
   });
 
-  it('MGW-TC-0007-02 噴射中は、上昇 280 px/秒、横 240 px/秒になる', () => {
+  it('MGW-TC-0007-02 噴射中は、上昇 70 px/秒、横 60 px/秒になる', () => {
     const start = launchedAlone();
     const up = run(start, 60, input({ boost: true }));
-    expect(start.missile.y - up.missile.y).toBeCloseTo(140, 9);
+    expect(start.missile.y - up.missile.y).toBeCloseTo(35, 9);
     const side = run(start, 60, input({ boost: true, dir: -1 }));
-    expect(start.missile.x - side.missile.x).toBeCloseTo(120, 9);
+    expect(start.missile.x - side.missile.x).toBeCloseTo(30, 9);
     // マウスの x へ近づくときも、横の速さは同じ
     const towards = run(start, 30, input({ boost: true, targetX: 480 }));
-    expect(towards.missile.x - start.missile.x).toBeCloseTo(60, 9);
+    expect(towards.missile.x - start.missile.x).toBeCloseTo(15, 9);
     // 画面の端で止まる
-    expect(run(start, 120, input({ boost: true, dir: 1 })).missile.x).toBe(MISSILE_X_MAX);
+    expect(run(start, 500, input({ boost: true, dir: 1 })).missile.x).toBe(MISSILE_X_MAX);
   });
 
   it('MGW-TC-0007-03 噴射中だけ、バックファイアを描く（isBoosting）', () => {
@@ -44,7 +44,7 @@ describe('ミサイル', () => {
   it('MGW-TC-0007-05 敵や隕石に触れずに最上部（y < 48）を抜けても、ミスにならない', () => {
     let s = launchedAlone();
     let steps = 0;
-    while (s.status === 'playing' && steps < 1000) {
+    while (s.status === 'playing' && steps < 2000) {
       s = step(s, input({ boost: true }));
       steps += 1;
     }
