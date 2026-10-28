@@ -3,8 +3,8 @@ id: MGW-TD-0002
 type: technical-design
 title: core の設計（定数・状態・ステップ・当たり判定・得点・音の計画）
 status: stable
-version: 1.2
-updated: 2026-10-27
+version: 1.3
+updated: 2026-10-28
 sources:
   - MGW-TD-0001（v1.0）
   - MGW-ADR-0001（v1.0）
@@ -78,7 +78,7 @@ verified: null
 | `METEOR_SPEED_RIGHT`・`_LEFT` | 180・120 px/秒 | §3.3 | |
 | `METEOR_COUNT` | 5 | §3.3 | |
 | `INITIAL_LIVES` | 3 | §6.3 | |
-| `EXTEND_SCORE` | 3000 | §6.3 | |
+| `EXTEND_SCORE` | 1000 | §6.3 | |
 | `MISS_RESPAWN` | 240 ステップ（2 秒） | §7 | |
 | `EXIT_RESPAWN` | 120 ステップ（1 秒） | §3.1 | |
 | `IDLE_LIMIT_1`・`_2` | 10,800・18,000 ステップ（90・150 秒） | §3.5 | |
@@ -205,7 +205,7 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 
 ### 7.2 増機
 
-得点を足したあと、`extended` が false で `score >= 3000` なら、`lives += 1`、`extended = true`。スコアは 99,999 で止める。
+得点を足したあと、`extended` が false で `score >= EXTEND_SCORE`（1000）なら、`lives += 1`、`extended = true`。スコアは 99,999 で止める。
 
 ## 8. 音の計画（`sound-plan.ts`）
 
@@ -236,3 +236,4 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 | 1.0 | 2026-10-26 | 初版 |
 | 1.1 | 2026-10-27 | §2：`REGIONS`・`LAUNCHER_START_X` を足した。§4：`planSteps` で超えた分を捨てるときは積み上げを 0 にし、足し算の誤差の余裕を持つ（どちらも MGW-TASK-0005 の実装に合わせる） |
 | 1.2 | 2026-10-27 | §6 の 9：待ちに入ったステップでは `waitSteps` を減らさない（ちょうど 2 秒・1 秒で戻るように。MGW-TASK-0009 の実装に合わせる） |
+| 1.3 | 2026-10-28 | §2・§7.2：増機の点数を 3000 から 1000 にする（仕様書 v1.5、doc/requests/2026-10-27-spec-1.5-extend-score.md） |
