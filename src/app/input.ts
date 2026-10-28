@@ -30,6 +30,8 @@ export function createInputEngine(field: HTMLElement, surfaces: HTMLElement[] = 
   };
 
   addEventListener('keydown', (e) => {
+    // 名前の入力欄で打っている文字（A・D・空白など）は、ゲームの操作にしない
+    if (e.target instanceof HTMLInputElement) return;
     if (LEFT.has(e.code) || RIGHT.has(e.code)) {
       if (LEFT.has(e.code)) left = true;
       else right = true;
