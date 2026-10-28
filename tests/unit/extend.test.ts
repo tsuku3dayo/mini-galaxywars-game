@@ -21,19 +21,19 @@ function aboutToScore100(patch: Partial<GameState>): GameState {
 }
 
 describe('増機', () => {
-  it('MGW-TC-0019-01 スコアが 3,000 点に届くと、残機が 1 基増える', () => {
-    const next = step(aboutToScore100({ score: 2950 }), NO_INPUT);
+  it('MGW-TC-0019-01 スコアが 1,000 点に届くと、残機が 1 基増える', () => {
+    const next = step(aboutToScore100({ score: 950 }), NO_INPUT);
     expect(next.lastKill?.points).toBe(100);
-    expect(next.score).toBe(3050);
+    expect(next.score).toBe(1050);
     expect(next.lives).toBe(4);
     expect(next.extended).toBe(true);
-    // ちょうど 3,000 でも増える。届かなければ増えない
-    expect(addScore({ ...newGame(0), score: 2900 }, 100)).toEqual({ score: 3000, lives: 4, extended: true });
-    expect(addScore({ ...newGame(0), score: 2850 }, 100)).toEqual({ score: 2950, lives: 3, extended: false });
+    // ちょうど 1,000 でも増える。届かなければ増えない
+    expect(addScore({ ...newGame(0), score: 900 }, 100)).toEqual({ score: 1000, lives: 4, extended: true });
+    expect(addScore({ ...newGame(0), score: 850 }, 100)).toEqual({ score: 950, lives: 3, extended: false });
   });
 
   it('MGW-TC-0019-04 増えたときに増機音が鳴る', () => {
-    const prev = aboutToScore100({ score: 2950 });
+    const prev = aboutToScore100({ score: 950 });
     const next = step(prev, NO_INPUT);
     expect(next.lives).toBe(4);
     expect(planSounds(prev, next)).toContain('extend');
@@ -43,7 +43,7 @@ describe('増機', () => {
   });
 
   it('MGW-TC-0019-03 増機は 1 回だけ', () => {
-    const once = step(aboutToScore100({ score: 2950 }), NO_INPUT);
+    const once = step(aboutToScore100({ score: 950 }), NO_INPUT);
     expect(once.lives).toBe(4);
     // 増機のあと、さらに点を取っても増えない
     const again = step(aboutToScore100({ score: 5950, lives: 4, extended: true }), NO_INPUT);

@@ -67,7 +67,7 @@ export const METEOR_LANE_LENGTH = METEOR_X_MAX - METEOR_X_MIN;
 export const METEOR_PATH_LENGTH = METEOR_LANE_LENGTH * METEOR_LANE_COUNT;
 
 export const INITIAL_LIVES = 3;
-export const EXTEND_SCORE = 3000;
+export const EXTEND_SCORE = 1000;
 export const MISS_RESPAWN = 240;
 export const EXIT_RESPAWN = 120;
 export const IDLE_LIMIT_1 = 10_800;
