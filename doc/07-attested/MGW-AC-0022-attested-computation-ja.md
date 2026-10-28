@@ -2,14 +2,16 @@
 id: MGW-AC-0022
 type: attested-computation
 title: 増機の点数を 1,000 点にしたことの確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-28
 sources:
   - MGW-TASK-0022（v1.0）
   - MGW-TC-0019（v1.1）
   - MGW-TC-0023（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T14:20:14+09:00
 ---
 
 # MGW-AC-0022 増機の点数を 1,000 点にしたことの確認
