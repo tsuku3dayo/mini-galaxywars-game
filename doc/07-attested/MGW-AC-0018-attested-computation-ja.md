@@ -2,7 +2,7 @@
 id: MGW-AC-0018
 type: attested-computation
 title: 名前の入力とランキング画面の確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-28
 sources:
@@ -11,7 +11,9 @@ sources:
   - MGW-TC-0017（v1.0）
   - MGW-TC-0025（v1.0）
   - MGW-TC-0026（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T15:32:44+09:00
 ---
 
 # MGW-AC-0018 名前の入力とランキング画面の確認
@@ -39,9 +41,17 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 画面：PC（1280 × 800）、iPhone 11、iPhone SE の幅で、名前の入力（入力欄は画面の上半分）とランキングの一覧（10 件が SE の幅に収まる）のスクリーンショットを見た。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0006 の終わり、2026-10-28、オーナー、iPhone 11・PC）
 
-この TASK に手動の確認 ID はない。iPhone でソフトウェアキーボードを出したときの見え方は、WS-0006 の終わりに公開 URL で見てもらう。
+この TASK に手動の確認 ID はない。公開 URL で、iPhone のホーム画面の本物の「GWミニ」と PC で次を見てもらい、すべて OK だった。
+
+| 見たこと | 結果 |
+| :--- | :--- |
+| ゲームが終わって 3 秒後に「NEW RECORD!」と名前の入力欄が出る | OK（iPhone・PC） |
+| iPhone：入力欄に触れるとキーボードが出て、入力欄が隠れない。打った文字が大文字になる | OK |
+| iPhone：キーボードの「完了」か「登録」でランキング画面に進み、キーボードが閉じたあとに画面がずれず、ボタンが押せる | OK |
+| PC：入力欄をクリックして名前を打ち、Enter か「登録」で登録できる | OK |
+| ランキング画面に名前・スコア・日付が出て、タイトルの HIGH がその点数になる | OK（iPhone・PC） |
 
 ## 3. 設計と違う作りにしたこと
 
@@ -54,5 +64,5 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 ## 4. 確認できなかったこと
 
-- iPhone の実機でのソフトウェアキーボードの出方（入力欄が隠れないか、閉じたあとに画面がずれないか）は、E2E では確かめられない。WS-0006 の終わりに見てもらう。
+- iPhone 11 以外の iPhone（画面の小さい SE など）の実機で、キーボードを出したときの見え方は確かめていない（実機がない）。
 - Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。

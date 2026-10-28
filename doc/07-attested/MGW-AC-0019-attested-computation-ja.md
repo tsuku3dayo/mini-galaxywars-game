@@ -2,13 +2,15 @@
 id: MGW-AC-0019
 type: attested-computation
 title: ランキングの書き出し・読み込みの確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-28
 sources:
   - MGW-TASK-0019（v1.0）
   - MGW-TC-0027（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T15:32:44+09:00
 ---
 
 # MGW-AC-0019 ランキングの書き出し・読み込みの確認
@@ -32,9 +34,14 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 画面：iPhone SE の幅で、読み込めないときの知らせと、置き換えの確認のスクリーンショットを見た。はじめは知らせが出ると「TITLE」の下が枠から切れていたので、ランキング画面の余白と行の間を詰めた（上の E2E で確かめる）。詰めたあとも CI（Linux）ではフォントで行が少し高くなり、1 px はみ出して落ちたので、行の高さを決め打ちにした（一覧 18 px、そのほか 20 px）。手元の iPhone SE の幅で、TITLE の下から枠の下まで約 30 px あいている。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0006 の終わり、2026-10-28、オーナー、iPhone 11・PC）
 
-この TASK に手動の確認 ID はない。iPhone で書き出したファイルの保存先と、ファイルを選ぶ画面は、WS-0006 の終わりに公開 URL で見てもらう。
+この TASK に手動の確認 ID はない。公開 URL で、iPhone のホーム画面の本物の「GWミニ」と PC で次を見てもらい、すべて OK だった。
+
+| 見たこと | 結果 |
+| :--- | :--- |
+| 「書き出し」でファイルを保存できる | OK（iPhone・PC） |
+| 「読み込み」で書き出したファイルを選ぶと確認が出て、「置き換える」で戻る | OK（iPhone・PC） |
 
 ## 3. 設計と違う作りにしたこと
 
@@ -45,5 +52,5 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 ## 4. 確認できなかったこと
 
-- iPhone の実機での書き出し（ファイルの保存先・「ファイル」アプリへの保存）と、読み込み（ファイルを選ぶ画面）は、E2E では確かめられない。WS-0006 の終わりに見てもらう。
+- 形の違うファイルを選んだときの知らせは、実機では見ていない（E2E の 3 つの project で確かめた）。
 - Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。
