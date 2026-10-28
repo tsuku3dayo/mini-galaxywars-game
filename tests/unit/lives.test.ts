@@ -50,18 +50,31 @@ describe('残機と待ち', () => {
     const back = run(missed, MISS_RESPAWN);
     for (const s of [missed, waiting, back]) expect(s.ufos.filter((u) => u.isAlive)).toHaveLength(5);
     expect(back.killCount).toBe(3);
-    // 待ちの間も隕石は動く（右へ 1.5 px／ステップ）
-    expect(waiting.meteors[0]!.x - missed.meteors[0]!.x).toBeCloseTo(150, 9);
+    // 待ちの間も隕石は動く（右へ 0.375 px／ステップ）
+    expect(waiting.meteors[0]!.x - missed.meteors[0]!.x).toBeCloseTo(37.5, 9);
   });
 
-  it('MGW-TC-0016-04 最上部を抜けたときは、1 秒後に発射台が出て Ready に戻る。残機は減らない', () => {
-    const top: GameState = { ...aboutToMiss(), meteors: [], missile: { x: 240, y: 37, isLaunched: true, isBoosting: false } };
+  it('MGW-TC-0016-04 最上部を抜けたとき、または UFO を倒したとき（8 機目を除く）は、1 秒後に発射台が出て Ready に戻る。残機は減らない', () => {
+    // 下端が 48.375 → 1 ステップで 48 より上に出る
+    const top: GameState = { ...aboutToMiss(), meteors: [], missile: { x: 240, y: 36, isLaunched: true, isBoosting: false } };
     const exited = step(top, NO_INPUT);
     expect(exited).toMatchObject({ status: 'respawn', waitReason: 'exit', lives: 3 });
     expect(run(exited, EXIT_RESPAWN - 1).status).toBe('respawn');
     const back = run(exited, EXIT_RESPAWN);
     expect(back.status).toBe('ready');
     expect(back.lives).toBe(3);
+
+    // UFO を倒したとき：ミサイルは消え、1 秒後に発射台が出る
+    const ufo = newGame(0).ufos[5]!;
+    const hit = step({ ...aboutToMiss(), meteors: [], missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: true } }, NO_INPUT);
+    expect(hit).toMatchObject({ status: 'respawn', waitReason: 'kill', lives: 3, killCount: 1 });
+    expect(hit.missile.isLaunched).toBe(false);
+    expect(hit.missile.isBoosting).toBe(false);
+    expect(run(hit, EXIT_RESPAWN - 1).status).toBe('respawn');
+    const again = run(hit, EXIT_RESPAWN);
+    expect(again.status).toBe('ready');
+    expect(again.lives).toBe(3);
+    expect(again.missile).toEqual({ x: 240, y: 596, isLaunched: false, isBoosting: false });
   });
 
   it('MGW-TC-0016-05 残機が 0 になると、ゲームオーバーになる（2 秒待ってから）', () => {

@@ -12,7 +12,7 @@ function aboutToScore100(patch: Partial<GameState>): GameState {
   return {
     ...base,
     status: 'playing',
-    missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false },
+    missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: false },
     meteors: [],
     beams: [],
     beamTimer: 1e9,

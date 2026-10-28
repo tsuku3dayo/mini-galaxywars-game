@@ -12,7 +12,7 @@ describe('クリア', () => {
       status: 'playing',
       ufos: base.ufos.map((u) => ({ ...u, isAlive: u.id === 5 })),
       killCount: 7,
-      missile: { x: last.x, y: last.y + 21, isLaunched: true, isBoosting: true },
+      missile: { x: last.x, y: last.y + 20, isLaunched: true, isBoosting: true },
       meteors: [],
       beams: [],
       beamTimer: 1e9,

@@ -28,16 +28,16 @@ describe('UFO', () => {
     expect(step(edge, NO_INPUT).ufos[3]!.x).toBeLessThan(1);
   });
 
-  it('MGW-TC-0008-02 速さは残りの機数で変わる：8 機 80 … 1 機 320 px/秒', () => {
+  it('MGW-TC-0008-02 速さは残りの機数で変わる：8 機 20 … 1 機 80 px/秒', () => {
     const table: [number, number][] = [
-      [8, 80],
-      [7, 100],
-      [6, 120],
-      [5, 140],
-      [4, 160],
-      [3, 180],
-      [2, 240],
-      [1, 320],
+      [8, 20],
+      [7, 25],
+      [6, 30],
+      [5, 35],
+      [4, 40],
+      [3, 45],
+      [2, 60],
+      [1, 80],
     ];
     for (const [alive, speed] of table) {
       const base = newGame(0);

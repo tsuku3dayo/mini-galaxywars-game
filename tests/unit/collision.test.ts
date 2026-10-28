@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { EXPLOSION_STEPS, FLASH_STEPS, MISS_RESPAWN } from '../../src/core/config';
 import { newGame, step } from '../../src/core/game';
-import { meteorAt } from '../../src/core/physics';
+import { meteorAt, missileBox } from '../../src/core/physics';
+import { hitPart } from '../../src/core/scoring';
 import type { Beam, GameState } from '../../src/core/types';
 import { NO_INPUT } from './helpers';
 
@@ -35,19 +36,28 @@ describe('当たり判定', () => {
     expect(step(playing(meteor.x + 40, meteor.y + 21, { meteors: [meteor] }), NO_INPUT).status).toBe('playing');
   });
 
-  it('MGW-TC-0011-04 ミサイルが UFO に当たると、UFO が壊れ、得点が入る', () => {
+  it('MGW-TC-0011-04 ミサイルが UFO に当たると、UFO が壊れ、得点が入り、ミサイルは消える', () => {
     const ufo = newGame(0).ufos[5]!; // 下段、x 180、y 108
-    // 1 ステップ上がると、ミサイルの先端が下部中央に入る
-    const next = step(playing(ufo.x, ufo.y + 21), NO_INPUT);
+    // 先端が下部中央の下端に接している。1 ステップ上がると、先端が下部中央に入る
+    const next = step(playing(ufo.x, ufo.y + 20), NO_INPUT);
     expect(next.ufos[5]!.isAlive).toBe(false);
     expect(next.score).toBe(100);
     expect(next.killCount).toBe(1);
     expect(next.lastKill).toEqual({ part: 'bottom', points: 100 });
-    // ミスではないので、ミサイルはそのまま上昇を続ける
-    expect(next.status).toBe('playing');
+    // ミスではない。ミサイルは消え、1 秒後に発射台が出るのを待つ（残機は減らない）
+    expect(next.status).toBe('respawn');
+    expect(next.waitReason).toBe('kill');
+    expect(next.missile.isLaunched).toBe(false);
     expect(next.lives).toBe(3);
-    // 倒した UFO にはもう当たらない
-    expect(step(next, NO_INPUT).score).toBe(100);
+
+    // 1 回の発射で倒せるのは 1 機：上段の UFO（id 1）を下段の UFO と同じ場所に重ねても（次のステップで両方に当たる位置）、倒れるのは先に調べる下段の 1 機だけ
+    const upper = newGame(0).ufos[1]!;
+    const both = playing(ufo.x, ufo.y + 20, { ufos: newGame(0).ufos.map((u) => (u.id === upper.id ? { ...u, x: ufo.x, y: ufo.y } : u)) });
+    expect(hitPart(missileBox({ ...both.missile, y: both.missile.y - 0.375 }), { ...both.ufos[upper.id]!, x: ufo.x + 20 / 120 })).not.toBeNull();
+    const one = step(both, NO_INPUT);
+    expect(one.killCount).toBe(1);
+    expect(one.ufos[5]!.isAlive).toBe(false);
+    expect(one.ufos[upper.id]!.isAlive).toBe(true);
   });
 
   it('MGW-TC-0011-05 ミサイルが光線に当たると、弾く範囲の外ならミスになる', () => {

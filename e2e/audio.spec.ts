@@ -18,7 +18,7 @@ async function startAndScore(page: Page) {
     meteors: [],
     beams: [],
     beamTimer: 1e9,
-    missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: true },
+    missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: true },
   });
   // 前提：生きている UFO は 1 機
   expect(((await getState(page)).ufos as { isAlive: boolean }[]).filter((u) => u.isAlive)).toHaveLength(1);

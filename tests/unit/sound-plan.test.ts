@@ -28,13 +28,13 @@ describe('音の計画', () => {
     // 発射前は噴射の入力があっても鳴らさない
     expect(soundsOf(newGame(0), input({ boost: true })).sounds).toEqual([]);
     // 噴射したまま playing でなくなった（最上部を抜けた）ときも止める
-    const top: GameState = { ...on.next, missile: { ...on.next.missile, y: 37 } };
+    const top: GameState = { ...on.next, missile: { ...on.next.missile, y: 36 } };
     expect(soundsOf(top, input({ boost: true })).sounds).toEqual(['jetOff']);
   });
 
   it('MGW-TC-0023-03 UFO を壊すと破壊音が鳴る', () => {
     const ufo = newGame(0).ufos[5]!;
-    const prev: GameState = { ...flying(), missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false } };
+    const prev: GameState = { ...flying(), missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: false } };
     const { next, sounds } = soundsOf(prev);
     // 前提：このステップで 1 機倒れた
     expect(next.killCount).toBe(1);
@@ -43,7 +43,7 @@ describe('音の計画', () => {
 
   it('MGW-TC-0023-05 増機すると増機音が鳴る', () => {
     const ufo = newGame(0).ufos[5]!;
-    const prev: GameState = { ...flying(), score: 950, missile: { x: ufo.x, y: ufo.y + 21, isLaunched: true, isBoosting: false } };
+    const prev: GameState = { ...flying(), score: 950, missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: false } };
     const { next, sounds } = soundsOf(prev);
     expect(next.extended).toBe(true);
     expect(sounds).toEqual(['ufoDestroyed', 'extend']);
@@ -59,7 +59,7 @@ describe('音の計画', () => {
     // 待ちの間は鳴らし続けない
     expect(soundsOf(next).sounds).toEqual([]);
     // 最上部を抜けたとき（ミスではない）は鳴らさない
-    const top: GameState = { ...flying(), missile: { x: 240, y: 37, isLaunched: true, isBoosting: false } };
+    const top: GameState = { ...flying(), missile: { x: 240, y: 36, isLaunched: true, isBoosting: false } };
     expect(soundsOf(top).sounds).toEqual([]);
   });
 });
