@@ -2,13 +2,15 @@
 id: MGW-US-0005
 type: user-story
 title: フィールドが仕様書の比率で表示される
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-28
 sources:
   - MGW-EP-0002（v1.0）
   - doc/specification.md (v1.6) §2、§11
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:50:27+09:00
 ---
 
 # MGW-US-0005 フィールドが仕様書の比率で表示される
