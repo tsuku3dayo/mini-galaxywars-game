@@ -2,14 +2,16 @@
 id: MGW-AC-0017
 type: attested-computation
 title: ランキングの保存の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-28
 sources:
   - MGW-TASK-0017（v1.0）
   - MGW-TC-0025（v1.0）
   - MGW-TC-0027（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T15:32:44+09:00
 ---
 
 # MGW-AC-0017 ランキングの保存の確認
