@@ -2,7 +2,7 @@
 id: MGW-AC-0017
 type: attested-computation
 title: ランキングの保存の確認
-status: draft
+status: review
 version: 1.0
 updated: 2026-10-28
 sources:
@@ -31,9 +31,9 @@ verified: null
 
 画面：この TASK は画面を変えていない（`src/storage/ranking-store.ts` を足しただけで、画面から使うのは MGW-TASK-0018）。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0006 の終わり、2026-10-28、オーナー、iPhone 11・PC）
 
-この TASK に手動の確認 ID はない。
+この TASK に手動の確認 ID はない。WS-0006 の終わりに、公開 URL で名前を登録し、ランキング画面とタイトルの HIGH に出ること、書き出したファイルを読み込んで戻せることを、PC と iPhone のホーム画面の本物の「GWミニ」で見てもらい、OK だった（実際の localStorage への保存は MGW-AC-0018 の E2E でも確かめた）。
 
 ## 3. 設計と違う作りにしたこと
 
@@ -41,5 +41,4 @@ verified: null
 
 ## 4. 確認できなかったこと
 
-- 実際の localStorage への保存と、読み込み直しても残ることは、画面から使う MGW-TASK-0018 の E2E（MGW-TC-0025-04）で確かめる。
 - Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。
