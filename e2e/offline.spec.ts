@@ -15,7 +15,7 @@ test.describe('オフライン', () => {
 
     await context.setOffline(true);
     await page.reload();
-    await expect(page.locator('.app-name')).toHaveText('ギャラクシーウォーズミニ');
+    await expect(page.locator('.app-name')).toHaveText('銀河戦争ミニ');
     await expect(page.locator('body')).toHaveAttribute('data-screen', 'title');
     await context.setOffline(false);
   });

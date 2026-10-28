@@ -260,13 +260,8 @@ body:not([data-screen='play']) #overlay-message {
   min-width: 180px;
 }
 
-.title-guide,
-.title-credit {
+.title-guide {
   margin: 0;
-}
-
-.title-credit {
-  line-height: 1.5;
 }
 
 /*

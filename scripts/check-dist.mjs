@@ -43,14 +43,14 @@ for (const file of files) {
   }
 }
 
-// MGW-TC-0002-04 マニフェストの name が「ギャラクシーウォーズミニ」で、Service Worker の範囲が /mini-galaxywars-game/
+// MGW-TC-0002-04 マニフェストの name が「銀河戦争ミニ」で、Service Worker の範囲が /mini-galaxywars-game/
 const manifestPath = join(DIST, 'manifest.webmanifest');
 if (!existsSync(manifestPath)) {
   errors.push('manifest.webmanifest がありません');
 } else {
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-  check(manifest.name === 'ギャラクシーウォーズミニ', `manifest の name が違います: ${manifest.name}`);
-  check(manifest.short_name === 'GWミニ', `manifest の short_name が違います: ${manifest.short_name}`);
+  check(manifest.name === '銀河戦争ミニ', `manifest の name が違います: ${manifest.name}`);
+  check(manifest.short_name === '銀河戦争ミニ', `manifest の short_name が違います: ${manifest.short_name}`);
   check(manifest.scope === BASE, `manifest の scope が違います: ${manifest.scope}`);
   check(manifest.start_url === BASE, `manifest の start_url が違います: ${manifest.start_url}`);
   check(index.includes('manifest.webmanifest'), 'index.html がマニフェストを読んでいません');
