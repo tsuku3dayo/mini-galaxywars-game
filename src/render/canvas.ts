@@ -1,11 +1,12 @@
 // 描く順番・倍率（MGW-TD-0003 §1・§2）。GameState を読むだけで、書き換えない
 import { EXPLOSION_STEPS, FIELD_HEIGHT, FIELD_WIDTH, LAUNCHER_Y, MISSILE_H, UFO_W } from '../core/config';
 import type { GameState } from '../core/types';
+import { overlaysFor, type DisplayMode } from './color-palette';
 import { HUD_CHAR, HUD_LEFT, HUD_LIVES_Y, HUD_RIGHT, HUD_TEXT_Y, hudModel, LIFE_ICON_GAP } from './hud';
 import { BACKFIRE, BEAM, bake, EXPLOSION, FONT, GLYPH_CELL, LAUNCHER, LIFE_ICON, METEOR, MISSILE, UFO, type Sprite } from './sprites';
 
 export interface View {
-  mode: 'cellophane' | 'pixel';
+  mode: DisplayMode;
   showHud: boolean;
   /** 光線の揺れ・炎の点滅に使う */
   tick: number;
@@ -101,7 +102,13 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
           ctx.drawImage(icon.image, HUD_RIGHT - icon.sprite.w - i * (icon.sprite.w + LIFE_ICON_GAP), HUD_LIVES_Y);
         }
       }
-      // 4. 擬似カラー・5. 被弾フラッシュは MGW-TASK-0020 で足す
+      // 4. 擬似カラー・5. 被弾フラッシュ
+      for (const o of overlaysFor(view.mode, state.flashSteps)) {
+        ctx.globalCompositeOperation = o.op;
+        ctx.fillStyle = o.color;
+        ctx.fillRect(o.x, o.y, o.w, o.h);
+      }
+      ctx.globalCompositeOperation = 'source-over';
     },
   };
 }
