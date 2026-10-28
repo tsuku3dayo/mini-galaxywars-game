@@ -3,14 +3,14 @@ id: MGW-US-0023
 type: user-story
 title: 効果音が鳴る
 status: stable
-version: 1.1
+version: 1.2
 updated: 2026-10-28
 sources:
   - MGW-EP-0005（v1.0）
-  - doc/specification.md (v1.5) §3.1、§12、§22
+  - doc/specification.md (v1.6) §3.1、§12、§22
 verified:
   by: tsuku3dayo
-  at: 2026-10-28T11:33:39+09:00
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0023 効果音が鳴る
@@ -29,7 +29,7 @@ verified:
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | 加速噴射の間、ミサイルの上昇音（ジェット音：矩形波 440 Hz → 880 Hz）が鳴る。噴射しないときは鳴らない | 単体・手動（iPhone・PC） |
+| 1 | 加速噴射の間、ミサイルの噴射音（ノイズの「シュー」という音）が鳴る。噴射しないときは鳴らない | 単体・手動（iPhone・PC） |
 | 2 | UFO を壊すと破壊音（ホワイトノイズ＋ 120 Hz → 30 Hz の低音）が鳴る | 単体・手動（iPhone・PC） |
 | 3 | 増機すると増機音（三角波 523 → 659 → 784 Hz のアルペジオ）が鳴る | 単体・手動（iPhone・PC） |
 | 4 | ミスすると爆発音（重低音のノイズ）が鳴る | 単体・手動（iPhone・PC） |

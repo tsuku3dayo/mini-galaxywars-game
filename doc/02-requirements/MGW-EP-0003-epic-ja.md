@@ -3,14 +3,14 @@ id: MGW-EP-0003
 type: epic
 title: 流れと HUD
 status: stable
-version: 1.1
+version: 1.2
 updated: 2026-10-28
 sources:
-  - MGW-PB-0001（v1.2） §2
-  - doc/specification.md (v1.5) §3.5、§6.3、§7、§8、§18
+  - MGW-PB-0001（v1.3） §2
+  - doc/specification.md (v1.6) §3.5、§6.3、§7、§8、§18
 verified:
   by: tsuku3dayo
-  at: 2026-10-28T11:33:39+09:00
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-EP-0003 流れと HUD
@@ -26,7 +26,7 @@ verified:
 | 順 | ID | タイトル |
 | :--- | :--- | :--- |
 | 3-1 | MGW-US-0014 | タイトル画面から始める |
-| 3-2 | MGW-US-0015 | HUD でスコアと残機を見る |
+| 3-2 | MGW-US-0015 | スコアと残機を見る |
 | 3-3 | MGW-US-0016 | ミスのあとに再登場し、残機がなくなると終わる |
 | 3-4 | MGW-US-0017 | 1 面をクリアする |
 | 3-5 | MGW-US-0018 | 一時停止する |

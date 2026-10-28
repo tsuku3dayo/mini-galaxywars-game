@@ -3,17 +3,17 @@ id: MGW-US-0002
 type: user-story
 title: オフラインで遊べる・ホーム画面に置ける
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-28
 sources:
   - MGW-EP-0001（v1.0）
-  - doc/specification.md (v1.5) §1.2、§10、§23、§25
+  - doc/specification.md (v1.6) §1.2、§10、§23、§25
   - MGW-ADR-0004（v1.1）
   - MGW-ADR-0005（v1.1）
-  - MGW-ADR-0007（v1.1）
+  - MGW-ADR-0007（v1.2）
 verified:
   by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0002 オフラインで遊べる・ホーム画面に置ける
@@ -35,7 +35,7 @@ verified:
 | 1 | 一度開いたあと、ネットワークを切っても起動して遊べる | E2E |
 | 2 | iPhone で機内モードにして、ホーム画面のアプリから起動して遊べる | 手動（iPhone） |
 | 3 | 公開するファイルに外部の URL（CDN・Web フォントなど）がない | check:dist |
-| 4 | マニフェストの `name` が「ギャラクシーウォーズミニ」で、Service Worker の範囲が `/mini-galaxywars-game/` | check:dist |
+| 4 | マニフェストの `name` が「銀河戦争ミニ」で、Service Worker の範囲が `/mini-galaxywars-game/` | check:dist |
 | 5 | iPhone のホーム画面に追加でき、アプリの名前が切れない | 手動（iPhone） |
 
 ## メモ

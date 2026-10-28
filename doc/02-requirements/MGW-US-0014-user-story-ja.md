@@ -3,15 +3,15 @@ id: MGW-US-0014
 type: user-story
 title: タイトル画面から始める
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-28
 sources:
-  - MGW-EP-0003（v1.1）
-  - doc/specification.md (v1.5) §7、§18
-  - MGW-ADR-0007（v1.1）
+  - MGW-EP-0003（v1.2）
+  - doc/specification.md (v1.6) §7、§18
+  - MGW-ADR-0007（v1.2）
 verified:
   by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0014 タイトル画面から始める
@@ -30,6 +30,6 @@ verified:
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | 起動すると `#/title` のタイトル画面に、アプリ名「ギャラクシーウォーズミニ」と「START」が出る | E2E |
+| 1 | 起動すると `#/title` のタイトル画面に、アプリ名「銀河戦争ミニ」と「START」が出る | E2E |
 | 2 | 「START」（または `Space`）で `#/play` に移り、発射前（Ready）から始まる | E2E |
 | 3 | `#/title`・`#/play`・`#/ranking` のハッシュで画面が切り替わる | E2E |

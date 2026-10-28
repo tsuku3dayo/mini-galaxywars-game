@@ -6,11 +6,11 @@ status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
-  - MGW-GUI-0001（v1.0）
-  - MGW-US-0016（v1.0）
+  - MGW-GUI-0001（v1.1）
+  - MGW-US-0016（v1.1）
   - MGW-US-0017（v1.0）
   - MGW-US-0025（v1.0）
-  - doc/specification.md (v1.5) §7、§9
+  - doc/specification.md (v1.6) §7、§9
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:52:10+09:00
