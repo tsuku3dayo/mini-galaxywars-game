@@ -2,13 +2,15 @@
 id: MGW-US-0013
 type: user-story
 title: 当てた部位で得点が変わる
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-28
 sources:
   - MGW-EP-0002（v1.0）
   - doc/specification.md (v1.6) §6.1、§6.2
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0013 当てた部位で得点が変わる

@@ -2,13 +2,15 @@
 id: MGW-US-0011
 type: user-story
 title: 当たり判定とミス
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-28
 sources:
   - MGW-EP-0002（v1.0）
   - doc/specification.md (v1.6) §3.1、§5.2、§12
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0011 当たり判定とミス

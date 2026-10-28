@@ -2,13 +2,15 @@
 id: MGW-US-0023
 type: user-story
 title: 効果音が鳴る
-status: review
+status: stable
 version: 1.2
 updated: 2026-10-28
 sources:
   - MGW-EP-0005（v1.0）
   - doc/specification.md (v1.6) §3.1、§12、§22
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0023 効果音が鳴る

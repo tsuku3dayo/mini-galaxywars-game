@@ -2,13 +2,15 @@
 id: MGW-US-0007
 type: user-story
 title: 誘導ミサイルを操る（通常上昇・加速噴射）
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-28
 sources:
   - MGW-EP-0002（v1.0）
   - doc/specification.md (v1.6) §3.1、§4.1、§11、§12
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0007 誘導ミサイルを操る（通常上昇・加速噴射）

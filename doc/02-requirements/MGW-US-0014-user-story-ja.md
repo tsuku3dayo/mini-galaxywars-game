@@ -2,14 +2,16 @@
 id: MGW-US-0014
 type: user-story
 title: タイトル画面から始める
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-28
 sources:
   - MGW-EP-0003（v1.2）
   - doc/specification.md (v1.6) §7、§18
   - MGW-ADR-0007（v1.2）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0014 タイトル画面から始める

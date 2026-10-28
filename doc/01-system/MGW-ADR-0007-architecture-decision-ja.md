@@ -2,13 +2,15 @@
 id: MGW-ADR-0007
 type: architecture-decision
 title: アプリ名と見た目（「銀河戦争ミニ」）
-status: review
+status: stable
 version: 1.2
 updated: 2026-10-28
 sources:
   - MGW-PB-0001（v1.3） §8
   - doc/specification.md (v1.6) §1
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-ADR-0007 アプリ名と見た目

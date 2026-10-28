@@ -2,13 +2,15 @@
 id: MGW-US-0019
 type: user-story
 title: 1,000 点で発射台が増える
-status: review
+status: stable
 version: 1.2
 updated: 2026-10-28
 sources:
   - MGW-EP-0003（v1.2）
   - doc/specification.md (v1.6) §6.3、§11、§12
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T17:12:02+09:00
 ---
 
 # MGW-US-0019 1,000 点で発射台が増える
