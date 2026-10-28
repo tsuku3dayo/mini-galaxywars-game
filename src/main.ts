@@ -102,7 +102,7 @@ addEventListener('keydown', (e) => {
 const toggle = () => {
   if (!state) return;
   const next = togglePause(state);
-  // 止めたらジェット音も止め、再開して噴射していればまた鳴らす
+  // 止めたら噴射音も止め、再開して噴射していればまた鳴らす
   synth.play(planSounds(state, next));
   state = next;
   // 押していたキー・指を忘れる（再開したとたんに噴射し続けないように）

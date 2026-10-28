@@ -22,7 +22,7 @@ async function startAndScore(page: Page) {
   });
   // 前提：生きている UFO は 1 機
   expect(((await getState(page)).ufos as { isAlive: boolean }[]).filter((u) => u.isAlive)).toHaveLength(1);
-  // 噴射（ジェット音）と UFO の破壊音の場面を通る
+  // 噴射（噴射音）と UFO の破壊音の場面を通る
   await advance(page, 1, { boost: true });
   await advance(page, 30, { boost: true });
   // 1 機倒して点が入った（どの部位に当たったかは見ない。残り 1 機の UFO は速く動くため）
