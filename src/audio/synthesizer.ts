@@ -7,16 +7,18 @@ export interface Synthesizer {
   /** resume()。iPhone では、最初のタッチの中で呼ぶ。失敗しても投げない（state() が unavailable になる） */
   unlock(): Promise<void>;
   play(commands: SoundCommand[]): void;
-  /** 鳴っている音（ジェット音）を止める */
+  /** 鳴っている音（噴射音）を止める */
   stopAll(): void;
   state(): AudioState;
 }
 
 const MASTER_GAIN = 0.3;
-const JET_GAIN = 0.15;
-const JET_LOW = 440;
-const JET_HIGH = 880;
-const JET_SWEEP_S = 0.3;
+/** 噴射音（ノイズの「シュー」。仕様書 v1.6、MGW-TD-0005） */
+const JET_GAIN = 0.12;
+const JET_BAND_HZ = 1200;
+const JET_Q = 0.8;
+const JET_ATTACK_S = 0.05;
+const JET_RELEASE_S = 0.08;
 const UFO_S = 0.4;
 const EXTEND_NOTES = [523, 659, 784];
 const EXTEND_STEP_S = 0.12;
@@ -71,31 +73,35 @@ export function createSynthesizer(make: () => AudioContext = () => new AudioCont
     return g;
   };
 
-  let jet: { osc: OscillatorNode; lfo: OscillatorNode } | null = null;
+  let jet: { src: AudioBufferSourceNode; env: GainNode } | null = null;
+  // 0.08 秒かけて音量を 0 に下げてから止める（ぷつっと切れないように）
   const jetOff = () => {
     if (!jet) return;
-    jet.osc.stop();
-    jet.lfo.stop();
+    const t = ctx.currentTime;
+    jet.env.gain.setValueAtTime(JET_GAIN, t);
+    jet.env.gain.linearRampToValueAtTime(0, t + JET_RELEASE_S);
+    jet.src.stop(t + JET_RELEASE_S);
     jet = null;
   };
 
   const sounds: Record<SoundCommand, (t: number) => void> = {
-    // 矩形波を 440 → 880 Hz へ 0.3 秒で上げ、くり返す。のこぎり波の LFO で周波数を動かす（-1〜1 → 440〜880）
+    // ホワイトノイズをくり返し、帯域通過フィルター（1,200 Hz、Q 0.8）に通した「シュー」。0.05 秒で音量 0.12 に上げ、jetOff まで鳴らす
     jetOn(t) {
       if (jet) return;
-      const osc = ctx.createOscillator();
-      osc.type = 'square';
-      osc.frequency.value = (JET_LOW + JET_HIGH) / 2;
-      const lfo = ctx.createOscillator();
-      lfo.type = 'sawtooth';
-      lfo.frequency.value = 1 / JET_SWEEP_S;
-      const depth = ctx.createGain();
-      depth.gain.value = (JET_HIGH - JET_LOW) / 2;
-      lfo.connect(depth).connect(osc.frequency);
-      osc.connect(gainTo(JET_GAIN));
-      osc.start(t);
-      lfo.start(t);
-      jet = { osc, lfo };
+      const env = gainTo(0);
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(JET_GAIN, t + JET_ATTACK_S);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = JET_BAND_HZ;
+      filter.Q.value = JET_Q;
+      filter.connect(env);
+      const src = ctx.createBufferSource();
+      src.buffer = noiseBuffer;
+      src.loop = true;
+      src.connect(filter);
+      src.start(t);
+      jet = { src, env };
     },
     jetOff,
     // ホワイトノイズ（0.4 秒）＋ のこぎり波を 120 → 30 Hz へ指数で下げる。音量を 0.4 秒で 0 へ
@@ -149,7 +155,7 @@ export function createSynthesizer(make: () => AudioContext = () => new AudioCont
         },
       ),
     play(commands) {
-      // 止まっている（iPhone で有効にする前など）ときは鳴らさない。ジェット音だけは止める
+      // 止まっている（iPhone で有効にする前など）ときは鳴らさない。噴射音だけは止める
       if (ctx.state !== 'running') {
         if (commands.includes('jetOff')) jetOff();
         return;

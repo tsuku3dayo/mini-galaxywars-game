@@ -14,7 +14,7 @@ function soundsOf(prev: GameState, stepInput = NO_INPUT) {
 const flying = (): GameState => launch({ ...newGame(0), meteors: [], beams: [], beamTimer: 1e9 });
 
 describe('音の計画', () => {
-  it('MGW-TC-0023-01 加速噴射の間、ミサイルの上昇音（ジェット音）が鳴る。噴射しないときは鳴らない', () => {
+  it('MGW-TC-0023-01 加速噴射の間、ミサイルの噴射音（ノイズの「シュー」という音）が鳴る。噴射しないときは鳴らない', () => {
     const start = flying();
     // 前提：発射後で、噴射していない
     expect(start).toMatchObject({ status: 'playing', missile: { isBoosting: false } });
@@ -54,7 +54,7 @@ describe('音の計画', () => {
     const prev: GameState = { ...flying(), meteors: [meteor], missile: { x: meteor.x, y: meteor.y + 21, isLaunched: true, isBoosting: true } };
     const { next, sounds } = soundsOf(prev, input({ boost: true }));
     expect(next.waitReason).toBe('miss');
-    // 噴射していたらジェット音も止める
+    // 噴射していたら噴射音も止める
     expect(sounds).toEqual(['jetOff', 'miss']);
     // 待ちの間は鳴らし続けない
     expect(soundsOf(next).sounds).toEqual([]);

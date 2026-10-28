@@ -26,7 +26,9 @@ class FakeNode {
   type = '';
   frequency = new FakeParam();
   gain = new FakeParam();
+  Q = new FakeParam();
   buffer: unknown = null;
+  loop = false;
   started: number | null = null;
   stopped: number | null = null;
   connect<T>(to: T) {
@@ -65,22 +67,39 @@ const make = (state?: AudioContextState) => {
 const oscillators = (nodes: FakeNode[]) => nodes.filter((n) => n.kind === 'oscillator');
 
 describe('音の合成（MGW-TD-0005）', () => {
-  it('ジェット音：矩形波を 440〜880 Hz で動かし、jetOff で止める', () => {
+  it('噴射音（MGW-TC-0023-01 の音色）：ノイズを帯域通過フィルター（1,200 Hz、Q 0.8）に通した「シュー」を、jetOn から jetOff まで鳴らす', () => {
     const { synth, nodes } = make();
     synth.play(['jetOn']);
-    const [osc, lfo] = oscillators(nodes);
-    expect(osc!.type).toBe('square');
-    expect(osc!.frequency.value).toBe(660);
-    expect(lfo!.type).toBe('sawtooth');
-    expect(lfo!.frequency.value).toBeCloseTo(1 / 0.3, 9);
-    // LFO の深さ 220：660 ± 220 → 440〜880 Hz
-    expect(nodes.some((n) => n.kind === 'gain' && n.gain.value === 220)).toBe(true);
+    // 矩形波などのオシレーターは使わず、くり返すノイズだけ
+    expect(oscillators(nodes)).toHaveLength(0);
+    const src = nodes.find((n) => n.kind === 'buffer')!;
+    expect(src.loop).toBe(true);
+    expect(src.started).toBe(10);
+    expect(src.stopped).toBeNull();
+    const filter = nodes.find((n) => n.kind === 'filter')!;
+    expect(filter.type).toBe('bandpass');
+    expect(filter.frequency.value).toBe(1200);
+    expect(filter.Q.value).toBe(0.8);
+    // 0.05 秒で音量 0.12 に上げる
+    const env = nodes.find((n) => n.kind === 'gain' && n.gain.calls.length > 0)!;
+    expect(env.gain.calls).toEqual([
+      ['set', 0, 10],
+      ['linear', 0.12, 10.05],
+    ]);
     // 2 回目の jetOn では重ねない
     synth.play(['jetOn']);
-    expect(oscillators(nodes)).toHaveLength(2);
+    expect(nodes.filter((n) => n.kind === 'buffer')).toHaveLength(1);
+    // jetOff：0.08 秒で 0 に下げてから止める
     synth.play(['jetOff']);
-    expect(osc!.stopped).not.toBeNull();
-    expect(lfo!.stopped).not.toBeNull();
+    expect(env.gain.calls.slice(2)).toEqual([
+      ['set', 0.12, 10],
+      ['linear', 0, 10.08],
+    ]);
+    expect(src.stopped).toBeCloseTo(10.08, 9);
+    // 止めたあとの jetOff は何もしない。もう一度 jetOn で鳴らし直せる
+    synth.play(['jetOff']);
+    synth.play(['jetOn']);
+    expect(nodes.filter((n) => n.kind === 'buffer')).toHaveLength(2);
   });
 
   it('破壊音：ノイズ 0.4 秒と、のこぎり波 120 → 30 Hz', () => {
