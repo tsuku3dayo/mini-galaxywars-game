@@ -3,12 +3,12 @@ id: MGW-TC-0013
 type: test-case
 title: 当てた部位で得点が変わる
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-28
 sources:
   - MGW-US-0013（v1.1）
-  - MGW-TST-0001（v1.1）
-  - MGW-TD-0002（v1.3）
+  - MGW-TST-0001（v1.2）
+  - MGW-TD-0002（v1.4）
 verified: null
 ---
 
@@ -26,3 +26,5 @@ verified: null
 | MGW-TC-0013-01 | 1 | 側面・上部は 50 点、下部中央は 100 点、下部の突起（2 か所）は 150 点 | 自動（単体） | `tests/unit/scoring.test.ts` |
 | MGW-TC-0013-02 | 2 | 3 機を倒したあと、4 機目の突起に当てると 600 点 | 自動（単体） | `tests/unit/scoring.test.ts` |
 | MGW-TC-0013-03 | 3 | 4 機目でも、突起以外に当てたときは通常の得点 | 自動（単体） | `tests/unit/scoring.test.ts` |
+| MGW-TC-0013-04 | 4 | 倒した UFO の位置に爆発が 0.4 秒出て、そのあと同じ位置に入った得点が、倒してから 1 秒まで出る | 自動（単体） | `tests/unit/kill-effect.test.ts` |
+| MGW-TC-0013-05 | 4 | 倒した UFO の位置に爆発が 0.4 秒出て、そのあと同じ位置に入った得点が、倒してから 1 秒まで出る | 手動（PC） | UFO を倒すと、その場所に爆発が出て、すぐあとに得点（`100` など）が少しの間出る |

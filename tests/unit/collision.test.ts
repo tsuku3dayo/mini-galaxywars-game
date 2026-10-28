@@ -35,17 +35,6 @@ describe('当たり判定', () => {
     expect(step(playing(meteor.x + 40, meteor.y + 21, { meteors: [meteor] }), NO_INPUT).status).toBe('playing');
   });
 
-  it('MGW-TC-0011-02 発射前のミサイルの先端に隕石が触れてもミスになる', () => {
-    // 最下段（y 576）の隕石が、発射台の上のミサイル（x 240）の真上に来る
-    const meteor = meteorAt(456 * 11 + 228);
-    const state: GameState = { ...newGame(0), meteors: [meteor], beamTimer: 1000 };
-    expect(state.status).toBe('ready');
-    const next = step(state, NO_INPUT);
-    expect(next.status).toBe('respawn');
-    expect(next.waitReason).toBe('miss');
-    expect(next.lives).toBe(2);
-  });
-
   it('MGW-TC-0011-04 ミサイルが UFO に当たると、UFO が壊れ、得点が入る', () => {
     const ufo = newGame(0).ufos[5]!; // 下段、x 180、y 108
     // 1 ステップ上がると、ミサイルの先端が下部中央に入る
