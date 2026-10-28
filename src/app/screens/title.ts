@@ -1,4 +1,4 @@
-// タイトル画面（MGW-GUI-0002）。SETTINGS は設定を作る MGW-TASK-0021 で足す
+// タイトル画面（MGW-GUI-0002）
 import { bake, UFO } from '../../render/sprites';
 
 export interface TitleScreen {
@@ -8,7 +8,7 @@ export interface TitleScreen {
 
 const pad5 = (n: number) => String(n).padStart(5, '0');
 
-export function createTitleScreen(root: HTMLElement, touch: boolean, onStart: () => void): TitleScreen {
+export function createTitleScreen(root: HTMLElement, touch: boolean, onStart: () => void, onSettings: () => void): TitleScreen {
   root.replaceChildren();
 
   const high = document.createElement('p');
@@ -34,9 +34,14 @@ export function createTitleScreen(root: HTMLElement, touch: boolean, onStart: ()
   ranking.href = '#/ranking';
   ranking.textContent = 'RANKING';
 
+  const settings = document.createElement('button');
+  settings.type = 'button';
+  settings.textContent = 'SETTINGS';
+  settings.addEventListener('click', onSettings);
+
   const menu = document.createElement('div');
   menu.className = 'title-menu';
-  menu.append(start, ranking);
+  menu.append(start, ranking, settings);
 
   const guide = document.createElement('p');
   guide.className = 'title-guide';
