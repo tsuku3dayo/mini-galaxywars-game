@@ -1,9 +1,40 @@
 // 描く順番・倍率（MGW-TD-0003 §1・§2）。GameState を読むだけで、書き換えない
-import { EXPLOSION_STEPS, FIELD_HEIGHT, FIELD_WIDTH, LAUNCHER_Y, MISSILE_H, UFO_W } from '../core/config';
+import { EXPLOSION_STEPS, FIELD_HEIGHT, FIELD_WIDTH, KILL_EFFECT_STEPS, LAUNCHER_Y, MISSILE_H, UFO_W } from '../core/config';
 import type { GameState } from '../core/types';
 import { overlaysFor, type DisplayMode } from './color-palette';
-import { HUD_CHAR, HUD_LEFT, HUD_LIVES_Y, HUD_RIGHT, HUD_TEXT_Y, hudModel, LIFE_ICON_GAP } from './hud';
-import { BACKFIRE, BEAM, bake, EXPLOSION, FONT, GLYPH_CELL, LAUNCHER, LIFE_ICON, METEOR, MISSILE, UFO, type Sprite } from './sprites';
+import {
+  GROUND_H,
+  GROUND_Y,
+  HUD_CHAR,
+  HUD_LEFT,
+  HUD_RIGHT,
+  HUD_TEXT_Y,
+  hudModel,
+  LIFE_ICON_STEP,
+  LIFE_ICON_Y,
+  LIFE_ICONS_X,
+  lifeModel,
+  LIVES_X,
+  LIVES_Y,
+} from './hud';
+import { killEffectView } from './kill-effect';
+import {
+  BACKFIRE,
+  BEAM,
+  bake,
+  EXPLOSION,
+  FONT,
+  GLYPH_CELL,
+  LAUNCHER,
+  LIFE_ICON,
+  METEOR,
+  METEOR_TRAIL,
+  meteorTrailX,
+  MISSILE,
+  type Sprite,
+  UFO_FRAMES,
+  ufoFrame,
+} from './sprites';
 
 export interface View {
   mode: DisplayMode;
@@ -26,10 +57,11 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
   const ctx = canvas.getContext('2d')!;
   const make = (sprite: Sprite): Baked => ({ sprite, image: bake(sprite) });
   const art = {
-    ufo: make(UFO),
+    ufo: UFO_FRAMES.map(make),
     missile: make(MISSILE),
     launcher: make(LAUNCHER),
     meteor: make(METEOR),
+    meteorTrail: make(METEOR_TRAIL),
     beam: BEAM.map(make),
     backfire: make(BACKFIRE),
     explosion: EXPLOSION.map(make),
@@ -68,16 +100,21 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
       ctx.fillRect(0, 0, FIELD_WIDTH, FIELD_HEIGHT);
       if (!state) return;
 
-      // 2. 隕石 → 光線 → UFO → 発射台 → ミサイル → バックファイア → 爆発
-      for (const m of state.meteors) put(art.meteor, m.x, m.y);
+      // 2. 隕石（尾つき）→ 光線 → UFO（2 コマ）→ 発射台 → ミサイル → バックファイア → 爆発 → UFO を倒したときの爆発・得点
+      for (const m of state.meteors) {
+        put(art.meteor, m.x, m.y);
+        put(art.meteorTrail, meteorTrailX(m), m.y);
+      }
       const beamFrame = art.beam[Math.floor(view.tick / 8) % art.beam.length]!;
       for (const b of state.beams) put(beamFrame, b.x, b.y);
+      // 8 機とも同じコマ（0.25 秒ごとに切り替える）
+      const ufoArt = art.ufo[ufoFrame(view.tick)]!;
       for (const u of state.ufos) {
         if (!u.isAlive) continue;
-        put(art.ufo, u.x, u.y);
+        put(ufoArt, u.x, u.y);
         // 画面の端をまたぐときは、反対の端にも描く
-        if (u.x < UFO_W / 2) put(art.ufo, u.x + FIELD_WIDTH, u.y);
-        if (u.x > FIELD_WIDTH - UFO_W / 2) put(art.ufo, u.x - FIELD_WIDTH, u.y);
+        if (u.x < UFO_W / 2) put(ufoArt, u.x + FIELD_WIDTH, u.y);
+        if (u.x > FIELD_WIDTH - UFO_W / 2) put(ufoArt, u.x - FIELD_WIDTH, u.y);
       }
       const onField = state.status === 'ready' || state.status === 'playing' || state.pausedFrom === 'ready' || state.pausedFrom === 'playing';
       if (onField) {
@@ -92,17 +129,30 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
         const frame = state.explosion.steps > EXPLOSION_STEPS / 2 ? 0 : 1;
         put(art.explosion[frame]!, state.explosion.x, state.explosion.y);
       }
-      // 3. HUD（SCORE・HIGH・残機のアイコン）
+      const effect = killEffectView(state.killEffect);
+      if (effect?.kind === 'explosion') {
+        // 倒してからの前半・後半で 2 枚を切り替える
+        const elapsed = KILL_EFFECT_STEPS - state.killEffect!.steps;
+        put(art.explosion[elapsed < EXPLOSION_STEPS / 2 ? 0 : 1]!, effect.x, effect.y);
+      } else if (effect?.kind === 'points') {
+        const label = String(effect.points);
+        text(label, Math.round(effect.x - (label.length * HUD_CHAR) / 2), Math.round(effect.y - HUD_CHAR / 2));
+      }
+      // 3. 地面と左下の残機（数と控えの発射台のアイコン）
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, GROUND_Y, FIELD_WIDTH, GROUND_H);
+      if (view.showHud) {
+        const lives = lifeModel(state.lives);
+        text(lives.count, LIVES_X, LIVES_Y);
+        for (let i = 0; i < lives.icons; i++) ctx.drawImage(art.lifeIcon.image, LIFE_ICONS_X + i * LIFE_ICON_STEP, LIFE_ICON_Y);
+      }
+      // 4. HUD（SCORE・HIGH）
       if (view.showHud) {
         const hud = hudModel(state);
         text(hud.score, HUD_LEFT, HUD_TEXT_Y);
         text(hud.high, HUD_RIGHT - hud.high.length * HUD_CHAR, HUD_TEXT_Y);
-        const icon = art.lifeIcon;
-        for (let i = 0; i < hud.lifeIcons; i++) {
-          ctx.drawImage(icon.image, HUD_RIGHT - icon.sprite.w - i * (icon.sprite.w + LIFE_ICON_GAP), HUD_LIVES_Y);
-        }
       }
-      // 4. 擬似カラー・5. 被弾フラッシュ
+      // 5. 擬似カラー・6. 被弾フラッシュ
       for (const o of overlaysFor(view.mode, state.flashSteps)) {
         ctx.globalCompositeOperation = o.op;
         ctx.fillStyle = o.color;
