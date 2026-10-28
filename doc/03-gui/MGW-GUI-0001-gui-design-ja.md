@@ -2,19 +2,17 @@
 id: MGW-GUI-0001
 type: gui-design
 title: 共通の画面の枠（大きさ・安全領域・色・文字）
-status: stable
-version: 1.0
-updated: 2026-10-26
+status: review
+version: 1.1
+updated: 2026-10-28
 sources:
-  - MGW-US-0002（v1.0）
+  - MGW-US-0002（v1.1）
   - MGW-US-0005（v1.0）
   - MGW-US-0021（v1.0）
   - MGW-US-0022（v1.0）
-  - MGW-ADR-0007（v1.1）
-  - doc/specification.md (v1.5) §1.2、§2、§18
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T16:52:10+09:00
+  - MGW-ADR-0007（v1.2）
+  - doc/specification.md (v1.6) §1.2、§2、§18
+verified: null
 ---
 
 # MGW-GUI-0001 共通の画面の枠
@@ -83,8 +81,8 @@ verified:
 
 | 場所 | 文言 |
 | :--- | :--- |
-| マニフェストの `name`、タイトル画面、`<title>` | ギャラクシーウォーズミニ |
-| マニフェストの `short_name`（ホーム画面） | GWミニ |
+| マニフェストの `name`、タイトル画面、`<title>` | 銀河戦争ミニ |
+| マニフェストの `short_name`（ホーム画面） | 銀河戦争ミニ（仕様書 v1.6 で「GWミニ」から変えた） |
 
 ## 7. 画面の一覧
 

@@ -2,15 +2,13 @@
 id: MGW-US-0008
 type: user-story
 title: UFO が 2 段で動く
-status: stable
-version: 1.0
-updated: 2026-10-26
+status: review
+version: 1.1
+updated: 2026-10-28
 sources:
   - MGW-EP-0002（v1.0）
-  - doc/specification.md (v1.5) §2.1、§3.2、§11
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  - doc/specification.md (v1.6) §2.1、§3.2、§11
+verified: null
 ---
 
 # MGW-US-0008 UFO が 2 段で動く
@@ -30,7 +28,8 @@ verified:
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
 | 1 | 上段の 4 機（y 64–88）は右へ、下段の 4 機（y 96–120）は左へ動く | 単体 |
-| 2 | 速さは残りの機数で変わる：8 機 80、7 機 100、6 機 120、5 機 140、4 機 160、3 機 180、2 機 240、1 機 320 px/秒 | 単体 |
+| 2 | 速さは残りの機数で変わる：8 機 20、7 機 25、6 機 30、5 機 35、4 機 40、3 機 45、2 機 60、1 機 80 px/秒 | 単体 |
+| 3 | UFO は 2 コマの絵を 0.25 秒ごとに切り替え、羽ばたくように見える | 単体・手動（PC） |
 
 ## メモ
 

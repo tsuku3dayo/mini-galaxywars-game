@@ -10,14 +10,14 @@ sources:
   - MGW-TS-0001（v1.1）
   - MGW-ADR-0001（v1.0）
   - MGW-ADR-0002（v1.0）
-  - MGW-GUI-0001（v1.0）
-  - MGW-GUI-0002（v1.0）
-  - MGW-GUI-0003（v1.0）
+  - MGW-GUI-0001（v1.1）
+  - MGW-GUI-0002（v1.1）
+  - MGW-GUI-0003（v1.1）
   - MGW-GUI-0004（v1.0）
   - MGW-GUI-0005（v1.0）
   - MGW-GUI-0006（v1.0）
   - MGW-GUI-0007（v1.0）
-  - doc/specification.md (v1.5) §16〜§18
+  - doc/specification.md (v1.6) §16〜§18
 verified: null
 ---
 

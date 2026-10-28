@@ -6,8 +6,8 @@ status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
-  - MGW-PB-0001（v1.2） §2
-  - doc/specification.md (v1.5) §1.1、§19
+  - MGW-PB-0001（v1.3） §2
+  - doc/specification.md (v1.6) §1.1、§19
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:22:35+09:00

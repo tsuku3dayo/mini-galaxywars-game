@@ -2,15 +2,13 @@
 id: MGW-US-0019
 type: user-story
 title: 1,000 点で発射台が増える
-status: stable
-version: 1.1
+status: review
+version: 1.2
 updated: 2026-10-28
 sources:
-  - MGW-EP-0003（v1.1）
-  - doc/specification.md (v1.5) §6.3、§11、§12
-verified:
-  by: tsuku3dayo
-  at: 2026-10-28T11:33:39+09:00
+  - MGW-EP-0003（v1.2）
+  - doc/specification.md (v1.6) §6.3、§11、§12
+verified: null
 ---
 
 # MGW-US-0019 1,000 点で発射台が増える
@@ -29,7 +27,7 @@ verified:
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | スコアが 1,000 点に届くと、残機が 1 基増え、HUD の発射台のアイコンが 1 つ増える | 単体・E2E |
+| 1 | スコアが 1,000 点に届くと、残機が 1 基増え、左下の残機の数とアイコンが 1 つ増える | 単体・E2E |
 | 2 | 増機は 1 回だけ | 単体 |
 | 3 | 増えたときに増機音が鳴る（音は MGW-US-0023） | 単体 |
 

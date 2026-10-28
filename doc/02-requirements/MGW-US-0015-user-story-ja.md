@@ -1,19 +1,17 @@
 ---
 id: MGW-US-0015
 type: user-story
-title: HUD でスコアと残機を見る
-status: stable
-version: 1.0
-updated: 2026-10-26
+title: スコアと残機を見る
+status: review
+version: 1.1
+updated: 2026-10-28
 sources:
-  - MGW-EP-0003（v1.1）
-  - doc/specification.md (v1.5) §2、§2.1、§6.3
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  - MGW-EP-0003（v1.2）
+  - doc/specification.md (v1.6) §2、§2.1、§6.3
+verified: null
 ---
 
-# MGW-US-0015 HUD でスコアと残機を見る
+# MGW-US-0015 スコアと残機を見る
 
 * **epic**：MGW-EP-0003
 * **優先順位**：3-2
@@ -29,10 +27,11 @@ verified:
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | HUD 帯（y 0–48）に「SCORE」「HIGH」と残機が出る | E2E |
+| 1 | HUD 帯（y 0–48）に「SCORE」「HIGH」が出て、残機は画面の左下（地面の下）に出る | E2E |
 | 2 | スコアは 5 桁のゼロ詰め（例：`00150`）で出る | 単体 |
-| 3 | 残機は、ミサイルではなく発射台のアイコンの数で出る | 手動（PC） |
+| 3 | 残機は、数（画面に出ている 1 基を含む）と、控えの発射台のアイコン（数 − 1 個）で出る。アイコンはミサイルではなく発射台の形 | 単体・手動（PC） |
 | 4 | HIGH は、ランキングの 1 位のスコアと、今のスコアの大きい方 | 単体 |
+| 5 | 発射台の下に、地面の横線が出る | 手動（PC） |
 
 ## メモ
 

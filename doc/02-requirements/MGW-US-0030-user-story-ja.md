@@ -7,7 +7,7 @@ version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0002（v1.0）
-  - doc/specification.md (v1.5) §1.2、§5.1、§10、§25
+  - doc/specification.md (v1.6) §1.2、§5.1、§10、§25
   - MGW-ADR-0001（v1.0）
   - MGW-ADR-0002（v1.0）
 verified:

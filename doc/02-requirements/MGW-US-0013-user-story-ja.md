@@ -2,15 +2,13 @@
 id: MGW-US-0013
 type: user-story
 title: 当てた部位で得点が変わる
-status: stable
-version: 1.0
-updated: 2026-10-26
+status: review
+version: 1.1
+updated: 2026-10-28
 sources:
   - MGW-EP-0002（v1.0）
-  - doc/specification.md (v1.5) §6.1、§6.2
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  - doc/specification.md (v1.6) §6.1、§6.2
+verified: null
 ---
 
 # MGW-US-0013 当てた部位で得点が変わる
@@ -32,6 +30,7 @@ verified:
 | 1 | 側面・上部は 50 点、下部中央は 100 点、下部の突起（2 か所）は 150 点 | 単体 |
 | 2 | 3 機を倒したあと、4 機目の突起に当てると 600 点 | 単体 |
 | 3 | 4 機目でも、突起以外に当てたときは通常の得点 | 単体 |
+| 4 | 倒した UFO の位置に爆発が 0.4 秒出て、そのあと同じ位置に入った得点が、倒してから 1 秒まで出る | 単体・手動（PC） |
 
 ## メモ
 
