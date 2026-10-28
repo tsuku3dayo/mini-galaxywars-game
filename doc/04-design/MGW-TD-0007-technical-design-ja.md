@@ -3,8 +3,8 @@ id: MGW-TD-0007
 type: technical-design
 title: PWA・起動の復旧・ビルド・CI・Lint の設計
 status: stable
-version: 1.3
-updated: 2026-10-27
+version: 1.4
+updated: 2026-10-28
 sources:
   - MGW-TD-0001（v1.0）
   - MGW-TS-0001（v1.1）
@@ -36,12 +36,12 @@ verified: null
 | `registerType` | `'prompt'`（MGW-ADR-0004） |
 | `workbox.cacheId` | `'mini-galaxywars'`（MGW-ADR-0005） |
 | `workbox.globPatterns` | `['**/*.{html,js,css,png,svg,webmanifest}']` |
-| `manifest.name`・`short_name` | `ギャラクシーウォーズミニ`・`GWミニ`（MGW-GUI-0001 §6） |
+| `manifest.name`・`short_name` | `銀河戦争ミニ`・`銀河戦争ミニ`（MGW-GUI-0001 §6、仕様書 v1.6） |
 | `manifest.display`・`orientation` | `standalone`・`portrait` |
 | `manifest.start_url`・`scope` | `/mini-galaxywars-game/` |
 | `manifest.icons` | 192・512 の PNG（`public/icons/`）、iPhone 用に 180 の `apple-touch-icon` |
 
-- `index.html` の head：`viewport-fit=cover`、`apple-mobile-web-app-capable`、`apple-mobile-web-app-status-bar-style = black-translucent`、`apple-mobile-web-app-title = GWミニ`（試作と同じ）。
+- `index.html` の head：`viewport-fit=cover`、`apple-mobile-web-app-capable`、`apple-mobile-web-app-status-bar-style = black-translucent`、`apple-mobile-web-app-title = 銀河戦争ミニ`。
 - 03 の試作は、公開の workflow で `dist/prototype/` に写して、いっしょに公開し続ける。
 
 ## 2. 更新（`app/pwa.ts`）
@@ -110,3 +110,4 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 | 1.1 | 2026-10-26 | §6：e2e は Playwright のコンテナで動かす。§8：typescript-eslint は型を使わない推奨にした（どちらも MGW-TASK-0001 の実装に合わせる） |
 | 1.2 | 2026-10-27 | §2：画面が見えたときにも新しい版を確かめる。待っていた版が次に開いたときに使われることを書いた（WS-0001 の手動テストで、iPhone に「更新」の案内が出なかったため） |
 | 1.3 | 2026-10-27 | §2：登録の直後にも新しい版を確かめる（WS-0001 の手動テストの診断で、iPhone のホーム画面のアプリは、登録の時点ではまだ確かめていなかったため） |
+| 1.4 | 2026-10-28 | §2 ほか：アプリ名を「銀河戦争ミニ」にする（`name`・`short_name`・`<title>`・`apple-mobile-web-app-title`。仕様書 v1.6） |
