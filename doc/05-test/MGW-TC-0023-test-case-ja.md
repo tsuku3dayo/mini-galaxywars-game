@@ -3,12 +3,12 @@ id: MGW-TC-0023
 type: test-case
 title: 効果音が鳴る
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-28
 sources:
   - MGW-US-0023（v1.1）
-  - MGW-TST-0001（v1.0）
-  - MGW-TD-0002（v1.2）
+  - MGW-TST-0001（v1.1）
+  - MGW-TD-0002（v1.3）
   - MGW-TD-0005（v1.0）
   - MGW-TD-0007（v1.3）
 verified: null
@@ -30,7 +30,7 @@ verified: null
 | MGW-TC-0023-03 | 2 | UFO を壊すと破壊音（ホワイトノイズ＋ 120 Hz → 30 Hz の低音）が鳴る | 自動（単体） | `tests/unit/sound-plan.test.ts` |
 | MGW-TC-0023-04 | 2 | UFO を壊すと破壊音（ホワイトノイズ＋ 120 Hz → 30 Hz の低音）が鳴る | 手動（iPhone・PC） | UFO を壊すと、ノイズと低くなっていく音が鳴る |
 | MGW-TC-0023-05 | 3 | 増機すると増機音（三角波 523 → 659 → 784 Hz のアルペジオ）が鳴る | 自動（単体） | `tests/unit/sound-plan.test.ts` |
-| MGW-TC-0023-06 | 3 | 増機すると増機音（三角波 523 → 659 → 784 Hz のアルペジオ）が鳴る | 手動（iPhone・PC） | 3,000 点に届くと、3 つの音が上がっていく増機音が鳴る |
+| MGW-TC-0023-06 | 3 | 増機すると増機音（三角波 523 → 659 → 784 Hz のアルペジオ）が鳴る | 手動（iPhone・PC） | 1,000 点に届くと、3 つの音が上がっていく増機音が鳴る（下部中央・突起を狙うか、4 機目の突起で 600 点を取ると届く） |
 | MGW-TC-0023-07 | 4 | ミスすると爆発音（重低音のノイズ）が鳴る | 自動（単体） | `tests/unit/sound-plan.test.ts` |
 | MGW-TC-0023-08 | 4 | ミスすると爆発音（重低音のノイズ）が鳴る | 手動（iPhone・PC） | ミスすると、低い爆発音が鳴る |
 | MGW-TC-0023-09 | 5 | 音のファイルを使わず、Web Audio で合成する | 自動（dist の検査） | `scripts/check-dist.mjs` |

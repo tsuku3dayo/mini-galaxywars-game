@@ -3,15 +3,15 @@ id: MGW-TASK-0011
 type: implementation-task
 title: HUD と終わりの表示
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-28
 sources:
-  - MGW-WS-0003（v1.0）
+  - MGW-WS-0003（v1.1）
   - MGW-TD-0003（v1.0）
   - MGW-TD-0004（v1.0）
   - MGW-TC-0015（v1.0）
   - MGW-TC-0017（v1.0）
-  - MGW-TC-0019（v1.0）
+  - MGW-TC-0019（v1.1）
 verified: null
 ---
 
@@ -36,7 +36,7 @@ verified: null
 | MGW-TC-0015-03 | MGW-US-0015 | 残機は、ミサイルではなく発射台のアイコンの数で出る | 手動（PC） |
 | MGW-TC-0015-04 | MGW-US-0015 | HIGH は、ランキングの 1 位のスコアと、今のスコアの大きい方 | 自動（単体） |
 | MGW-TC-0017-02 | MGW-US-0017 | UFO を 8 機すべて倒すと、クリアの表示が出てゲームが終わる | 自動（E2E） |
-| MGW-TC-0019-02 | MGW-US-0019 | スコアが 3,000 点に届くと、残機が 1 基増え、HUD の発射台のアイコンが 1 つ増える | 自動（E2E） |
+| MGW-TC-0019-02 | MGW-US-0019 | スコアが 1,000 点に届くと、残機が 1 基増え、HUD の発射台のアイコンが 1 つ増える | 自動（E2E） |
 
 ## 終わりの条件
 

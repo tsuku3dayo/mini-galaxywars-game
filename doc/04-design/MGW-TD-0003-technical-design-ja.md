@@ -7,7 +7,7 @@ version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-TD-0001（v1.0）
-  - MGW-TD-0002（v1.2）
+  - MGW-TD-0002（v1.3）
   - MGW-GUI-0001（v1.0）
   - MGW-GUI-0003（v1.0）
   - MGW-GUI-0006（v1.0）
