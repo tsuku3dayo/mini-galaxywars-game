@@ -269,14 +269,19 @@ body:not([data-screen='play']) #overlay-message {
   line-height: 1.5;
 }
 
-/* iPhone SE の高さでも、10 件・書き出し・読み込み・知らせ・TITLE が収まるよう詰める */
+/*
+ * iPhone SE の高さでも、10 件・書き出し・読み込み・知らせ・TITLE が収まるよう詰める。
+ * フォントで行の高さが変わらないよう（CI の Linux は少し高い）、行の高さを決めておく
+ */
 #screen-ranking {
   gap: 8px;
   padding: 8px;
+  line-height: 20px;
 }
 
 #screen-ranking h2 {
   font-size: 24px;
+  line-height: 28px;
   margin: 0;
 }
 
@@ -288,7 +293,8 @@ body:not([data-screen='play']) #overlay-message {
 
 .ranking-table th,
 .ranking-table td {
-  padding: 1px 6px;
+  padding: 0 6px;
+  line-height: 18px;
   text-align: left;
   white-space: pre;
 }
