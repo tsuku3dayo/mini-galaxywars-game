@@ -1,4 +1,4 @@
-// プレイ画面の中央の表示と Pause（MGW-GUI-0003 §2・§4、MGW-TD-0004 §4・§5）。ランキング登録への分かれ道は MGW-TASK-0018 で足す
+// プレイ画面の中央の表示と Pause（MGW-GUI-0003 §2・§4、MGW-TD-0004 §4・§5）
 import { STEPS_PER_SECOND } from '../../core/config';
 import type { GameState } from '../../core/types';
 import { setData } from '../debug';
@@ -29,7 +29,11 @@ export function createPauseButton(topbar: HTMLElement, onToggle: () => void): vo
   topbar.append(pause);
 }
 
-export function createPlayOverlay(root: HTMLElement, onResume: () => void): PlayOverlay {
+/**
+ * onEnd は、終わってから END_WAIT_MS たったときに 1 回だけ呼ぶ。
+ * ランキング登録（名前の入力）に進んだら true を返す。false なら「TITLE」を出す
+ */
+export function createPlayOverlay(root: HTMLElement, onResume: () => void, onEnd: (score: number) => boolean): PlayOverlay {
   const section = document.createElement('section');
   section.id = 'overlay-message';
   const main = document.createElement('p');
@@ -45,6 +49,8 @@ export function createPlayOverlay(root: HTMLElement, onResume: () => void): Play
   root.append(section);
 
   let endedAt: number | null = null;
+  /** 待ったあとの行き先（null はまだ決めていない） */
+  let toEntry: boolean | null = null;
 
   return {
     update(state) {
@@ -60,9 +66,18 @@ export function createPlayOverlay(root: HTMLElement, onResume: () => void): Play
         mainText = cleared ? 'GOOD!!' : 'GAME OVER';
         subText = cleared ? 'STAGE CLEAR' : '';
         overlay = cleared ? 'clear' : 'gameover';
-        showTitle = now - endedAt >= END_WAIT_MS;
+        if (now - endedAt >= END_WAIT_MS) {
+          toEntry ??= onEnd(state.score);
+          showTitle = !toEntry;
+          if (toEntry) {
+            // 名前の入力を重ねるので、中央の表示は消す
+            mainText = '';
+            overlay = 'entry';
+          }
+        }
       } else {
         endedAt = null;
+        toEntry = null;
         if (paused) {
           mainText = 'PAUSE';
           overlay = 'pause';

@@ -273,3 +273,93 @@ body:not([data-screen='play']) #overlay-message {
   font-size: 28px;
   margin: 0;
 }
+
+/* ランキングの一覧（MGW-GUI-0005 §2）。名前の空白も詰めずに出す */
+.ranking-table {
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 2px 6px;
+  text-align: left;
+  white-space: pre;
+}
+
+.ranking-table th {
+  border-bottom: 2px solid var(--fg);
+}
+
+.ranking-table td:nth-child(-n + 2) {
+  text-align: right;
+}
+
+.ranking-table[hidden],
+#screen-ranking p[hidden] {
+  display: none;
+}
+
+/* ランキング登録（MGW-GUI-0004）。キーボードに隠れないよう、画面の上半分に置く */
+#overlay-entry {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 24px 16px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+#overlay-entry[hidden],
+body:not([data-screen='play']) #overlay-entry {
+  display: none;
+}
+
+#overlay-entry h2 {
+  font-size: 28px;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.entry-rank {
+  font-size: 22px;
+  margin: 0;
+  white-space: pre;
+}
+
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.entry-form p {
+  margin: 0;
+}
+
+/* 文字を打てるようにする。16px より小さいと iPhone が拡大してしまう */
+#entry-name {
+  font: inherit;
+  font-size: 22px;
+  width: 12ch;
+  padding: 6px 8px;
+  color: var(--fg);
+  background: var(--bg);
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  text-transform: uppercase;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.entry-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}

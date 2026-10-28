@@ -72,5 +72,12 @@ export function watchLayout(
   addEventListener('scroll', resetScroll);
   visualViewport?.addEventListener('scroll', resetScroll);
   visualViewport?.addEventListener('resize', resetScroll);
+  // 名前の入力のあと（キーボードが閉じたあと）に、大きさとスクロールを戻す（MGW-TD-0004 §3）
+  document.addEventListener('focusout', () =>
+    setTimeout(() => {
+      apply();
+      resetScroll();
+    }, 0),
+  );
   apply();
 }

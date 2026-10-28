@@ -9,8 +9,10 @@ import { createLoop } from './app/loop';
 import { createStepStats } from './app/step-stats';
 import { setupPwa } from './app/pwa';
 import { watchRoute, type Screen } from './app/router';
+import { createEntryOverlay } from './app/screens/entry';
 import { createPauseButton, createPlayOverlay } from './app/screens/play';
 import { createRankingScreen } from './app/screens/ranking';
+import { createRankingStore } from './storage/ranking-store';
 import { createTitleScreen } from './app/screens/title';
 import { createUpdateBanner } from './app/screens/update-banner';
 import { createRenderer } from './render/canvas';
@@ -60,10 +62,14 @@ const start = () => {
   location.hash = '#/play';
 };
 const title = createTitleScreen(document.getElementById('screen-title')!, touch, start);
-// ランキングの 1 位は MGW-TASK-0017 のあとで読む。それまでは 0
-title.refresh(0);
-createRankingScreen(document.getElementById('screen-ranking')!);
+// ランキング（MGW-TD-0006）
+const ranking = createRankingStore(localStorage, () => new Date());
+const topScore = () => ranking.load()[0]?.score ?? 0;
+const rankingScreen = createRankingScreen(document.getElementById('screen-ranking')!);
+/** 名前の入力欄で打っているときは、ゲームのキー（Space・P など）として扱わない */
+const typing = (e: KeyboardEvent) => e.target instanceof HTMLInputElement;
 addEventListener('keydown', (e) => {
+  if (typing(e)) return;
   if (screen === 'title' && e.code === 'Space' && !e.repeat) {
     e.preventDefault();
     start();
@@ -81,8 +87,30 @@ const toggle = () => {
   draw();
 };
 createPauseButton(document.getElementById('topbar')!, toggle);
-const overlay = createPlayOverlay(stage, toggle);
+// ランキング登録（MGW-GUI-0004）。終わって 3 秒たち、上位 10 件に入るときに重ねて出す
+let entryScore = 0;
+const entry = createEntryOverlay(stage, {
+  onSubmit(name) {
+    try {
+      ranking.add(entryScore, name);
+    } catch {
+      // 保存できなくても（容量・設定など）、ランキング画面へは進む
+    }
+    location.hash = '#/ranking';
+  },
+  onSkip() {
+    location.hash = '#/title';
+  },
+});
+const overlay = createPlayOverlay(stage, toggle, (score) => {
+  const rank = ranking.rankOf(score);
+  if (rank === null) return false;
+  entryScore = score;
+  entry.show(rank, score);
+  return true;
+});
 addEventListener('keydown', (e) => {
+  if (typing(e)) return;
   if (screen === 'play' && (e.code === 'KeyP' || e.code === 'Escape') && !e.repeat) {
     e.preventDefault();
     toggle();
@@ -152,15 +180,18 @@ watchRoute((next) => {
   screen = next;
   setData('screen', screen);
   banner.refresh(screen, updateWaiting);
+  entry.hide();
   if (screen === 'play') {
-    // ランキングの 1 位は MGW-TASK-0017 のあとで読む。それまでは 0
-    state = newGame(0);
+    // HIGH はランキングの 1 位から始める（MGW-TD-0004 §1）
+    state = newGame(topScore());
     input.reset();
     loop.start();
   } else {
     loop.stop();
     synth.stopAll();
     state = null;
+    if (screen === 'title') title.refresh(topScore());
+    if (screen === 'ranking') rankingScreen.refresh(ranking.load());
   }
   draw();
 });

@@ -80,3 +80,56 @@ export function hasInk(page: Page, x: number, y: number, w: number, h: number): 
 export function clearField(page: Page): Promise<void> {
   return setState(page, { meteors: [], beams: [], beamTimer: 1e9 });
 }
+
+export interface RankingRow {
+  score: number;
+  name: string;
+  date: string;
+}
+
+/** localStorage のランキング（MGW-TD-0006 §1.1）を入れる。読むのは、終わったとき・画面に入ったとき */
+export function seedRanking(page: Page, entries: RankingRow[]): Promise<void> {
+  return page.evaluate(
+    (e) => localStorage.setItem('galaxy-wars-scores', JSON.stringify({ app: 'mini-galaxywars', version: 1, entries: e })),
+    entries,
+  );
+}
+
+/** 99,999 点で 10 件うまったランキング（どのスコアも入らない） */
+export const FULL_RANKING: RankingRow[] = Array.from({ length: 10 }, () => ({ score: 99_999, name: 'TOP', date: '2026-10-01T12:00:00+09:00' }));
+
+/**
+ * プレイ画面を開き、決めたスコアでゲームを終わらせる。
+ * clear：7 機を倒した状態で、8 機目（下段の id 5）に当てる。gameOver：残り 0 機でミスの待ちを終える。
+ * 終わったときのスコアを返す（クリアは当たった部位の点が足される）
+ */
+export async function endGame(page: Page, kind: 'clear' | 'gameOver', scoreBefore: number): Promise<number> {
+  await freeze(page, true);
+  if (kind === 'clear') {
+    const base = await getState(page);
+    const ufos = (base.ufos as { id: number; x: number; y: number; isAlive: boolean }[]).map((u) => ({ ...u, isAlive: u.id === 5 }));
+    const last = ufos[5]!;
+    await setState(page, {
+      ufos,
+      killCount: 7,
+      score: scoreBefore,
+      status: 'playing',
+      missile: { x: last.x, y: last.y + 21, isLaunched: true, isBoosting: false },
+      meteors: [],
+      beams: [],
+      beamTimer: 1e9,
+    });
+    await advance(page, 1);
+    await expect(page.locator('body')).toHaveAttribute('data-status', 'cleared');
+  } else {
+    await setState(page, { score: scoreBefore, lives: 0, status: 'respawn', waitReason: 'miss', waitSteps: 1, meteors: [], beams: [], beamTimer: 1e9 });
+    await advance(page, 2);
+    await expect(page.locator('body')).toHaveAttribute('data-status', 'gameOver');
+  }
+  return (await getState(page)).score as number;
+}
+
+/** 名前の入力の「順位とスコア」の行の文字（例：3RD  01250） */
+export function rankLine(rank: string, score: number): string {
+  return `${rank}  ${String(score).padStart(5, '0')}`;
+}
