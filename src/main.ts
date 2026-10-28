@@ -12,7 +12,9 @@ import { watchRoute, type Screen } from './app/router';
 import { createEntryOverlay } from './app/screens/entry';
 import { createPauseButton, createPlayOverlay } from './app/screens/play';
 import { createRankingScreen } from './app/screens/ranking';
+import { createSettingsOverlay } from './app/screens/settings';
 import { createRankingStore } from './storage/ranking-store';
+import { createSettingsStore } from './storage/settings-store';
 import { createTitleScreen } from './app/screens/title';
 import { createUpdateBanner } from './app/screens/update-banner';
 import { createRenderer } from './render/canvas';
@@ -61,7 +63,27 @@ const start = () => {
   unlockAudio();
   location.hash = '#/play';
 };
-const title = createTitleScreen(document.getElementById('screen-title')!, touch, start);
+// 設定（表示方式。MGW-GUI-0006、MGW-TD-0006 §2）。タイトルの上に重ねる
+const settingsStore = createSettingsStore(localStorage);
+let displayMode = settingsStore.loadDisplayMode();
+setData('displayMode', displayMode);
+const settings = createSettingsOverlay(
+  stage,
+  (mode) => {
+    displayMode = mode;
+    try {
+      settingsStore.saveDisplayMode(mode);
+    } catch {
+      // 保存できなくても、今回は選んだ方式で描く
+    }
+    setData('displayMode', mode);
+  },
+  () => setData('overlay', 'none'),
+);
+const title = createTitleScreen(document.getElementById('screen-title')!, touch, start, () => {
+  settings.show(displayMode);
+  setData('overlay', 'settings');
+});
 // ランキング（MGW-TD-0006）
 const ranking = createRankingStore(localStorage, () => new Date());
 const topScore = () => ranking.load()[0]?.score ?? 0;
@@ -70,7 +92,8 @@ const rankingScreen = createRankingScreen(document.getElementById('screen-rankin
 const typing = (e: KeyboardEvent) => e.target instanceof HTMLInputElement;
 addEventListener('keydown', (e) => {
   if (typing(e)) return;
-  if (screen === 'title' && e.code === 'Space' && !e.repeat) {
+  // 設定を開いている間は、Space で始めない
+  if (screen === 'title' && !settings.isOpen() && e.code === 'Space' && !e.repeat) {
     e.preventDefault();
     start();
   }
@@ -153,13 +176,14 @@ function runSteps(count: number, fixed?: StepInput): number {
 
 /** 描いて、状態を body の data 属性に出す（MGW-TD-0004 §6.1） */
 function draw(): void {
-  renderer.draw(state, { mode: 'cellophane', showHud: true, tick: state?.stepCount ?? 0 });
+  renderer.draw(state, { mode: displayMode, showHud: true, tick: state?.stepCount ?? 0 });
   setData('status', state?.status ?? '');
   setData('score', state?.score ?? 0);
   setData('high', state ? displayHighScore(state) : 0);
   setData('lives', state?.lives ?? 0);
   setData('audio', synth.state());
   overlay.update(state);
+  if (settings.isOpen()) setData('overlay', 'settings');
   panel?.update(stats, state?.status ?? '');
 }
 
@@ -181,6 +205,7 @@ watchRoute((next) => {
   setData('screen', screen);
   banner.refresh(screen, updateWaiting);
   entry.hide();
+  settings.hide();
   if (screen === 'play') {
     // HIGH はランキングの 1 位から始める（MGW-TD-0004 §1）
     state = newGame(topScore());
