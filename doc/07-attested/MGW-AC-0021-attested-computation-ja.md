@@ -2,13 +2,15 @@
 id: MGW-AC-0021
 type: attested-computation
 title: 表示方式の設定の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-28
 sources:
   - MGW-TASK-0021（v1.0）
   - MGW-TC-0029（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-28T16:15:15+09:00
 ---
 
 # MGW-AC-0021 表示方式の設定の確認
