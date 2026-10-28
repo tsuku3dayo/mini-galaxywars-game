@@ -16,8 +16,8 @@ export default defineConfig({
       injectRegister: false,
       includeAssets: ['icons/icon-180.png'],
       manifest: {
-        name: 'ギャラクシーウォーズミニ',
-        short_name: 'GWミニ',
+        name: '銀河戦争ミニ',
+        short_name: '銀河戦争ミニ',
         lang: 'ja',
         start_url: BASE,
         scope: BASE,

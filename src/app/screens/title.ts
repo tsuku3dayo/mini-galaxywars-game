@@ -1,4 +1,4 @@
-// タイトル画面（MGW-GUI-0002）
+// タイトル画面（MGW-GUI-0002）。原作の表記はタイトル画面に出さず、README に書く（仕様書 v1.6、MGW-ADR-0007）
 import { bake, UFO } from '../../render/sprites';
 
 export interface TitleScreen {
@@ -16,7 +16,7 @@ export function createTitleScreen(root: HTMLElement, touch: boolean, onStart: ()
 
   const name = document.createElement('h1');
   name.className = 'app-name';
-  name.textContent = 'ギャラクシーウォーズミニ';
+  name.textContent = '銀河戦争ミニ';
 
   // 飾りの UFO 3 機（ドット絵をそのまま拡大）
   const ufos = document.createElement('div');
@@ -47,11 +47,7 @@ export function createTitleScreen(root: HTMLElement, touch: boolean, onStart: ()
   guide.className = 'title-guide';
   guide.textContent = touch ? 'なぞって移動 タップで発射' : '←→/マウスで移動 SPACEで発射';
 
-  const credit = document.createElement('p');
-  credit.className = 'title-credit';
-  credit.append('原作 1979 ユニバーサル／タイトー', document.createElement('br'), '非公式の再現作品');
-
-  root.append(high, name, ufos, menu, guide, credit);
+  root.append(high, name, ufos, menu, guide);
 
   return {
     refresh(value) {
