@@ -269,8 +269,19 @@ body:not([data-screen='play']) #overlay-message {
   line-height: 1.5;
 }
 
+/*
+ * iPhone SE の高さでも、10 件・書き出し・読み込み・知らせ・TITLE が収まるよう詰める。
+ * フォントで行の高さが変わらないよう（CI の Linux は少し高い）、行の高さを決めておく
+ */
+#screen-ranking {
+  gap: 8px;
+  padding: 8px;
+  line-height: 20px;
+}
+
 #screen-ranking h2 {
-  font-size: 28px;
+  font-size: 24px;
+  line-height: 28px;
   margin: 0;
 }
 
@@ -282,7 +293,8 @@ body:not([data-screen='play']) #overlay-message {
 
 .ranking-table th,
 .ranking-table td {
-  padding: 2px 6px;
+  padding: 0 6px;
+  line-height: 18px;
   text-align: left;
   white-space: pre;
 }
@@ -296,8 +308,36 @@ body:not([data-screen='play']) #overlay-message {
 }
 
 .ranking-table[hidden],
-#screen-ranking p[hidden] {
+#screen-ranking p[hidden],
+.ranking-confirm[hidden] {
   display: none;
+}
+
+/* 書き出し・読み込み（MGW-GUI-0005 §2） */
+.ranking-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.ranking-message {
+  margin: 0;
+}
+
+/* 読み込みの確認。一覧の上に重ねる */
+.ranking-confirm {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.ranking-confirm p {
+  margin: 0;
 }
 
 /* ランキング登録（MGW-GUI-0004）。キーボードに隠れないよう、画面の上半分に置く */

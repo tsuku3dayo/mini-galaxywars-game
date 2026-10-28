@@ -65,7 +65,7 @@ const title = createTitleScreen(document.getElementById('screen-title')!, touch,
 // ランキング（MGW-TD-0006）
 const ranking = createRankingStore(localStorage, () => new Date());
 const topScore = () => ranking.load()[0]?.score ?? 0;
-const rankingScreen = createRankingScreen(document.getElementById('screen-ranking')!);
+const rankingScreen = createRankingScreen(document.getElementById('screen-ranking')!, ranking);
 /** 名前の入力欄で打っているときは、ゲームのキー（Space・P など）として扱わない */
 const typing = (e: KeyboardEvent) => e.target instanceof HTMLInputElement;
 addEventListener('keydown', (e) => {
@@ -191,7 +191,7 @@ watchRoute((next) => {
     synth.stopAll();
     state = null;
     if (screen === 'title') title.refresh(topScore());
-    if (screen === 'ranking') rankingScreen.refresh(ranking.load());
+    if (screen === 'ranking') rankingScreen.refresh();
   }
   draw();
 });
