@@ -3,18 +3,18 @@ id: MGW-WS-0007
 type: workstream
 title: 表示方式
 status: stable
-version: 1.6
-updated: 2026-10-29
+version: 1.7
+updated: 2026-10-30
 sources:
   - MGW-EP-0007（v1.0）
-  - MGW-TST-0001（v1.6）
+  - MGW-TST-0001（v1.7）
 verified: null
 ---
 
 # MGW-WS-0007 表示方式
 
 * **epic**：MGW-EP-0007
-* **実施の順**：8 / 13（前：MGW-WS-0006、次：MGW-WS-0009）
+* **実施の順**：8 / 14（前：MGW-WS-0006、次：MGW-WS-0009）
 
 ## ねらい
 

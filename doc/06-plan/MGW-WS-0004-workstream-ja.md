@@ -3,18 +3,18 @@ id: MGW-WS-0004
 type: workstream
 title: タッチ操作と iPhone
 status: stable
-version: 1.6
-updated: 2026-10-29
+version: 1.7
+updated: 2026-10-30
 sources:
   - MGW-EP-0004（v1.0）
-  - MGW-TST-0001（v1.6）
+  - MGW-TST-0001（v1.7）
 verified: null
 ---
 
 # MGW-WS-0004 タッチ操作と iPhone
 
 * **epic**：MGW-EP-0004
-* **実施の順**：4 / 13（前：MGW-WS-0003、次：MGW-WS-0005）
+* **実施の順**：4 / 14（前：MGW-WS-0003、次：MGW-WS-0005）
 
 ## ねらい
 

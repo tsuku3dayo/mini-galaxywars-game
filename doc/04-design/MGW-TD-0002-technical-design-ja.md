@@ -6,7 +6,7 @@ status: stable
 version: 1.7
 updated: 2026-10-29
 sources:
-  - MGW-TD-0001（v1.1）
+  - MGW-TD-0001（v1.2）
   - MGW-ADR-0001（v1.0）
   - MGW-ADR-0002（v1.1）
   - MGW-US-0006（v1.1）

@@ -7,9 +7,9 @@ version: 1.3
 updated: 2026-10-29
 sources:
   - MGW-US-0016（v1.3）
-  - MGW-TST-0001（v1.6）
+  - MGW-TST-0001（v1.7）
   - MGW-TD-0002（v1.7）
-  - MGW-TD-0004（v1.6）
+  - MGW-TD-0004（v1.7）
 verified: null
 ---
 

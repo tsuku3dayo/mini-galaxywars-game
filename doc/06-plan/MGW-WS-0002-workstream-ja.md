@@ -3,18 +3,18 @@ id: MGW-WS-0002
 type: workstream
 title: ゲームの核
 status: stable
-version: 1.6
-updated: 2026-10-29
+version: 1.7
+updated: 2026-10-30
 sources:
   - MGW-EP-0002（v1.0）
-  - MGW-TST-0001（v1.6）
+  - MGW-TST-0001（v1.7）
 verified: null
 ---
 
 # MGW-WS-0002 ゲームの核
 
 * **epic**：MGW-EP-0002
-* **実施の順**：2 / 13（前：MGW-WS-0001、次：MGW-WS-0003）
+* **実施の順**：2 / 14（前：MGW-WS-0001、次：MGW-WS-0003）
 
 ## ねらい
 

@@ -3,13 +3,13 @@ id: MGW-WS-0013
 type: workstream
 title: 弾の絵・隕石の尾・出撃の位置・名前の入力欄（修正用）
 status: stable
-version: 1.0
-updated: 2026-10-29
+version: 1.1
+updated: 2026-10-30
 sources:
   - MGW-EP-0002（v1.0）
   - MGW-EP-0003（v1.3）
   - MGW-EP-0006（v1.1）
-  - MGW-TST-0001（v1.6）
+  - MGW-TST-0001（v1.7）
   - doc/requests/2026-10-29-spec-1.10-sprites-deploy.md
 verified: null
 ---
@@ -17,7 +17,7 @@ verified: null
 # MGW-WS-0013 弾の絵・隕石の尾・出撃の位置・名前の入力欄（修正用）
 
 * **epic**：MGW-EP-0002、MGW-EP-0003、MGW-EP-0006
-* **実施の順**：13 / 13（前：MGW-WS-0012。このあとリリース）
+* **実施の順**：13 / 14（前：MGW-WS-0012、次：MGW-WS-0014）
 
 ## ねらい
 
@@ -38,6 +38,7 @@ verified: null
 | 11 | MGW-WS-0011 | タイトル画面の点数の説明・ボタンとクレジットの名前（完了） |
 | 12 | MGW-WS-0012 | 時間ボーナス（完了） |
 | 13 | **MGW-WS-0013** | 弾の絵・隕石の尾・出撃の位置・名前の入力欄 |
+| 14 | MGW-WS-0014 | タイトル画面の版とリリース 1.0.0 |
 
 ## user-story
 
