@@ -11,6 +11,8 @@ import {
   INITIAL_LIVES,
   KILL_EFFECT_STEPS,
   LAUNCHER_START_X,
+  LAUNCHER_X_MAX,
+  LAUNCHER_X_MIN,
   MISS_RESPAWN,
   MISSILE_H,
   MISSILE_READY_Y,
@@ -108,10 +110,11 @@ export function step(state: GameState, input: StepInput): GameState {
   } else if (s.status === 'playing') {
     s.missile = { ...s.missile, ...moveMissile(s.missile.x, s.missile.y, input), isBoosting: input.boost };
   } else if (s.status === 'standby' && input.launch) {
-    // 出撃：発射台を出して発射前に戻る。このタップでは発射しない（仕様書 v1.7）
+    // 出撃：発射台を出して発射前に戻る。このタップでは発射しない（仕様書 v1.7）。
+    // 出る位置は、タップ・クリックした x（Space はマウスの x）。なければ真ん中（仕様書 v1.10）
     s.status = 'ready';
-    s.launcherX = LAUNCHER_START_X;
-    s.missile = readyMissile(LAUNCHER_START_X);
+    s.launcherX = input.targetX === null ? LAUNCHER_START_X : Math.min(LAUNCHER_X_MAX, Math.max(LAUNCHER_X_MIN, input.targetX));
+    s.missile = readyMissile(s.launcherX);
   }
 
   // 6. 当たり判定（隕石 → UFO → 光線。ミス・UFO を倒した・クリアが決まったら、残りは調べない）

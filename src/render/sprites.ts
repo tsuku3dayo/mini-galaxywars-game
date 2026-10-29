@@ -160,6 +160,9 @@ export const METEOR = mirrored([
 
 /** 隕石の尾 8 × 7（3 本の横線。進む向きの反対側に付ける） */
 export const METEOR_TRAIL = plain(['########', '........', '........', '########', '........', '........', '########']);
+/** 尾の 2 コマ目：上下の線を長さ 6 にする（左右に 1 ずつ空ける。仕様書 v1.10） */
+export const METEOR_TRAIL_SHORT = plain(['.######.', '........', '........', '########', '........', '........', '.######.']);
+export const METEOR_TRAIL_FRAMES = [METEOR_TRAIL, METEOR_TRAIL_SHORT] as const;
 
 /** 尾の中心の x。右へ進むときは左、左へ進むときは右に、隕石の端に付ける */
 export function meteorTrailX(meteor: { x: number; direction: 1 | -1 }): number {
@@ -167,13 +170,17 @@ export function meteorTrailX(meteor: { x: number; direction: 1 | -1 }): number {
 }
 
 /** 光線 4 × 16（波の形）。2 枚を切り替えて揺らす */
-// 2 コマは形をはっきり変える（仕様書 v1.7）：1 コマ目は太く細かい波、2 コマ目は細く大きな波（同じ波をずらすだけでは違いが見えない）
-const WAVE_TIGHT = ['##..', '.##.', '..##', '.##.'];
-const WAVE_WIDE = ['#...', '.#..', '..#.', '...#', '...#', '..#.', '.#..', '#...'];
-export const BEAM = [WAVE_TIGHT, WAVE_WIDE].map((wave) => plain(Array.from({ length: 16 }, (_, i) => wave[i % wave.length]!)));
+// 2 コマはオーナーの画像（銀河戦争ミニ_弾1・弾2）のとおり：幅 1 点の細い波と、それを左右に裏返した波（仕様書 v1.10）。
+// 画像の波は、点の位置が 0・1・2・3・3・2・1 の 7 行でくり返す。画像は 15 行なので、同じ波をもう 1 行続けて 16 行にする
+const WAVE = ['#...', '.#..', '..#.', '...#', '...#', '..#.', '.#..'];
+const WAVE_ROWS = Array.from({ length: 16 }, (_, i) => WAVE[i % WAVE.length]!);
+export const BEAM = [WAVE_ROWS, WAVE_ROWS.map((r) => [...r].reverse().join(''))].map(plain);
 
 /** 光線のコマ。UFO と同じ時に切り替える（0.25 秒ごと） */
 export const beamFrame = ufoFrame;
+
+/** 隕石の尾のコマ。UFO と同じ時に切り替える（0.25 秒ごと。仕様書 v1.10） */
+export const meteorTrailFrame = ufoFrame;
 
 /** バックファイア 8 × 12（ミサイルの下の炎） */
 export const BACKFIRE = mirrored(['####', '####', '.###', '.###', '..##', '..##', '..##', '...#', '...#', '...#', '...#', '...#']);

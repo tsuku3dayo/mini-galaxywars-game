@@ -108,17 +108,22 @@ describe('残機と待ち', () => {
     expect(crowded.lives).toBe(standby.lives);
   });
 
-  it('MGW-TC-0016-09 出撃待ちで launch が来ると、発射台が x = 240 に出て Ready に戻る。このタップでは発射しない', () => {
+  it('MGW-TC-0016-09 出撃待ちで、タップ・クリック・Space を押すと、発射台が出て発射前（Ready）に戻る。出る位置は、タップ・クリックした x（画面の端で止める）。Space のときはマウスの x があればその x、なければ x = 240。このタップでは発射しない', () => {
     const standby = run(step(aboutToMiss(), NO_INPUT), MISS_RESPAWN);
     expect(standby.status).toBe('standby');
-    // 左右・指の x が来ても、出撃待ちのままで何も動かない
+    // 左右・噴射だけでは、出撃待ちのままで何も動かない
     expect(step(standby, { dir: 1, targetX: 100, launch: false, boost: true }).status).toBe('standby');
-    const deployed = step(standby, { ...NO_INPUT, launch: true, boost: true });
+    // タップ・クリックした x（targetX）に出る。このタップでは発射しない
+    const deployed = step(standby, { ...NO_INPUT, targetX: 120, launch: true, boost: true });
     expect(deployed.status).toBe('ready');
-    expect(deployed.launcherX).toBe(240);
-    expect(deployed.missile).toEqual({ x: 240, y: 596, isLaunched: false, isBoosting: false });
+    expect(deployed.launcherX).toBe(120);
+    expect(deployed.missile).toEqual({ x: 120, y: 596, isLaunched: false, isBoosting: false });
     expect(deployed.lives).toBe(2);
+    // 画面の端では止める（24〜456）
+    expect(step(standby, { ...NO_INPUT, targetX: 3, launch: true }).launcherX).toBe(24);
+    expect(step(standby, { ...NO_INPUT, targetX: 479, launch: true }).launcherX).toBe(456);
+    // x がない（Space で、マウスの位置がない）ときは真ん中
+    expect(step(standby, { ...NO_INPUT, launch: true }).launcherX).toBe(240);
     // 次のタップで発射する
     expect(step(deployed, { ...NO_INPUT, launch: true }).status).toBe('playing');
-  });
-});
+  });});
