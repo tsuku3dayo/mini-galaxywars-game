@@ -56,7 +56,7 @@ export function createInputEngine(field: HTMLElement, surfaces: HTMLElement[] = 
   const release = (e: PointerEvent) => {
     if (!pointerDown) return;
     pointerDown = false;
-    // 離したときに発射する（ready のときだけ使われる）
+    // 離したときに発射・出撃する（ready・standby のときだけ使われる）
     if (e.type === 'pointerup') launchPending = true;
   };
   for (const surface of [field, ...surfaces]) {
@@ -87,7 +87,8 @@ export function createInputEngine(field: HTMLElement, surfaces: HTMLElement[] = 
       const input: StepInput = {
         dir,
         targetX: dir === 0 ? pointerX : null,
-        launch: launchPending && status === 'ready',
+        // ready なら発射、standby なら出撃（MGW-TD-0004 §4）
+        launch: launchPending && (status === 'ready' || status === 'standby'),
         boost: status === 'playing' && (space || pointerDown),
       };
       launchPending = false;

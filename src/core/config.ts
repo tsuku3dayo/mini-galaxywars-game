@@ -45,7 +45,7 @@ export const UFO_ROW_Y = [76, 108] as const;
 export const UFO_START_X = [60, 180, 300, 420] as const;
 /** 残り機数（添字）→ 速さ */
 export const UFO_SPEEDS = [0, 80, 60, 45, 40, 35, 30, 25, 20] as const;
-/** UFO の 2 コマを切り替える間隔（0.25 秒） */
+/** UFO・光線の 2 コマを切り替える間隔（0.25 秒） */
 export const UFO_FRAME_STEPS = 30;
 
 export const BEAM_W = 4;
@@ -70,6 +70,8 @@ export const METEOR_COUNT = 5;
 /** 1 段の道のり・1 周の道のり */
 export const METEOR_LANE_LENGTH = METEOR_X_MAX - METEOR_X_MIN;
 export const METEOR_PATH_LENGTH = METEOR_LANE_LENGTH * METEOR_LANE_COUNT;
+/** 初めの並びで、となりどうしの間の最小（1 周の 1/10。仕様書 v1.7） */
+export const METEOR_MIN_GAP = METEOR_PATH_LENGTH / 10;
 
 export const INITIAL_LIVES = 3;
 export const EXTEND_SCORE = 1000;

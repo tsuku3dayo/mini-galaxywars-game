@@ -105,7 +105,7 @@ describe("ドット絵とフォント（MGW-TD-0003 §3・§4）", () => {
       right.x - METEOR_SIZE / 2,
     );
     // 初めの 5 個も、それぞれ向きの後ろに付く
-    for (const m of newGame(0).meteors)
+    for (const m of newGame(0, 1).meteors)
       expect(Math.sign(m.x - meteorTrailX(m))).toBe(m.direction);
   });
 

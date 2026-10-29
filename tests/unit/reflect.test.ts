@@ -10,7 +10,7 @@ const justAbove = (tipY: number) => tipY - 8 - 0.5;
 describe('光線弾き', () => {
   it('MGW-TC-0012-01 ミサイルの先端の中央・横幅 4 px の範囲で、正面の上から光線を受けると、ミスにならずに弾く', () => {
     // 発射前（先端 y 584）。中心から +2 px
-    const ready: GameState = { ...newGame(0), meteors: [], beamTimer: 1000, beams: [falling(242, justAbove(584))] };
+    const ready: GameState = { ...newGame(0, 1), meteors: [], beamTimer: 1000, beams: [falling(242, justAbove(584))] };
     const reflected = step(ready, NO_INPUT);
     expect(reflected.status).toBe('ready');
     expect(reflected.lives).toBe(3);
@@ -33,10 +33,10 @@ describe('光線弾き', () => {
   it('MGW-TC-0012-02 弾いた光線は上へ飛び、画面の上で消える。UFO には当たらない', () => {
     // 下段の UFO（id 5、x 180）の真下から上へ飛ぶ光線
     const state: GameState = {
-      ...newGame(0),
+      ...newGame(0, 1),
       meteors: [],
       beamTimer: 100_000,
-      ufos: newGame(0).ufos.map((u) => ({ ...u, x: u.id === 5 ? 180 : u.x })),
+      ufos: newGame(0, 1).ufos.map((u) => ({ ...u, x: u.id === 5 ? 180 : u.x })),
       beams: [{ x: 180, y: 200, vy: -90, reflected: true }],
     };
     const later = run(state, 120);
@@ -49,7 +49,7 @@ describe('光線弾き', () => {
   });
 
   it('MGW-TC-0012-03 4 px の範囲の外で光線を受けると、ミスになる', () => {
-    const ready: GameState = { ...newGame(0), meteors: [], beamTimer: 1000, beams: [falling(243, justAbove(584))] };
+    const ready: GameState = { ...newGame(0, 1), meteors: [], beamTimer: 1000, beams: [falling(243, justAbove(584))] };
     expect(step(ready, NO_INPUT)).toMatchObject({ status: 'respawn', waitReason: 'miss', lives: 2 });
     expect(step({ ...ready, beams: [falling(237, justAbove(584))] }, NO_INPUT).status).toBe('respawn');
     // 中央でも、正面の上から来たのでなければ（前のステップで先端より下にいた）弾かない

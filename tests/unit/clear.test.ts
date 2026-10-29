@@ -5,7 +5,7 @@ import { NO_INPUT } from './helpers';
 
 describe('クリア', () => {
   it('MGW-TC-0017-01 UFO を 8 機すべて倒すと、クリアの表示が出てゲームが終わる', () => {
-    const base = newGame(0);
+    const base = newGame(0, 1);
     const last = base.ufos[5]!; // 下段、x 180
     const state: GameState = {
       ...base,
