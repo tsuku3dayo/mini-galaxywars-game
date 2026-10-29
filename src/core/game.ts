@@ -14,6 +14,7 @@ import {
   MISS_RESPAWN,
   MISSILE_H,
   MISSILE_READY_Y,
+  SCORE_MAX,
   STEPS_PER_SECOND,
   UFO_ROW_Y,
   UFO_START_X,
@@ -36,7 +37,7 @@ import {
   pickShooter,
 } from './physics';
 import { meteorStartPositions } from './random';
-import { addScore, hitPart, killPoints } from './scoring';
+import { addScore, hitPart, killPoints, timeBonusOf } from './scoring';
 import type { Beam, GameState, Missile, StepInput, UFO } from './types';
 
 const readyMissile = (x: number): Missile => ({ x, y: MISSILE_READY_Y, isLaunched: false, isBoosting: false });
@@ -71,6 +72,8 @@ export function newGame(highScore: number, seed: number): GameState {
     explosion: null,
     lastKill: null,
     killEffect: null,
+    playSteps: 0,
+    timeBonus: 0,
   };
 }
 
@@ -82,6 +85,8 @@ export function step(state: GameState, input: StepInput): GameState {
   const s: GameState = {
     ...state,
     stepCount: state.stepCount + 1,
+    // 時間ボーナスの経過時間は、ミサイルが飛んでいるステップだけ数える（仕様書 v1.9 §6.4）
+    playSteps: state.playSteps + (state.status === 'playing' ? 1 : 0),
     flashSteps: Math.max(0, state.flashSteps - 1),
     explosion: state.explosion && state.explosion.steps > 1 ? { ...state.explosion, steps: state.explosion.steps - 1 } : null,
     killEffect: state.killEffect && state.killEffect.steps > 1 ? { ...state.killEffect, steps: state.killEffect.steps - 1 } : null,
@@ -114,7 +119,7 @@ export function step(state: GameState, input: StepInput): GameState {
     const result = checkHits(s, state.missile.y);
     if (result === 'miss') miss(s);
     if (result === 'kill') kill(s);
-    if (result === 'clear') s.status = 'cleared';
+    if (result === 'clear') clear(s);
     if (result !== null) s.missile = { ...s.missile, isBoosting: false };
   }
 
@@ -212,6 +217,13 @@ function miss(s: GameState): void {
   s.waitSteps = MISS_RESPAWN;
   s.flashSteps = FLASH_STEPS;
   s.explosion = { x: s.missile.x, y: s.missile.y, steps: EXPLOSION_STEPS };
+}
+
+/** クリアしたとき（MGW-TD-0002 §7.3）。時間ボーナスを足す。増機には使わない */
+function clear(s: GameState): void {
+  s.status = 'cleared';
+  s.timeBonus = timeBonusOf(s.playSteps);
+  s.score = Math.min(SCORE_MAX, s.score + s.timeBonus);
 }
 
 /** UFO を倒したとき（MGW-TD-0002 §6.4）。ミサイルを消し、1 秒後に出撃待ち。残機は減らさない */

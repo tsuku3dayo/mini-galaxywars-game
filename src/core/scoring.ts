@@ -1,5 +1,5 @@
 // 部位の得点・600 点ボーナス・増機（MGW-TD-0002 §7、仕様書 §6）
-import { EXTEND_SCORE, FIELD_WIDTH, SCORE_MAX } from './config';
+import { EXTEND_SCORE, FIELD_WIDTH, SCORE_MAX, STEPS_PER_SECOND, TIME_BONUS_BASE, TIME_BONUS_PER_SEC } from './config';
 import type { Box } from './physics';
 import type { GameState, UFO, UfoPart } from './types';
 
@@ -55,4 +55,15 @@ export function addScore(state: GameState, points: number): Pick<GameState, 'sco
   const score = Math.min(SCORE_MAX, state.score + points);
   const extend = !state.extended && score >= EXTEND_SCORE;
   return { score, lives: state.lives + (extend ? 1 : 0), extended: state.extended || extend };
+}
+
+/** 時間ボーナス：max(0, 180 − 経過秒（切り捨て）) × 5（MGW-TD-0002 §7.3。steps は Playing の間のステップ数） */
+export function timeBonusOf(steps: number): number {
+  return Math.max(0, TIME_BONUS_BASE - Math.floor(steps / STEPS_PER_SECOND)) * TIME_BONUS_PER_SEC;
+}
+
+/** 画面とランキングに出すクリアのタイム（ミリ秒。0.1 秒単位で切り捨て） */
+export function clearTimeMs(steps: number): number {
+  // 0.1 秒の数を整数で数えてから戻す（小数の誤差で 1 つ少なくならないように）
+  return Math.floor((steps * 10) / STEPS_PER_SECOND) * 100;
 }

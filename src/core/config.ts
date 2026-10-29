@@ -85,3 +85,7 @@ export const EXPLOSION_STEPS = 48;
 /** UFO を倒してから、爆発と得点を出す長さ（初めの EXPLOSION_STEPS は爆発、残りは得点） */
 export const KILL_EFFECT_STEPS = EXIT_RESPAWN;
 export const SCORE_MAX = 99_999;
+/** 時間ボーナスの基準（秒）。これ以上かかると 0（仕様書 v1.9 §6.4） */
+export const TIME_BONUS_BASE = 180;
+/** 1 秒早いごとに増える時間ボーナス（点） */
+export const TIME_BONUS_PER_SEC = 5;

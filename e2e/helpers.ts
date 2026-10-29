@@ -111,7 +111,7 @@ export const FULL_RANKING: RankingRow[] = Array.from({ length: 10 }, () => ({ sc
  * clear：7 機を倒した状態で、8 機目（下段の id 5）に当てる。gameOver：残り 0 機でミスの待ちを終える。
  * 終わったときのスコアを返す（クリアは当たった部位の点が足される）
  */
-export async function endGame(page: Page, kind: 'clear' | 'gameOver', scoreBefore: number): Promise<number> {
+export async function endGame(page: Page, kind: 'clear' | 'gameOver', scoreBefore: number, playSteps?: number): Promise<number> {
   await freeze(page, true);
   if (kind === 'clear') {
     const base = await getState(page);
@@ -126,6 +126,8 @@ export async function endGame(page: Page, kind: 'clear' | 'gameOver', scoreBefor
       meteors: [],
       beams: [],
       beamTimer: 1e9,
+      // 時間ボーナスが 0 になる経過時間（180 秒）にして、スコアを UFO の得点だけにする（仕様書 v1.9。ボーナスは MGW-TC-0013-06・0017-04）
+      playSteps: playSteps ?? 180 * 120,
     });
     await advance(page, 1);
     await expect(page.locator('body')).toHaveAttribute('data-status', 'cleared');
