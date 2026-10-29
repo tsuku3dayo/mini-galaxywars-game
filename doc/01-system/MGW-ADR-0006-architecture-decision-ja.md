@@ -6,7 +6,7 @@ status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
-  - doc/specification.md (v1.6) §13
+  - doc/specification.md (v1.7) §13
 verified:
   by: tsuku3dayo
   at: 2026-10-26T15:48:01+09:00

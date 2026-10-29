@@ -3,14 +3,14 @@ id: MGW-US-0026
 type: user-story
 title: ランキングを見る
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-29
 sources:
-  - MGW-EP-0006（v1.0）
-  - doc/specification.md (v1.6) §9、§18
+  - MGW-EP-0006（v1.1）
+  - doc/specification.md (v1.7) §9、§18
 verified:
   by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-US-0026 ランキングを見る
@@ -29,9 +29,11 @@ verified:
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | `#/ranking` に、上位 10 件の順位・スコア・名前・日時が出る | E2E |
+| 1 | `#/ranking` に、上位 10 件の順位・名前・スコアと、名前の下に結果（`CLEAR`・`GAME OVER`）と日時が出る。1〜3 位は `1st`・`2nd`・`3rd` | E2E |
 | 2 | 記録がないときは、記録がないことが分かる表示が出る | E2E |
-| 3 | 「TITLE」でタイトルに戻る | E2E |
+| 3 | 「← BACK」でタイトルに戻る | E2E |
+| 4 | 登録したあとに開いたときは、今登録した記録の行が目立ち、名前に「（あなた）」が付く | E2E |
+| 5 | 見た目は「ブロック崩しミニ」のランキング画面と同じ形（紺の画面、上に BACK とタイトル、下に記録のバックアップ） | 手動（iPhone・PC） |
 
 ## メモ
 
