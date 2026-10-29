@@ -2,7 +2,7 @@
 id: MGW-AC-0031
 type: attested-computation
 title: 効果音のオン・オフの確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -10,7 +10,9 @@ sources:
   - MGW-TC-0014（v1.2）
   - MGW-TC-0023（v1.3）
   - MGW-TC-0034（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T14:47:07+09:00
 ---
 
 # MGW-AC-0031 効果音のオン・オフの確認
@@ -43,12 +45,12 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 画面：iPhone 11・iPhone SE・PC（1280 × 800）で、タイトル画面（CREDITS・ランキング消去の下に「🔊 効果音：オン」）と、プレイ画面のボタンの段（左に「‖ 一時停止」、右に「🔊 効果音：オン」）のスクリーンショットを見た。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0010 の終わり、2026-10-29、オーナー、iPhone 11・PC）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0034-04 | オフのときは、どの効果音も鳴らない。噴射音が鳴っているときに押すと、すぐ止まる | 未実施（WS の終わりに確かめる） |
-| MGW-TC-0034-08 | オフで始めてから iPhone でオンに戻すと、すぐ鳴る | 未実施（WS の終わりに確かめる） |
+| MGW-TC-0034-04 | オフのときは、どの効果音も鳴らない。噴射音が鳴っているときに押すと、すぐ止まる | OK（iPhone・PC） |
+| MGW-TC-0034-08 | オフで始めてから iPhone でオンに戻すと、すぐ鳴る | OK（iPhone のホーム画面の本物のアプリ） |
 
 ## 3. 設計と違う作りにしたこと
 
@@ -56,5 +58,5 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 ## 4. 確認できなかったこと
 
-- 音が鳴ること・止まることそのものは自動では確かめられない（E2E の WebKit には AudioContext がなく、Chromium は鳴らない）。WS の終わりに PC と iPhone で聞いてもらう。
+- 音が鳴ること・止まることそのものは自動では確かめられない（E2E の WebKit には AudioContext がなく、Chromium は鳴らない）。WS の終わりに PC と iPhone で聞いてもらい、OK だった（§2）。
 - Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。

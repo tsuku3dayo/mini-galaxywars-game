@@ -2,14 +2,16 @@
 id: MGW-AC-0030
 type: attested-computation
 title: クレジット画面の確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-TASK-0030（v1.0）
   - MGW-TC-0014（v1.2）
   - MGW-TC-0033（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T14:47:07+09:00
 ---
 
 # MGW-AC-0030 クレジット画面の確認
@@ -32,11 +34,11 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 画面：iPhone 11・iPhone SE・PC（1280 × 800）で、クレジット画面と、CREDITS・ランキング消去を 1 段に並べたタイトル画面のスクリーンショットを見た。「ブロック崩しミニ」のクレジット画面と同じ並び（BACK とタイトル、うすい字の役割と太字の名前が中央に縦に並ぶ）になった。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0010 の終わり、2026-10-29、オーナー、iPhone 11・PC）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0033-04 | 見た目は「ブロック崩しミニ」のクレジット画面と同じ形 | 未実施（WS の終わりに確かめる） |
+| MGW-TC-0033-04 | 見た目は「ブロック崩しミニ」のクレジット画面と同じ形 | OK（iPhone・PC） |
 
 ## 3. 設計と違う作りにしたこと
 
