@@ -2,13 +2,15 @@
 id: MGW-AC-0033
 type: attested-computation
 title: 経過時間・時間ボーナス・合計の確認
-status: draft
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-TASK-0033（v1.0）
   - MGW-TC-0013（v1.2）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T17:25:01+09:00
 ---
 
 # MGW-AC-0033 経過時間・時間ボーナス・合計の確認
@@ -31,9 +33,9 @@ verified: null
 
 画面：この TASK では描き方を変えていない。この段階では、クリアした瞬間に HUD の SCORE が合計（ボーナスを足したもの）になる。SCORE を UFO の得点だけにする表示と、クリアの表示の 4 行・TIME は MGW-TASK-0034。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0012 の終わり、2026-10-29、オーナー、iPhone 11・PC）
 
-この TASK に手動の確認 ID はない。
+この TASK に手動の確認 ID はない。時間ボーナスの大きさ（MGW-TC-0013-08）は MGW-AC-0034 で確かめ、OK だった。
 
 ## 3. 設計と違う作りにしたこと
 
