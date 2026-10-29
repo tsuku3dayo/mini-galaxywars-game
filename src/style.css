@@ -555,8 +555,37 @@ body:not([data-screen='play']) #overlay-message {
 
 .title-sub button,
 .title-sub .button {
+  gap: 6px;
   font-size: 16px;
   padding: 4px 12px;
+}
+
+/*
+ * 背の低い画面（iPhone SE など）では、ボタンが 6 つになっても枠に収まるよう、間を詰め、飾りの UFO を小さくする。
+ * ボタンは 44px のまま（MGW-GUI-0001 §5）。HIGH（左上）とアプリ名が重ならないよう、上は空けておく
+ */
+@media (max-height: 620px) {
+  #screen-title {
+    gap: 6px;
+    padding: 30px 8px 8px;
+  }
+
+  #screen-title .app-name {
+    font-size: 24px;
+  }
+
+  .title-ufos canvas {
+    width: 32px;
+    height: 24px;
+  }
+
+  .title-menu {
+    gap: 8px;
+  }
+
+  .title-guide {
+    font-size: 14px;
+  }
 }
 
 /* ランキング消去の確認（MGW-GUI-0002 §2）。タイトル画面の上に重ねる */

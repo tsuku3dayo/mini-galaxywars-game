@@ -2,7 +2,7 @@
 import type { GameState, StepInput } from '../core/types';
 import type { StepStats } from './step-stats';
 
-export type DataKey = 'screen' | 'overlay' | 'status' | 'score' | 'high' | 'lives' | 'displayMode' | 'touch' | 'update' | 'audio' | 'seed';
+export type DataKey = 'screen' | 'overlay' | 'status' | 'score' | 'high' | 'lives' | 'displayMode' | 'touch' | 'update' | 'audio' | 'seed' | 'sound';
 
 /** body の data 属性（いつも付ける） */
 export function setData(key: DataKey, value: string | number): void {

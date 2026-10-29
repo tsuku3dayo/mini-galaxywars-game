@@ -69,7 +69,7 @@ test.describe('表示方式の設定', () => {
     await openSettings(page);
     await page.locator('#overlay-settings').getByRole('radio', { name: 'ピクセルパーフェクト' }).check();
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('mini-galaxywars-settings')!));
-    expect(saved).toEqual({ app: 'mini-galaxywars', version: 1, displayMode: 'pixel' });
+    expect(saved).toEqual({ app: 'mini-galaxywars', version: 1, displayMode: 'pixel', sound: true });
 
     await page.reload();
     await expect(page.locator('body')).toHaveAttribute('data-display-mode', 'pixel');

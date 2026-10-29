@@ -15,6 +15,7 @@ import { createRankingScreen } from './app/screens/ranking';
 import { createSettingsOverlay } from './app/screens/settings';
 import { createClearRankingOverlay } from './app/screens/clear-ranking';
 import { createCreditsScreen } from './app/screens/credits';
+import { createSoundToggle } from './app/sound-toggle';
 import { createRankingStore, type RankingResult } from './storage/ranking-store';
 import { createSettingsStore } from './storage/settings-store';
 import { createTitleScreen } from './app/screens/title';
@@ -67,14 +68,17 @@ const start = () => {
 };
 // 設定（表示方式。MGW-GUI-0006、MGW-TD-0006 §2）。タイトルの上に重ねる
 const settingsStore = createSettingsStore(localStorage);
-let displayMode = settingsStore.loadDisplayMode();
+const savedSettings = settingsStore.load();
+let displayMode = savedSettings.displayMode;
 setData('displayMode', displayMode);
+// 効果音のオン・オフ（MGW-TD-0005・0006）。オフで始めても、音の準備（unlock）はしておく
+synth.setEnabled(savedSettings.sound);
 const settings = createSettingsOverlay(
   stage,
   (mode) => {
     displayMode = mode;
     try {
-      settingsStore.saveDisplayMode(mode);
+      settingsStore.save({ displayMode: mode });
     } catch {
       // 保存できなくても、今回は選んだ方式で描く
     }
@@ -137,6 +141,17 @@ const toggle = () => {
 };
 const playButtons = document.getElementById('play-buttons')!;
 createPauseButton(playButtons, toggle);
+// 効果音のボタン：タイトル画面とボタンの段の右（MGW-GUI-0002・0003）。押してもゲームは止めない
+createSoundToggle([title.soundSlot, playButtons], savedSettings.sound, (on) => {
+  try {
+    settingsStore.save({ sound: on });
+  } catch {
+    // 保存できなくても、今回は選んだとおりにする
+  }
+  synth.setEnabled(on);
+  // ボタンの click の中で音を有効にしておく（iPhone。MGW-TD-0004 §7）
+  unlockAudio();
+});
 // ランキング登録（MGW-GUI-0004）。終わって 3 秒たち、上位 10 件に入るときに重ねて出す
 let entryScore = 0;
 let entryResult: RankingResult = 'gameOver';
