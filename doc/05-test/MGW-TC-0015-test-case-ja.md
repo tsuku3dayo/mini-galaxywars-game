@@ -3,13 +3,13 @@ id: MGW-TC-0015
 type: test-case
 title: HUD でスコアと残機を見る
 status: stable
-version: 1.1
-updated: 2026-10-28
+version: 1.2
+updated: 2026-10-29
 sources:
   - MGW-US-0015（v1.2）
-  - MGW-TST-0001（v1.4）
-  - MGW-TD-0003（v1.4）
-  - MGW-TD-0004（v1.3）
+  - MGW-TST-0001（v1.5）
+  - MGW-TD-0003（v1.5）
+  - MGW-TD-0004（v1.4）
 verified: null
 ---
 
@@ -30,3 +30,5 @@ verified: null
 | MGW-TC-0015-04 | 4 | HIGH は、ランキングの 1 位のスコアと、今のスコアの大きい方 | 自動（単体） | `tests/unit/hud.test.ts` |
 | MGW-TC-0015-05 | 3 | 残機は、数（画面に出ている 1 基を含む）と、控えの発射台のアイコン（数 − 1 個）で出る。アイコンはミサイルではなく発射台の形 | 自動（単体） | `tests/unit/hud.test.ts` |
 | MGW-TC-0015-06 | 5 | 発射台の下に、地面の横線が出る | 手動（PC） | 発射台のすぐ下に、緑の横線が画面の幅いっぱいに見える |
+| MGW-TC-0015-07 | 6 | 左下の残機の行の右に、経過時間が `TIME 095`（経過秒を切り捨てて 3 桁）で出る。SCORE は UFO の得点だけ | 自動（単体） | `tests/unit/hud.test.ts` |
+| MGW-TC-0015-08 | 6 | 左下の残機の行の右に、経過時間が `TIME 095`（経過秒を切り捨てて 3 桁）で出る。SCORE は UFO の得点だけ | 自動（E2E） | `e2e/hud.spec.ts` |

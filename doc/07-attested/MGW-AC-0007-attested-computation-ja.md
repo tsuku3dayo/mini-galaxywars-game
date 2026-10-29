@@ -9,7 +9,7 @@ sources:
   - MGW-TASK-0007（v1.0）
   - MGW-TC-0011（v1.1）
   - MGW-TC-0012（v1.0）
-  - MGW-TC-0013（v1.1）
+  - MGW-TC-0013（v1.2）
 verified:
   by: tsuku3dayo
   at: 2026-10-27T14:36:24+09:00

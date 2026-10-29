@@ -3,11 +3,11 @@ id: MGW-TD-0004
 type: technical-design
 title: app の設計（ルーティング・画面・入力・ループ・テスト用の入口）
 status: stable
-version: 1.3
+version: 1.4
 updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
-  - MGW-TD-0002（v1.5）
+  - MGW-TD-0002（v1.6）
   - MGW-ADR-0002（v1.1）
   - MGW-GUI-0001（v1.5）
   - MGW-GUI-0002（v1.3）
@@ -49,6 +49,7 @@ verified: null
 - 設定（`settings`）・名前の入力（`entry`）・ランキング消去の確認（`clear`）は、ハッシュを変えずに DOM を重ねて出す（MGW-GUI-0001 §7）。
 - `#/play` をじかに開いたときも、新しいゲームから始める。
 - **種**（仕様書 v1.7）：ゲームを始めるたびに `crypto.getRandomValues(new Uint32Array(1))[0]` で決める（使えなければ `Date.now() >>> 0`）。`?debug=1&seed=<整数>` のときは、その値を使う（E2E で並びをそろえるため）。今のゲームの種は `data-seed` と `__mgw.getState()` で読める。
+- **登録するもの**：スコアは合計（`state.score`）、クリアのときはタイム（`clearTimeMs(playSteps)`）も渡す（仕様書 v1.9）。
 - **登録のあと**：`#/ranking` に移るとき、今登録した記録の順位を渡し（`ranking.highlight(rank)`）、その行を目立たせる。ほかから `#/ranking` を開いたときは目立たせない。
 
 ## 2. 画面の骨組み（`index.html`）
@@ -133,6 +134,7 @@ frame(now):
   requestAnimationFrame(frame)
 ```
 
+- クリアの表示（`#overlay-message`）には、`GOOD!!`・`STAGE CLEAR` の下に 4 行を出す：`UFO 01150`（`score − timeBonus`）、`TIME 95.7`（`clearTimeMs ÷ 1000` を小数第 1 位で）、`BONUS 00425`（`timeBonus`）、`TOTAL 01575`（`score`）。ゲームオーバーでは出さない（仕様書 v1.9）。
 - 状態が cleared・gameOver になったら 3 秒（360 ステップ相当、時刻で数える）待ってから、ランキングに入るなら名前の入力、入らないなら「TITLE」を出す。この表示は app が受け持つ。
 - `READY` の表示は、ゲームの最初の ready の 1 秒だけ（GUI-0003 §4）。
 - 出撃待ち（standby）の間は `#standby-hint` を出す。文言はタッチ端末なら「タップで出撃」、PC なら「クリック/SPACEで出撃」。
@@ -181,3 +183,4 @@ frame(now):
 | 1.1 | 2026-10-29 | 仕様書 v1.7：§1 の `#/credits`・種・登録のあとの目立たせ方、§2 の骨組み（上のバーをなくし、ボタンの段・出撃待ちの案内・クレジット・消去の確認・効果音のボタン）、§3 のボタンの段、§4 のタップの判定と standby、§5 の出撃待ちの案内と効果音、§6 の `data-sound`・`data-seed`、§7 |
 | 1.2 | 2026-10-29 | §3：ボタンの段の高さは 48 px より低くしない（MGW-TASK-0028 の実装で、iPhone SE（320 × 568）でボタンが段からはみ出したため） |
 | 1.3 | 2026-10-29 | §2.1：タイトル画面の並び（点数の説明・同じ大きさの 5 つのボタン・操作の案内の下のランキング消去）と、収まらないときの枠の中のスクロール（仕様書 v1.8） |
+| 1.4 | 2026-10-29 | 仕様書 v1.9：§1 の登録するもの（合計とタイム）、§5 のクリアの表示の 4 行 |

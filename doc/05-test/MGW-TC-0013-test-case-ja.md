@@ -3,12 +3,12 @@ id: MGW-TC-0013
 type: test-case
 title: 当てた部位で得点が変わる
 status: stable
-version: 1.1
-updated: 2026-10-28
+version: 1.2
+updated: 2026-10-29
 sources:
   - MGW-US-0013（v1.2）
-  - MGW-TST-0001（v1.4）
-  - MGW-TD-0002（v1.5）
+  - MGW-TST-0001（v1.5）
+  - MGW-TD-0002（v1.6）
 verified: null
 ---
 
@@ -28,3 +28,6 @@ verified: null
 | MGW-TC-0013-03 | 3 | 4 機目でも、突起以外に当てたときは通常の得点 | 自動（単体） | `tests/unit/scoring.test.ts` |
 | MGW-TC-0013-04 | 4 | 倒した UFO の位置に爆発が 0.4 秒出て、そのあと同じ位置に入った得点が、倒してから 1 秒まで出る | 自動（単体） | `tests/unit/kill-effect.test.ts` |
 | MGW-TC-0013-05 | 4 | 倒した UFO の位置に爆発が 0.4 秒出て、そのあと同じ位置に入った得点が、倒してから 1 秒まで出る | 手動（PC） | UFO を倒すと、その場所に爆発が出て、すぐあとに得点（`100` など）が少しの間出る |
+| MGW-TC-0013-06 | 5 | クリアしたとき、時間ボーナス max(0, 180 − 経過秒（切り捨て）) × 5 が UFO の得点に足され、合計がスコアになる。ゲームオーバーでは 0 | 自動（単体） | `tests/unit/time-bonus.test.ts` |
+| MGW-TC-0013-07 | 6 | 経過時間は、ミサイルが飛んでいる間（Playing）だけ数える。発射前・待ち・出撃待ち・一時停止の間は数えない | 自動（単体） | `tests/unit/time-bonus.test.ts` |
+| MGW-TC-0013-08 | 7 | 時間ボーナスの大きさが、遊んで納得できる（早く倒すと上乗せになる） | 手動（iPhone・PC） | 何回か遊んでクリアし、早くクリアしたときほどクリアの表示の BONUS が大きく、UFO の得点とくらべて大きすぎも小さすぎもしない |

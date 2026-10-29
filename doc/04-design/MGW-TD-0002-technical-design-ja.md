@@ -3,7 +3,7 @@ id: MGW-TD-0002
 type: technical-design
 title: core の設計（定数・状態・ステップ・当たり判定・得点・音の計画）
 status: stable
-version: 1.5
+version: 1.6
 updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
@@ -89,6 +89,8 @@ verified: null
 | `KILL_EFFECT_STEPS` | 120（1 秒） | §6.1 | UFO を倒してから、爆発と得点を出す長さ（`EXIT_RESPAWN` と同じ） |
 | `UFO_FRAME_STEPS` | 30（0.25 秒） | §3.2 | UFO・光線の 2 コマを切り替える間隔 |
 | `SCORE_MAX` | 99,999 ★ | | 5 桁で止める |
+| `TIME_BONUS_BASE` | 180 秒 | §6.4、§11 | 時間ボーナスの基準（仕様書 v1.9） |
+| `TIME_BONUS_PER_SEC` | 5 点 | §6.4、§11 | 1 秒早いごとに増える点 |
 
 ## 3. 型（`types.ts`）
 
@@ -128,6 +130,8 @@ export interface GameState {
   explosion: { x: number; y: number; steps: number } | null;
   lastKill: { part: UfoPart; points: number } | null;
   killEffect: { x: number; y: number; points: number; steps: number } | null; // 倒した UFO の位置の爆発と得点（§6.4）
+  playSteps: number;             // 時間ボーナスの経過時間。ステップの始まりで playing のときだけ 1 足す（仕様書 v1.9）
+  timeBonus: number;             // クリアしたときの時間ボーナス（それまでは 0。§7.3）
 }
 
 export interface StepInput {
@@ -225,6 +229,13 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 
 得点を足したあと、`extended` が false で `score >= EXTEND_SCORE`（1000）なら、`lives += 1`、`extended = true`。スコアは 99,999 で止める。
 
+### 7.3 時間ボーナス（仕様書 v1.9）
+
+- `playSteps` は、`step` の始まりの状態が playing のときだけ 1 足す（ready・respawn・standby・paused・cleared・gameOver では足さない）。一時停止の間は `step` が何もしないので、足されない。
+- クリアが決まったステップで、`timeBonus = timeBonusOf(playSteps)` を求め、`score = min(SCORE_MAX, score + timeBonus)` にする。増機の判定（§7.2）には使わない。ゲームオーバーでは足さない（`timeBonus` は 0 のまま）。
+- `timeBonusOf(steps) = max(0, TIME_BONUS_BASE − floor(steps ÷ 120)) × TIME_BONUS_PER_SEC`（`scoring.ts`）。
+- 画面とランキングに出すタイムは、`clearTimeMs(steps) = floor(steps × 1000 ÷ 120 ÷ 100) × 100`（0.1 秒単位で切り捨てたミリ秒）。
+
 ## 8. 音の計画（`sound-plan.ts`）
 
 前のステップと次のステップの状態を比べて、鳴らす音を決める。
@@ -245,6 +256,7 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 - 当たり判定の順、UFO を倒したらミサイルが消えて 1 秒待つこと、光線弾き（MGW-US-0011、0012、0016）
 - 得点・600 点・増機・残機・待ち・ゲームオーバー・クリア・永久パターン防止・一時停止（MGW-US-0013、0016〜0020）
 - 音の計画（MGW-US-0023）
+- 時間ボーナス：式（境目の 179.99 秒・180 秒）、Playing の間だけ数えること、クリアで足し、ゲームオーバーでは足さないこと、増機に使わないこと（MGW-US-0013）
 - 同じ種と同じ入力の列から同じ結果、60 Hz と 120 Hz の描画で同じ結果、`planSteps` の上限（MGW-US-0030）
 - 出撃待ち：待ちのあと standby になり、`launch` で ready（x = 240）、そのステップでは発射しない、光線を撃たない、永久パターン防止は進む、一時停止から standby に戻る（MGW-US-0016、0018）
 - 隕石の初めの並び：同じ種なら同じ、種が違えば変わる、となりどうしの間が 501.6 以上（MGW-US-0010）
@@ -265,3 +277,4 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 | 1.3 | 2026-10-28 | §2・§7.2：増機の点数を 3000 から 1000 にする（仕様書 v1.5、doc/requests/2026-10-27-spec-1.5-extend-score.md） |
 | 1.4 | 2026-10-28 | 仕様書 v1.6：§2 の速さ（1/4、光線 1/2）・隕石 11 段・新しい定数、§3 の `waitReason` と `killEffect`、§5 の隕石の道のり、§6 の手順と §6.4（UFO を倒したらミサイルを消して 1 秒待つ）、§8 の音 |
 | 1.5 | 2026-10-29 | 仕様書 v1.7：§2 の `METEOR_PATH_LENGTH`・`METEOR_MIN_GAP`、§3 の `standby`、§4 の `newGame` の種・`random.ts`、§5 の隕石の初めの並び、§6 の出撃待ち、§9 のテスト、§10 の乱数 |
+| 1.6 | 2026-10-29 | 仕様書 v1.9：§2 の `TIME_BONUS_BASE`・`TIME_BONUS_PER_SEC`、§3 の `playSteps`・`timeBonus`、§7.3 時間ボーナス、§9 のテスト |
