@@ -3,13 +3,13 @@ id: MGW-WS-0012
 type: workstream
 title: 時間ボーナス（修正用）
 status: stable
-version: 1.0
+version: 1.1
 updated: 2026-10-29
 sources:
   - MGW-EP-0002（v1.0）
   - MGW-EP-0003（v1.3）
   - MGW-EP-0006（v1.1）
-  - MGW-TST-0001（v1.5）
+  - MGW-TST-0001（v1.6）
   - doc/requests/2026-10-29-spec-1.9-time-bonus.md
 verified: null
 ---
@@ -17,7 +17,7 @@ verified: null
 # MGW-WS-0012 時間ボーナス（修正用）
 
 * **epic**：MGW-EP-0002、MGW-EP-0003、MGW-EP-0006
-* **実施の順**：12 / 12（前：MGW-WS-0011。このあとリリース）
+* **実施の順**：12 / 13（前：MGW-WS-0011、次：MGW-WS-0013）
 
 ## ねらい
 
@@ -37,6 +37,7 @@ verified: null
 | 10 | MGW-WS-0010 | 遊んでみて気になった所の修正と、ランキング・クレジット・効果音（完了） |
 | 11 | MGW-WS-0011 | タイトル画面の点数の説明・ボタンとクレジットの名前（完了） |
 | 12 | **MGW-WS-0012** | 時間ボーナス |
+| 13 | MGW-WS-0013 | 弾の絵・隕石の尾・出撃の位置・名前の入力欄（修正用、仕様書 v1.10） |
 
 ## user-story
 

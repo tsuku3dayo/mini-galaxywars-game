@@ -3,18 +3,18 @@ id: MGW-WS-0003
 type: workstream
 title: 流れと HUD
 status: stable
-version: 1.5
+version: 1.6
 updated: 2026-10-29
 sources:
   - MGW-EP-0003（v1.3）
-  - MGW-TST-0001（v1.5）
+  - MGW-TST-0001（v1.6）
 verified: null
 ---
 
 # MGW-WS-0003 流れと HUD
 
 * **epic**：MGW-EP-0003
-* **実施の順**：3 / 12（前：MGW-WS-0002、次：MGW-WS-0004）
+* **実施の順**：3 / 13（前：MGW-WS-0002、次：MGW-WS-0004）
 
 ## ねらい
 

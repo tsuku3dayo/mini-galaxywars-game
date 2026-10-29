@@ -10,11 +10,11 @@ sources:
   - MGW-TC-0005（v1.1）
   - MGW-TC-0007（v1.1）
   - MGW-TC-0008（v1.1）
-  - MGW-TC-0009（v1.2）
-  - MGW-TC-0010（v1.2）
+  - MGW-TC-0009（v1.3）
+  - MGW-TC-0010（v1.3）
   - MGW-TC-0011（v1.1）
   - MGW-TC-0013（v1.2）
-  - MGW-TC-0016（v1.2）
+  - MGW-TC-0016（v1.3）
 verified:
   by: tsuku3dayo
   at: 2026-10-29T10:09:17+09:00

@@ -10,7 +10,7 @@ sources:
   - MGW-TC-0013（v1.2）
   - MGW-TC-0015（v1.2）
   - MGW-TC-0017（v1.1）
-  - MGW-TC-0025（v1.2）
+  - MGW-TC-0025（v1.3）
   - MGW-TC-0026（v1.2）
   - MGW-TC-0027（v1.2）
 verified:

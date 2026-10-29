@@ -9,9 +9,9 @@ sources:
   - MGW-TASK-0028（v1.0）
   - MGW-TC-0005（v1.1）
   - MGW-TC-0006（v1.1）
-  - MGW-TC-0009（v1.2）
-  - MGW-TC-0010（v1.2）
-  - MGW-TC-0016（v1.2）
+  - MGW-TC-0009（v1.3）
+  - MGW-TC-0010（v1.3）
+  - MGW-TC-0016（v1.3）
   - MGW-TC-0018（v1.1）
   - MGW-TC-0021（v1.1）
   - MGW-TC-0022（v1.0）
