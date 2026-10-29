@@ -2,7 +2,7 @@
 id: MGW-AC-0023
 type: attested-computation
 title: core の速さ・隕石の段・UFO を倒したときの流れの確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -15,7 +15,9 @@ sources:
   - MGW-TC-0011（v1.1）
   - MGW-TC-0013（v1.1）
   - MGW-TC-0016（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:09:17+09:00
 ---
 
 # MGW-AC-0023 core の速さ・隕石の段・UFO を倒したときの流れの確認

@@ -2,7 +2,7 @@
 id: MGW-AC-0024
 type: attested-computation
 title: 地面・残機・倒したときの表示・UFO の 2 コマ・隕石の尾の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -12,7 +12,9 @@ sources:
   - MGW-TC-0013（v1.1）
   - MGW-TC-0015（v1.1）
   - MGW-TC-0019（v1.2）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:09:17+09:00
 ---
 
 # MGW-AC-0024 地面・残機・倒したときの表示・UFO の 2 コマ・隕石の尾の確認

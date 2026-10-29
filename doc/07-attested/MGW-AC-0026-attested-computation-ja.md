@@ -2,14 +2,16 @@
 id: MGW-AC-0026
 type: attested-computation
 title: 名前「銀河戦争ミニ」とタイトル画面の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-TASK-0026（v1.0）
   - MGW-TC-0002（v1.1）
   - MGW-TC-0014（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:09:17+09:00
 ---
 
 # MGW-AC-0026 名前「銀河戦争ミニ」とタイトル画面の確認

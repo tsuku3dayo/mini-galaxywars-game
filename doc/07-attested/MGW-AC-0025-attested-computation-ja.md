@@ -2,13 +2,15 @@
 id: MGW-AC-0025
 type: attested-computation
 title: ミサイルの噴射音の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-TASK-0025（v1.0）
   - MGW-TC-0023（v1.2）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:09:17+09:00
 ---
 
 # MGW-AC-0025 ミサイルの噴射音の確認
