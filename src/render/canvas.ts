@@ -18,10 +18,12 @@ import {
   LIVES_Y,
 } from './hud';
 import { killEffectView } from './kill-effect';
+import { showsLauncher, showsMissile } from './view';
 import {
   BACKFIRE,
   BEAM,
   bake,
+  beamFrame,
   EXPLOSION,
   FONT,
   GLYPH_CELL,
@@ -39,7 +41,7 @@ import {
 export interface View {
   mode: DisplayMode;
   showHud: boolean;
-  /** 光線の揺れ・炎の点滅に使う */
+  /** UFO・光線のコマ、炎の点滅に使う（ステップの数） */
   tick: number;
 }
 
@@ -100,13 +102,14 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
       ctx.fillRect(0, 0, FIELD_WIDTH, FIELD_HEIGHT);
       if (!state) return;
 
-      // 2. 隕石（尾つき）→ 光線 → UFO（2 コマ）→ 発射台 → ミサイル → バックファイア → 爆発 → UFO を倒したときの爆発・得点
+      // 2. 隕石（尾つき）→ 光線（2 コマ）→ UFO（2 コマ）→ 発射台（発射前だけ）→ ミサイル → バックファイア → 爆発 → UFO を倒したときの爆発・得点
       for (const m of state.meteors) {
         put(art.meteor, m.x, m.y);
         put(art.meteorTrail, meteorTrailX(m), m.y);
       }
-      const beamFrame = art.beam[Math.floor(view.tick / 8) % art.beam.length]!;
-      for (const b of state.beams) put(beamFrame, b.x, b.y);
+      // 光線も UFO と同じ時にコマを切り替える
+      const beamArt = art.beam[beamFrame(view.tick)]!;
+      for (const b of state.beams) put(beamArt, b.x, b.y);
       // 8 機とも同じコマ（0.25 秒ごとに切り替える）
       const ufoArt = art.ufo[ufoFrame(view.tick)]!;
       for (const u of state.ufos) {
@@ -116,9 +119,8 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
         if (u.x < UFO_W / 2) put(ufoArt, u.x + FIELD_WIDTH, u.y);
         if (u.x > FIELD_WIDTH - UFO_W / 2) put(ufoArt, u.x - FIELD_WIDTH, u.y);
       }
-      const onField = state.status === 'ready' || state.status === 'playing' || state.pausedFrom === 'ready' || state.pausedFrom === 'playing';
-      if (onField) {
-        put(art.launcher, state.launcherX, LAUNCHER_Y);
+      if (showsLauncher(state)) put(art.launcher, state.launcherX, LAUNCHER_Y);
+      if (showsMissile(state)) {
         put(art.missile, state.missile.x, state.missile.y);
         // 噴射中だけ、ミサイルの下に点滅する炎
         if (state.missile.isBoosting && Math.floor(view.tick / 4) % 2 === 0) {

@@ -8,8 +8,8 @@ updated: 2026-10-28
 sources:
   - MGW-US-0015（v1.1）
   - MGW-TST-0001（v1.3）
-  - MGW-TD-0003（v1.2）
-  - MGW-TD-0004（v1.1）
+  - MGW-TD-0003（v1.3）
+  - MGW-TD-0004（v1.2）
 verified: null
 ---
 

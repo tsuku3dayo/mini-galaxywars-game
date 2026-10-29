@@ -1,4 +1,4 @@
-// プレイ画面の中央の表示と Pause（MGW-GUI-0003 §2・§4、MGW-TD-0004 §4・§5）
+// プレイ画面の中央の表示・出撃待ちの案内・一時停止のボタン（MGW-GUI-0003 §2・§4、MGW-TD-0004 §2・§4・§5）
 import { STEPS_PER_SECOND } from '../../core/config';
 import type { GameState } from '../../core/types';
 import { setData } from '../debug';
@@ -22,18 +22,48 @@ function button(label: string, onClick: () => void): HTMLButtonElement {
   return b;
 }
 
-/** 上のバーの右の Pause（プレイ中だけ。押しても発射・移動しない） */
-export function createPauseButton(topbar: HTMLElement, onToggle: () => void): void {
-  const pause = button('Pause', onToggle);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/** 一時停止の印（‖）。インラインの SVG で描く（MGW-GUI-0001 §5.1） */
+function pauseIcon(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 16 16');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.classList.add('icon');
+  for (const x of ['4', '10']) {
+    const bar = document.createElementNS(SVG_NS, 'rect');
+    bar.setAttribute('x', x);
+    bar.setAttribute('y', '2');
+    bar.setAttribute('width', '2.5');
+    bar.setAttribute('height', '12');
+    bar.setAttribute('rx', '1');
+    bar.setAttribute('fill', 'currentColor');
+    svg.append(bar);
+  }
+  return svg;
+}
+
+/** ボタンの段の左の一時停止（プレイ中だけ。押しても発射・移動しない） */
+export function createPauseButton(row: HTMLElement, onToggle: () => void): void {
+  const pause = button('一時停止', onToggle);
   pause.id = 'pause-button';
-  topbar.append(pause);
+  pause.prepend(pauseIcon());
+  row.append(pause);
 }
 
 /**
  * onEnd は、終わってから END_WAIT_MS たったときに 1 回だけ呼ぶ。
- * ランキング登録（名前の入力）に進んだら true を返す。false なら「TITLE」を出す
+ * ランキング登録（名前の入力）に進んだら true を返す。false なら「TITLE」を出す。
+ * hint は出撃待ちの案内（タッチ端末は「タップで出撃」、PC は「クリック/SPACEで出撃」）
  */
-export function createPlayOverlay(root: HTMLElement, onResume: () => void, onEnd: (score: number) => boolean): PlayOverlay {
+export function createPlayOverlay(
+  root: HTMLElement,
+  hint: HTMLElement,
+  touch: boolean,
+  onResume: () => void,
+  onEnd: (score: number) => boolean,
+): PlayOverlay {
+  hint.textContent = touch ? 'タップで出撃' : 'クリック/SPACEで出撃';
   const section = document.createElement('section');
   section.id = 'overlay-message';
   const main = document.createElement('p');
@@ -94,6 +124,7 @@ export function createPlayOverlay(root: HTMLElement, onResume: () => void, onEnd
       section.hidden = mainText === '';
       // 一時停止の間は、うしろを暗くする
       section.classList.toggle('dim', paused);
+      hint.hidden = state?.status !== 'standby';
       setData('overlay', overlay);
     },
   };

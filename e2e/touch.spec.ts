@@ -24,7 +24,7 @@ const control = (page: Page) => page.locator('#control-area');
 const field = (page: Page) => page.locator('#game');
 
 test.describe('タッチ操作と操作空間', () => {
-  test('MGW-TC-0021-01 タッチ端末では、フィールドの下に高さ 96 の操作空間が出る', async ({ page, isMobile }) => {
+  test('MGW-TC-0021-01 タッチ端末では、フィールドの下に高さ 96 の操作空間が、角の丸い枠に囲まれて出る。中に「ここをなぞって移動・タップで発射」と出る', async ({ page, isMobile }) => {
     await openPlay(page);
     if (!isMobile) {
       // PC では出さない
@@ -32,7 +32,17 @@ test.describe('タッチ操作と操作空間', () => {
       return;
     }
     await expect(control(page)).toBeVisible();
-    await expect(control(page)).toContainText('なぞって移動 ・ タップで発射');
+    await expect(control(page)).toHaveText('ここをなぞって移動・タップで発射');
+    // 角の丸い枠（線と背景）で囲む
+    const box = await control(page)
+      .locator('.control-box')
+      .evaluate((el) => {
+        const s = getComputedStyle(el);
+        return { radius: parseFloat(s.borderTopLeftRadius), border: parseFloat(s.borderTopWidth), bg: s.backgroundColor };
+      });
+    expect(box.radius).toBeGreaterThan(0);
+    expect(box.border).toBeGreaterThan(0);
+    expect(box.bg).not.toBe('rgba(0, 0, 0, 0)');
     const stage = (await field(page).boundingBox())!;
     const area = (await control(page).boundingBox())!;
     // ゲーム画面のすぐ下に、同じ幅で、論理 96（ゲーム画面の 640 に対して）の高さ
@@ -57,9 +67,11 @@ test.describe('タッチ操作と操作空間', () => {
         await expect.poll(async () => (await getState(page)).launcherX).toBeCloseTo(100, 0);
         await finger(target, 'pointermove', await clientX(page, 400), y);
         await expect.poll(async () => (await getState(page)).launcherX).toBeCloseTo(400, 0);
-        // 発射台を真ん中に戻してから離す（離すと発射するので、次の確かめのために戻す）
+        // 発射台を真ん中に戻してから離す。なぞって離したときは発射しない（MGW-TC-0021-06）ので、タップで発射する
         await finger(target, 'pointermove', await clientX(page, 240), y);
         await expect.poll(async () => (await getState(page)).launcherX).toBeCloseTo(240, 0);
+        await finger(target, 'pointerup', await clientX(page, 240), y);
+        await finger(target, 'pointerdown', await clientX(page, 240), y);
         await finger(target, 'pointerup', await clientX(page, 240), y);
         await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
         // 発射後はミサイルが指の x を追う
@@ -73,7 +85,35 @@ test.describe('タッチ操作と操作空間', () => {
       }
     });
 
-    test('MGW-TC-0021-03 操作空間かプレイ空間をタップすると発射する', async ({ page }) => {
+    test('MGW-TC-0021-06 操作空間かプレイ空間をなぞって動かしてから離しても、発射しない', async ({ page }) => {
+      for (const target of [control(page), field(page)]) {
+        await openPlay(page);
+        await clearField(page);
+        const y = await centerY(target);
+        await finger(target, 'pointerdown', await clientX(page, 240), y);
+        await finger(target, 'pointermove', await clientX(page, 300), y);
+        await expect.poll(async () => (await getState(page)).launcherX).toBeGreaterThan(260);
+        await finger(target, 'pointerup', await clientX(page, 300), y);
+        // 離しても発射前のまま（しばらく待っても）
+        await page.waitForTimeout(300);
+        await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
+        expect((await getState(page)).missile.isLaunched).toBe(false);
+        // 戻ってきて同じ場所で離しても（動いた距離で決める）発射しない
+        await finger(target, 'pointerdown', await clientX(page, 300), y);
+        await finger(target, 'pointermove', await clientX(page, 200), y);
+        await finger(target, 'pointermove', await clientX(page, 300), y);
+        await finger(target, 'pointerup', await clientX(page, 300), y);
+        await page.waitForTimeout(300);
+        await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
+        // 少しのぶれ（10 px 未満）はタップとして発射する
+        await finger(target, 'pointerdown', await clientX(page, 300), y);
+        await finger(target, 'pointermove', (await clientX(page, 300)) + 4, y + 3);
+        await finger(target, 'pointerup', (await clientX(page, 300)) + 4, y + 3);
+        await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
+      }
+    });
+
+    test('MGW-TC-0021-03 操作空間かプレイ空間をタップ（10 px 未満しか動かないもの）すると発射する', async ({ page }) => {
       for (const target of [control, field]) {
         await openPlay(page);
         await clearField(page);

@@ -40,7 +40,7 @@ describe('発射台', () => {
     expect(run(newGame(0, 1), 1000, input({ targetX: 480 })).launcherX).toBe(LAUNCHER_X_MAX);
   });
 
-  it('MGW-TC-0006-04 Space かクリックで発射し、ミサイルが上昇を始める', () => {
+  it('MGW-TC-0006-04 Space かクリック（10 px 未満しか動かないもの）で発射し、ミサイルが上昇を始める', () => {
     const launched = launch(newGame(0, 1));
     expect(launched.status).toBe('playing');
     expect(launched.missile.isLaunched).toBe(true);

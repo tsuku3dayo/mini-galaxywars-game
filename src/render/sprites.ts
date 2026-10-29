@@ -167,8 +167,13 @@ export function meteorTrailX(meteor: { x: number; direction: 1 | -1 }): number {
 }
 
 /** 光線 4 × 16（波の形）。2 枚を切り替えて揺らす */
-const WAVE = ['##..', '.##.', '..##', '.##.'];
-export const BEAM = [0, 2].map((shift) => plain(Array.from({ length: 16 }, (_, i) => WAVE[(i + shift) % WAVE.length]!)));
+// 2 コマは形をはっきり変える（仕様書 v1.7）：1 コマ目は太く細かい波、2 コマ目は細く大きな波（同じ波をずらすだけでは違いが見えない）
+const WAVE_TIGHT = ['##..', '.##.', '..##', '.##.'];
+const WAVE_WIDE = ['#...', '.#..', '..#.', '...#', '...#', '..#.', '.#..', '#...'];
+export const BEAM = [WAVE_TIGHT, WAVE_WIDE].map((wave) => plain(Array.from({ length: 16 }, (_, i) => wave[i % wave.length]!)));
+
+/** 光線のコマ。UFO と同じ時に切り替える（0.25 秒ごと） */
+export const beamFrame = ufoFrame;
 
 /** バックファイア 8 × 12（ミサイルの下の炎） */
 export const BACKFIRE = mirrored(['####', '####', '.###', '.###', '..##', '..##', '..##', '...#', '...#', '...#', '...#', '...#']);
