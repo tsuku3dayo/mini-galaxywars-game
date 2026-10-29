@@ -54,12 +54,15 @@ const file = (entries: unknown, patch: Record<string, unknown> = {}) =>
   JSON.stringify({ app: 'mini-galaxywars', version: 1, entries, ...patch });
 
 describe('ランキングの保存', () => {
-  it('MGW-TC-0025-02 記録するのは、スコア・プレイヤー名・日時・結果（クリアかゲームオーバー）', () => {
+  it('MGW-TC-0025-02 記録するのは、スコア（クリアは合計）・プレイヤー名・日時・結果と、クリアのタイム', () => {
     const { store, saved } = setup();
-    expect(store.add(1250, 'haru', 'clear')).toBe(1);
+    expect(store.add(1250, 'haru', 'clear', 95_700)).toBe(1);
     expect(store.add(900, 'たあ', 'gameOver')).toBe(2);
     const [e, g] = saved().entries;
-    expect(Object.keys(e!).sort()).toEqual(['date', 'name', 'result', 'score']);
+    expect(Object.keys(e!).sort()).toEqual(['date', 'name', 'result', 'score', 'time']);
+    expect(e!.time).toBe(95_700);
+    // ゲームオーバーにはタイムを付けない（渡されても付けない）
+    expect(Object.keys(saved().entries[1]!).sort()).toEqual(['date', 'name', 'result', 'score']);
     expect(e!.score).toBe(1250);
     // 名前は大文字に直さない（仕様書 v1.7）
     expect(e!.name).toBe('haru');
@@ -215,6 +218,20 @@ describe('ランキングの保存（そのほか）', () => {
     expect(store.load().map((e) => e.result ?? '-')).toEqual(['-', 'clear', '-']);
   });
 
+  it('MGW-TC-0027-07 タイムが 0〜1,000,000 ミリ秒の整数でない記録や、クリアでない記録にタイムがあるファイルは読み込まない', () => {
+    const { store } = setup();
+    const clear = (time: unknown) => ({ ...entry(1575, 'たあ'), result: 'clear', time });
+    // 正しいタイムは読める
+    expect(store.parseImport(file([clear(0), clear(95_700), clear(1_000_000)])).ok).toBe(true);
+    // 形の違うタイムは読まない
+    for (const bad of [clear(-100), clear(1_000_100), clear(95.5), clear('95700'), { ...entry(390, 'はる'), result: 'gameOver', time: 10_000 }, { ...entry(390, 'はる'), time: 10_000 }]) {
+      expect(store.parseImport(file([bad])), JSON.stringify(bad)).toEqual({ ok: false });
+    }
+    // 書き出したタイムはそのまま戻る
+    store.add(1575, 'たあ', 'clear', 95_700);
+    const parsed = store.parseImport(store.exportJson());
+    expect(parsed.ok && parsed.entries[0]!.time).toBe(95_700);
+  });
   it('MGW-TC-0032-02 「消す」で全部消え、「やめる」では何も変わらない（全消去）', () => {
     const { storage, store, saved } = setup();
     store.add(1520, 'たあ', 'clear');

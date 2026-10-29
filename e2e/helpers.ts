@@ -93,6 +93,8 @@ export interface RankingRow {
   date: string;
   /** 仕様書 v1.7 から。前からの記録にはない */
   result?: 'clear' | 'gameOver';
+  /** 仕様書 v1.9 から。クリアのタイム（ミリ秒） */
+  time?: number;
 }
 
 /** localStorage のランキング（MGW-TD-0006 §1.1）を入れる。読むのは、終わったとき・画面に入ったとき */

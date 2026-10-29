@@ -265,6 +265,24 @@ button:active,
   font-size: 22px;
 }
 
+/* クリアの結果（UFO・TIME・BONUS・TOTAL。仕様書 v1.9）。等幅の文字で値の始まりをそろえる */
+.message-result {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 18px;
+  white-space: pre;
+  text-align: left;
+}
+
+.message-result p {
+  margin: 0;
+}
+
+.message-result[hidden] {
+  display: none;
+}
+
 body:not([data-screen='play']) #overlay-message {
   display: none;
 }
