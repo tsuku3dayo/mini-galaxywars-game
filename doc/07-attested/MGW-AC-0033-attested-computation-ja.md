@@ -2,13 +2,15 @@
 id: MGW-AC-0033
 type: attested-computation
 title: 経過時間・時間ボーナス・合計の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-TASK-0033（v1.0）
   - MGW-TC-0013（v1.2）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T17:25:01+09:00
 ---
 
 # MGW-AC-0033 経過時間・時間ボーナス・合計の確認

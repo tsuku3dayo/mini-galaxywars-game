@@ -2,7 +2,7 @@
 id: MGW-AC-0034
 type: attested-computation
 title: HUD の TIME・クリアの表示の 4 行・ランキングのタイムの確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -13,7 +13,9 @@ sources:
   - MGW-TC-0025（v1.2）
   - MGW-TC-0026（v1.2）
   - MGW-TC-0027（v1.2）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T17:25:01+09:00
 ---
 
 # MGW-AC-0034 HUD の TIME・クリアの表示の 4 行・ランキングのタイムの確認
