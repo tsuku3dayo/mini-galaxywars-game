@@ -3,11 +3,11 @@ id: MGW-WS-0008
 type: workstream
 title: 増機の点数（修正用）
 status: stable
-version: 1.5
-updated: 2026-10-29
+version: 1.6
+updated: 2026-10-30
 sources:
   - MGW-EP-0003（v1.3）
-  - MGW-TST-0001（v1.6）
+  - MGW-TST-0001（v1.7）
   - doc/requests/2026-10-27-spec-1.5-extend-score.md
 verified: null
 ---
@@ -15,7 +15,7 @@ verified: null
 # MGW-WS-0008 増機の点数（修正用）
 
 * **epic**：MGW-EP-0003
-* **実施の順**：6 / 13（前：MGW-WS-0005、次：MGW-WS-0006）
+* **実施の順**：6 / 14（前：MGW-WS-0005、次：MGW-WS-0006）
 
 ## ねらい
 

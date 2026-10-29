@@ -3,12 +3,12 @@ id: MGW-TC-0014
 type: test-case
 title: タイトル画面から始める
 status: stable
-version: 1.3
-updated: 2026-10-29
+version: 1.4
+updated: 2026-10-30
 sources:
   - MGW-US-0014（v1.4）
-  - MGW-TST-0001（v1.6）
-  - MGW-TD-0004（v1.6）
+  - MGW-TST-0001（v1.7）
+  - MGW-TD-0004（v1.7）
 verified: null
 ---
 
@@ -30,3 +30,4 @@ verified: null
 | MGW-TC-0014-05 | 5 | タイトル画面に、UFO の絵と部位からの線で得点（側面・上部 50、下部中央 100、下部突起 150）を示す点数の説明と、「4 機目の突起は 600」が出る | 自動（単体） | `tests/unit/score-guide.test.ts` |
 | MGW-TC-0014-06 | 5 | 同上 | 自動（E2E） | `e2e/title.spec.ts` |
 | MGW-TC-0014-07 | 5 | 同上 | 手動（iPhone・PC） | タイトル画面の点数の説明が、元のゲームの説明（UFO から線を引いて 50・100・150）と同じように読め、どこに当てると何点かが分かる。「4 機目の突起は 600」も読める |
+| MGW-TC-0014-08 | 6 | タイトル画面の HIGH と同じ行の右端に、`v` と `package.json` の `version`（例：`v1.0.0`）が出て、HIGH と重ならず、HIGH より小さい文字で、ゲーム画面の枠からはみ出さない（仕様書 v1.11） | 自動（E2E） | `e2e/title.spec.ts` |

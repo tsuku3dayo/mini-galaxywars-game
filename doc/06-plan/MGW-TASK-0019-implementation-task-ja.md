@@ -6,7 +6,7 @@ status: stable
 version: 1.0
 updated: 2026-10-26
 sources:
-  - MGW-WS-0006（v1.6）
+  - MGW-WS-0006（v1.7）
   - MGW-TD-0006（v1.2）
   - MGW-TC-0027（v1.2）
 verified: null

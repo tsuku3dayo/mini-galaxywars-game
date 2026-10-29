@@ -7,7 +7,7 @@ version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-TASK-0032（v1.0）
-  - MGW-TC-0014（v1.3）
+  - MGW-TC-0014（v1.4）
   - MGW-TC-0022（v1.0）
   - MGW-TC-0033（v1.1）
 verified:

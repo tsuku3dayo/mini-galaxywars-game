@@ -3,13 +3,13 @@ id: MGW-WS-0012
 type: workstream
 title: 時間ボーナス（修正用）
 status: stable
-version: 1.1
-updated: 2026-10-29
+version: 1.2
+updated: 2026-10-30
 sources:
   - MGW-EP-0002（v1.0）
   - MGW-EP-0003（v1.3）
   - MGW-EP-0006（v1.1）
-  - MGW-TST-0001（v1.6）
+  - MGW-TST-0001（v1.7）
   - doc/requests/2026-10-29-spec-1.9-time-bonus.md
 verified: null
 ---
@@ -17,7 +17,7 @@ verified: null
 # MGW-WS-0012 時間ボーナス（修正用）
 
 * **epic**：MGW-EP-0002、MGW-EP-0003、MGW-EP-0006
-* **実施の順**：12 / 13（前：MGW-WS-0011、次：MGW-WS-0013）
+* **実施の順**：12 / 14（前：MGW-WS-0011、次：MGW-WS-0013）
 
 ## ねらい
 

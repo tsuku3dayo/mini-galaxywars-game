@@ -3,8 +3,8 @@ id: MGW-TD-0001
 type: technical-design
 title: 全体の設計（モジュール・データの流れ・画面との対応）
 status: stable
-version: 1.1
-updated: 2026-10-29
+version: 1.2
+updated: 2026-10-30
 sources:
   - MGW-SA-0001（v1.1）
   - MGW-TS-0001（v1.1）
@@ -94,7 +94,7 @@ sequenceDiagram
 | GUI | 部品・状態・メッセージ | 作るモジュール |
 | :--- | :--- | :--- |
 | MGW-GUI-0001 | 3 段の組み立て（ボタンの段）、倍率、安全領域、スクロールを 0 に戻す、色と文字、紺の画面と部品、アプリの名前 | `index.html`・`style.css`・`app/layout.ts`・`render/sprites.ts`（フォント）・`vite.config.ts`（マニフェスト） |
-| MGW-GUI-0002 | タイトル、HIGH、START・RANKING・SETTINGS・CREDITS・ランキング消去・効果音、操作の案内 | `app/screens/title.ts`・`app/screens/clear-ranking.ts`・`app/sound-toggle.ts` |
+| MGW-GUI-0002 | タイトル、HIGH、版、START・RANKING・SETTINGS・CREDITS・ランキング消去・効果音、操作の案内 | `app/screens/title.ts`・`app/screens/clear-ranking.ts`・`app/sound-toggle.ts`・`vite.config.ts`（版の埋め込み） |
 | MGW-GUI-0003 | HUD（SCORE・HIGH・残機）、ゲームの絵（光線の 2 コマ、発射前だけの発射台）、バックファイア、爆発、ゲーム画面と操作空間の枠 | `render/canvas.ts`・`render/sprites.ts`・`index.html`・`style.css`（枠） |
 | MGW-GUI-0003 | タッチの決まり（なぞる・タップで発射と出撃・触れ続けて噴射） | `app/input.ts` |
 | MGW-GUI-0003 | 一時停止・PAUSE・RESUME、READY・タップで出撃・GOOD!!・STAGE CLEAR・GAME OVER、TITLE | `app/screens/play.ts`（状態は `core/game.ts`） |
@@ -135,3 +135,4 @@ ESLint の設定で、ファイルの場所ごとに次をエラーにする。
 | :--- | :--- | :--- |
 | 1.0 | 2026-10-26 | 初版 |
 | 1.1 | 2026-10-29 | 仕様書 v1.7：§1 に `random.ts`・`credits`・`clear-ranking`、上のバーをなくす。§3 に紺の画面・ボタンの段・効果音・クレジットの部品 |
+| 1.2 | 2026-10-30 | 仕様書 v1.11：§3 のタイトル画面の版（`vite.config.ts` で `package.json` の `version` を埋め込む。MGW-TD-0004 §2.1） |

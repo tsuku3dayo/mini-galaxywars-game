@@ -3,10 +3,10 @@ id: MGW-TD-0004
 type: technical-design
 title: app の設計（ルーティング・画面・入力・ループ・テスト用の入口）
 status: stable
-version: 1.6
-updated: 2026-10-29
+version: 1.7
+updated: 2026-10-30
 sources:
-  - MGW-TD-0001（v1.1）
+  - MGW-TD-0001（v1.2）
   - MGW-TD-0002（v1.7）
   - MGW-ADR-0002（v1.1）
   - MGW-GUI-0001（v1.5）
@@ -87,6 +87,7 @@ verified: null
 - 上から：HIGH（左上）、アプリ名、点数の説明（MGW-TD-0003 §7 の Canvas と「4 機目の突起は 600」）、START・RANKING・SETTINGS・CREDITS・効果音（同じ大きさ。効果音は `.sound-toggle`）、操作の案内、ランキング消去（小さめ）。
 - 中身は `#screen-title` の中のスクロールできる箱に入れる。枠に収まるときはスクロールしない。収まらないとき（iPhone SE など）は `overflow-y: auto` で枠の中だけスクロールする（ページは動かさない。MGW-GUI-0001 §4）。
 - タイトル画面で `Space` を押したときは、ゲームを始め、中身をスクロールさせない（`preventDefault`）。
+- **版**（仕様書 v1.11）：`vite.config.ts` の `define` で、`package.json` の `version` を `__APP_VERSION__`（文字列）として埋め込む（型は `src/vite-env.d.ts` に書く）。`title.ts` は、HIGH と同じ行の右端に `.title-version`（`v` + 版。`aria-label` は「バージョン 1.0.0」の形）を置く。HIGH と同じくスクロールする箱の外に置き、`position: absolute` で HIGH の行の右に寄せて、行の高さを増やさない。文字は 13 px、色はうすい灰色。
 
 ## 3. 大きさ（`layout.ts`）
 
@@ -187,3 +188,4 @@ frame(now):
 | 1.4 | 2026-10-29 | 仕様書 v1.9：§1 の登録するもの（合計とタイム）、§5 のクリアの表示の 4 行 |
 | 1.5 | 2026-10-29 | 仕様書 v1.10：§4 の出撃の位置（`targetX`）、§1 の名前の入力欄の幅 |
 | 1.6 | 2026-10-29 | §1：名前の入力欄の幅を `calc(9.5em + 20px)` にした（`8em` では全角 8 文字が収まらなかった。MGW-TASK-0035 の実装に合わせる） |
+| 1.7 | 2026-10-30 | 仕様書 v1.11：§2.1 のタイトル画面の版（`__APP_VERSION__` と `.title-version`） |
