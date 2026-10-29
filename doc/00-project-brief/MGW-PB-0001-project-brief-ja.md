@@ -6,7 +6,7 @@ status: stable
 version: 1.3
 updated: 2026-10-28
 sources:
-  - doc/specification.md (v1.8) §1〜§25
+  - doc/specification.md (v1.9) §1〜§25
   - doc/requests/2026-10-26-stage1-only.md
   - doc/requests/2026-10-26-spec-1.2-open-items.md
   - doc/workflow.txt

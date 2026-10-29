@@ -2,16 +2,14 @@
 id: MGW-US-0027
 type: user-story
 title: ランキングを書き出す・読み込む
-status: stable
-version: 1.1
+status: review
+version: 1.2
 updated: 2026-10-29
 sources:
   - MGW-EP-0006（v1.1）
-  - doc/specification.md (v1.8) §9、§21
+  - doc/specification.md (v1.9) §9、§21
   - MGW-ADR-0005（v1.1）
-verified:
-  by: tsuku3dayo
-  at: 2026-10-29T10:42:24+09:00
+verified: null
 ---
 
 # MGW-US-0027 ランキングを書き出す・読み込む
@@ -34,6 +32,7 @@ verified:
 | 2 | 「記録を読み込む」で、書き出した JSON からランキングを戻せる（日本語の名前・結果も戻る） | 単体・E2E |
 | 3 | 形の違う JSON や、ほかのアプリの JSON（`app` が `mini-galaxywars` でない）は読み込まず、今の記録を変えない | 単体・E2E |
 | 4 | 仕様書 v1.6 までの形（英大文字の名前・結果なし）で書き出したファイルも読み込める | 単体 |
+| 5 | タイムが 0〜1,000,000 ミリ秒の整数でない記録や、クリアでない記録にタイムがあるファイルは読み込まない | 単体 |
 
 ## メモ
 

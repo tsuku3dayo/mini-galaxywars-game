@@ -2,15 +2,13 @@
 id: MGW-US-0017
 type: user-story
 title: 1 面をクリアする
-status: stable
-version: 1.0
-updated: 2026-10-26
+status: review
+version: 1.1
+updated: 2026-10-29
 sources:
   - MGW-EP-0003（v1.3）
-  - doc/specification.md (v1.8) §7、§8.1、§12
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  - doc/specification.md (v1.9) §7、§8.1、§12
+verified: null
 ---
 
 # MGW-US-0017 1 面をクリアする
@@ -31,6 +29,7 @@ verified:
 | :--- | :--- | :--- |
 | 1 | UFO を 8 機すべて倒すと、クリアの表示が出てゲームが終わる | 単体・E2E |
 | 2 | クリアのあと、スコアが上位 10 件に入るときはランキング登録（MGW-US-0025）に進み、入らないときは「TITLE」でタイトルに戻る | E2E |
+| 3 | クリアの表示の下に、UFO の得点・タイム（小数第 1 位で切り捨て）・時間ボーナス・合計が出る。ゲームオーバーでは出ない | E2E・手動（iPhone・PC） |
 
 ## 仕様書 §12 の受け入れ基準との対応
 

@@ -7,7 +7,7 @@ version: 1.0
 updated: 2026-10-26
 sources:
   - MGW-EP-0007（v1.0）
-  - doc/specification.md (v1.8) §1.1、§19
+  - doc/specification.md (v1.9) §1.1、§19
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:22:35+09:00
