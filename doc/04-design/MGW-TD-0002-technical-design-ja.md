@@ -12,20 +12,20 @@ sources:
   - MGW-US-0006（v1.1）
   - MGW-US-0007（v1.1）
   - MGW-US-0008（v1.1）
-  - MGW-US-0009（v1.2）
-  - MGW-US-0010（v1.2）
+  - MGW-US-0009（v1.3）
+  - MGW-US-0010（v1.3）
   - MGW-US-0011（v1.1）
   - MGW-US-0012（v1.0）
   - MGW-US-0013（v1.2）
-  - MGW-US-0016（v1.2）
+  - MGW-US-0016（v1.3）
   - MGW-US-0017（v1.1）
   - MGW-US-0018（v1.1）
   - MGW-US-0019（v1.2）
   - MGW-US-0020（v1.0）
   - MGW-US-0023（v1.3）
   - MGW-US-0030（v1.1）
-  - MGW-GUI-0003（v1.3）
-  - doc/specification.md (v1.9) §2、§3、§5、§6、§7、§11、§17、§22
+  - MGW-GUI-0003（v1.4）
+  - doc/specification.md (v1.10) §2、§3、§5、§6、§7、§11、§17、§22
   - doc/requests/2026-10-26-spec-1.4-design-values.md
 verified: null
 ---

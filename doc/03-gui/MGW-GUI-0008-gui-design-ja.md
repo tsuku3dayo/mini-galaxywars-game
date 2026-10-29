@@ -8,7 +8,7 @@ updated: 2026-10-29
 sources:
   - MGW-GUI-0001（v1.5）
   - MGW-US-0033（v1.1）
-  - doc/specification.md (v1.9) §18
+  - doc/specification.md (v1.10) §18
 verified:
   by: tsuku3dayo
   at: 2026-10-29T15:03:15+09:00
