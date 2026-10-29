@@ -44,7 +44,7 @@ test.describe('タイトル画面とルーティング', () => {
     }
   });
 
-  test('MGW-TC-0014-03 #/title・#/play・#/ranking のハッシュで画面が切り替わる', async ({ page }) => {
+  test('MGW-TC-0014-03 #/title・#/play・#/ranking・#/credits のハッシュで画面が切り替わる', async ({ page }) => {
     const body = page.locator('body');
     await page.goto('./#/ranking');
     await expect(body).toHaveAttribute('data-screen', 'ranking');
@@ -64,6 +64,13 @@ test.describe('タイトル画面とルーティング', () => {
     await expect(page.locator('#game')).toBeHidden();
     // プレイを離れたら、状態はなくなる
     await expect(body).toHaveAttribute('data-status', '');
+
+    await page.evaluate(() => (location.hash = '#/credits'));
+    await expect(body).toHaveAttribute('data-screen', 'credits');
+    await expect(page.locator('#screen-credits')).toBeVisible();
+    for (const other of ['#screen-title', '#screen-ranking', '#game']) await expect(page.locator(other)).toBeHidden();
+    await page.evaluate(() => (location.hash = '#/title'));
+    await expect(page.locator('#screen-credits')).toBeHidden();
 
     // タイトルの RANKING とランキングの BACK でも行き来できる。知らないハッシュはタイトル
     await page.locator('#screen-title').getByRole('link', { name: 'RANKING' }).click();

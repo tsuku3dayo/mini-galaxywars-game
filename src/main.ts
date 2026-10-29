@@ -14,6 +14,7 @@ import { createPauseButton, createPlayOverlay } from './app/screens/play';
 import { createRankingScreen } from './app/screens/ranking';
 import { createSettingsOverlay } from './app/screens/settings';
 import { createClearRankingOverlay } from './app/screens/clear-ranking';
+import { createCreditsScreen } from './app/screens/credits';
 import { createRankingStore, type RankingResult } from './storage/ranking-store';
 import { createSettingsStore } from './storage/settings-store';
 import { createTitleScreen } from './app/screens/title';
@@ -85,6 +86,8 @@ const settings = createSettingsOverlay(
 const ranking = createRankingStore(localStorage, () => new Date());
 const topScore = () => ranking.load()[0]?.score ?? 0;
 const rankingScreen = createRankingScreen(document.getElementById('screen-ranking')!, ranking);
+// クレジット（MGW-GUI-0008）。中身は変わらないので、一度だけ作る
+createCreditsScreen(document.getElementById('screen-credits')!);
 // ランキング消去の確認（MGW-GUI-0002 §2）。タイトルの上に重ねる
 const clearRanking = createClearRankingOverlay(
   stage,

@@ -164,7 +164,8 @@ body:not([data-screen='play']) #standby-hint {
 /* 画面はハッシュで切り替える（MGW-TD-0004 §1） */
 body:not([data-screen='play']) #game,
 body:not([data-screen='title']) #screen-title,
-body:not([data-screen='ranking']) #screen-ranking {
+body:not([data-screen='ranking']) #screen-ranking,
+body:not([data-screen='credits']) #screen-credits {
   display: none;
 }
 
@@ -505,6 +506,43 @@ body:not([data-screen='play']) #overlay-message {
 
 .ranking-confirm p {
   margin: 0;
+}
+
+/* クレジット画面（MGW-GUI-0008）。見出しは中央、役割（小さく薄い字）と名前（太字）を中央に縦に並べる */
+.credits-header {
+  position: relative;
+}
+
+.credits-header h2 {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.credits-list {
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.credits-list dt {
+  margin-top: 24px;
+  color: var(--navy-sub);
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.credits-list dt:first-child {
+  margin-top: 8px;
+}
+
+.credits-list dd {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 /* タイトル画面の小さめのボタン（CREDITS・ランキング消去・効果音。MGW-GUI-0002 §1） */
