@@ -3,7 +3,7 @@ id: MGW-TD-0006
 type: technical-design
 title: storage の設計（ランキング・設定・JSON）
 status: stable
-version: 1.1
+version: 1.2
 updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
@@ -39,6 +39,7 @@ verified: null
 ```
 
 - `entries` はスコアの高い順、最大 10 件。同じスコアなら、先に登録した方（`date` が古い方）を上にする★。
+- `time` はクリアのタイム（ミリ秒。0.1 秒単位で切り捨てた 0〜1,000,000 の整数。仕様書 v1.9）。クリアの記録だけに付け、前からの記録にはない。
 - `result` は `"clear"` か `"gameOver"`（仕様書 v1.7）。前からの記録にはないので、なくてもよい（`version` は 1 のまま）。読んだ記録に `result` がなければ、そのまま（足さない）。
 - 書き出しの JSON も同じ形。ファイル名は `mini-galaxywars-ranking-YYYYMMDD.json`。
 
@@ -50,7 +51,7 @@ verified: null
 | :--- | :--- |
 | `load(): RankingEntry[]` | 読む。無い・壊れている・形が違うときは空として扱う（保存はし直さない） |
 | `rankOf(score): number \| null` | 入るなら順位（1〜10）、入らないなら null。0 点は入らない |
-| `add(score, name, result): number` | 足して並べ直し、10 件に切って保存。入った順位を返す。`result` は `'clear'`・`'gameOver'` |
+| `add(score, name, result, time?): number` | 足して並べ直し、10 件に切って保存。入った順位を返す。`result` は `'clear'`・`'gameOver'`。`time` はクリアのときだけ |
 | `exportJson(): string` | 今の内容を 1.1 の形で（2 文字の字下げ） |
 | `parseImport(text): { ok: true; entries } \| { ok: false }` | 1.3 で調べる。今の記録は変えない |
 | `replaceAll(entries)` | 読み込みの確認のあとに、まるごと置き換える |
@@ -63,7 +64,7 @@ verified: null
 - JSON として読めない
 - `app` が `"mini-galaxywars"` でない、`version` が 1 でない
 - `entries` が配列でない、11 件以上
-- どれかの項目で、`score` が 0〜99,999 の整数でない、`name` が 1.4 の決まりに合わない、`date` が日時として読めない、`result` があるのに `"clear"`・`"gameOver"` でない
+- どれかの項目で、`score` が 0〜99,999 の整数でない、`name` が 1.4 の決まりに合わない、`date` が日時として読めない、`result` があるのに `"clear"`・`"gameOver"` でない、`time` があるのに 0〜1,000,000 の整数でない、`time` があるのに `result` が `"clear"` でない
 
 前の形（英大文字の名前・`result` なし）のファイルは、この検査に通る（MGW-US-0027）。
 
@@ -90,7 +91,7 @@ localStorage `mini-galaxywars-settings`：
 
 ## 3. 日付の表示
 
-ランキング画面は、端末の時刻で `YYYY/MM/DD HH:MM`（仕様書 v1.7。前は `YYYY-MM-DD`）。スコアは 3 けたごとにカンマ（`1,520`）。保存はタイムゾーン付きの ISO 8601。
+ランキング画面は、端末の時刻で `YYYY/MM/DD HH:MM`。クリアのタイムは `95.7 秒`（`time ÷ 1000` を小数第 1 位で）（仕様書 v1.7。前は `YYYY-MM-DD`）。スコアは 3 けたごとにカンマ（`1,520`）。保存はタイムゾーン付きの ISO 8601。
 
 ## 4. 確かめ方
 
@@ -104,3 +105,4 @@ localStorage `mini-galaxywars-settings`：
 | :--- | :--- | :--- |
 | 1.0 | 2026-10-26 | 初版 |
 | 1.1 | 2026-10-29 | 仕様書 v1.7：§1.1 の `result`、§1.2 の `add` の結果と `clearAll`、§1.3・§1.4 の名前（日本語・書記素で数える・変換の途中は削らない）、§2 の `sound`、§3 の日時の形 |
+| 1.2 | 2026-10-29 | 仕様書 v1.9：§1.1 の `time`、§1.2 の `add` のタイム、§1.3 のタイムの検査、§3 のタイムの表示 |

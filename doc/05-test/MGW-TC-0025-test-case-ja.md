@@ -3,13 +3,13 @@ id: MGW-TC-0025
 type: test-case
 title: ランキングに登録する
 status: stable
-version: 1.1
+version: 1.2
 updated: 2026-10-29
 sources:
   - MGW-US-0025（v1.2）
-  - MGW-TST-0001（v1.4）
-  - MGW-TD-0006（v1.1）
-  - MGW-TD-0004（v1.3）
+  - MGW-TST-0001（v1.5）
+  - MGW-TD-0006（v1.2）
+  - MGW-TD-0004（v1.4）
 verified: null
 ---
 
@@ -25,7 +25,7 @@ verified: null
 | 確認 ID | 条件 No | 確かめること | 種類 | 確かめる場所・手動の手順 |
 | :--- | :--- | :--- | :--- | :--- |
 | MGW-TC-0025-01 | 1 | クリアかゲームオーバーでゲームが終わり、スコアが上位 10 件に入るとき、名前を入れて登録できる | 自動（E2E） | `e2e/ranking.spec.ts` |
-| MGW-TC-0025-02 | 2 | 記録するのは、スコア・プレイヤー名・日時・結果（クリアかゲームオーバー） | 自動（単体） | `tests/unit/ranking-store.test.ts` |
+| MGW-TC-0025-02 | 2 | 記録するのは、スコア（クリアは時間ボーナスを足した合計）・プレイヤー名・日時・結果（クリアかゲームオーバー）と、クリアのタイム | 自動（単体） | `tests/unit/ranking-store.test.ts` |
 | MGW-TC-0025-03 | 3 | localStorage の `galaxy-wars-scores` に、スコアの高い順で上位 10 件だけを残す | 自動（単体） | `tests/unit/ranking-store.test.ts` |
 | MGW-TC-0025-04 | 4 | ページを読み込み直しても、記録が残っている | 自動（E2E） | `e2e/ranking.spec.ts` |
 | MGW-TC-0025-05 | 5 | 名前は 1〜8 文字で、ひらがな・カタカナ・漢字・英数字を入れられる。日本語の変換の途中で文字が消えない | 自動（単体） | `tests/unit/ranking-store.test.ts` |

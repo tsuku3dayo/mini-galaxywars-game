@@ -3,11 +3,11 @@ id: MGW-WS-0008
 type: workstream
 title: 増機の点数（修正用）
 status: stable
-version: 1.3
+version: 1.4
 updated: 2026-10-29
 sources:
   - MGW-EP-0003（v1.3）
-  - MGW-TST-0001（v1.4）
+  - MGW-TST-0001（v1.5）
   - doc/requests/2026-10-27-spec-1.5-extend-score.md
 verified: null
 ---
@@ -15,7 +15,7 @@ verified: null
 # MGW-WS-0008 増機の点数（修正用）
 
 * **epic**：MGW-EP-0003
-* **実施の順**：6 / 11（前：MGW-WS-0005、次：MGW-WS-0006）
+* **実施の順**：6 / 12（前：MGW-WS-0005、次：MGW-WS-0006）
 
 ## ねらい
 
@@ -34,6 +34,7 @@ verified: null
 | 9 | MGW-WS-0009 | 元のゲームに寄せる修正（修正用、仕様書 v1.6） |
 | 10 | MGW-WS-0010 | 遊んでみて気になった所の修正と、ランキング・クレジット・効果音（修正用、仕様書 v1.7） |
 | 11 | MGW-WS-0011 | タイトル画面の点数の説明・ボタンとクレジットの名前（修正用、仕様書 v1.8） |
+| 12 | MGW-WS-0012 | 時間ボーナス（修正用、仕様書 v1.9） |
 
 ## user-story
 
