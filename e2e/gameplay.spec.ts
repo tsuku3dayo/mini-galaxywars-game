@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { advance, endGame, freeze, FULL_RANKING, getState, openPlay, rankLine, seedRanking, setState } from './helpers';
+import { advance, clearField, endGame, freeze, FULL_RANKING, getState, hasInk, openPlay, rankLine, seedRanking, setState } from './helpers';
 
 test.describe('プレイ', () => {
   test('MGW-TC-0017-02 UFO を 8 機すべて倒すと、クリアの表示が出てゲームが終わる', async ({ page }) => {
@@ -79,6 +79,93 @@ test.describe('プレイ', () => {
       await expect(body).toHaveAttribute('data-screen', 'title');
     });
   }
+
+  test('MGW-TC-0010-08 隕石の初めの並びはゲームごとに変わる（種から決める）', async ({ page }) => {
+    const meteorsOf = async () => JSON.stringify((await getState(page)).meteors);
+    const body = page.locator('body');
+    // 種を決めないで 2 回始めると、種も並びも変わる
+    const starts: { seed: string; meteors: string }[] = [];
+    for (let i = 0; i < 2; i++) {
+      await page.goto('./?debug=1#/title');
+      await page.goto('./?debug=1#/play');
+      await expect(body).toHaveAttribute('data-status', 'ready');
+      starts.push({ seed: (await body.getAttribute('data-seed'))!, meteors: await meteorsOf() });
+    }
+    expect(starts[0]!.seed).toMatch(/^\d+$/);
+    expect(starts[1]!.seed).not.toBe(starts[0]!.seed);
+    expect(starts[1]!.meteors).not.toBe(starts[0]!.meteors);
+    // ?debug=1&seed で種を決めて始められる（同じ種なら同じ並びになることは MGW-TC-0010-07 の単体テスト）
+    await openPlay(page, 777);
+    await expect(body).toHaveAttribute('data-seed', '777');
+    // タイトルに戻ると、種は空
+    await page.evaluate(() => (location.hash = '#/title'));
+    await expect(body).toHaveAttribute('data-seed', '');
+  });
+
+  test('MGW-TC-0016-08 出撃待ちの間は「タップで出撃」（PC は「クリック/SPACEで出撃」）と出て、発射台は出ない', async ({ page, isMobile }) => {
+    await openPlay(page);
+    await clearField(page);
+    await freeze(page, true);
+    const hint = page.locator('#standby-hint');
+    await expect(hint).toBeHidden();
+    // ミスの待ちを終えて、出撃待ちにする
+    await setState(page, { status: 'respawn', waitReason: 'miss', waitSteps: 1, lives: 2 });
+    await advance(page, 2);
+    await expect(page.locator('body')).toHaveAttribute('data-status', 'standby');
+    await expect(hint).toBeVisible();
+    await expect(hint).toHaveText(isMobile ? 'タップで出撃' : 'クリック/SPACEで出撃');
+    // 発射台もミサイルも描かない
+    expect(await hasInk(page, 200, 570, 80, 45)).toBe(false);
+    // 待っていても出撃待ちのまま、光線は撃たない
+    await advance(page, 240);
+    const s = await getState(page);
+    expect(s.status).toBe('standby');
+    expect(s.beams).toEqual([]);
+  });
+
+  test('MGW-TC-0016-10 出撃待ちで、タップ・クリック・Space を押すと、発射台が出て Ready に戻る。このタップでは発射しない', async ({ page, isMobile }) => {
+    const toStandby = async () => {
+      await openPlay(page);
+      await clearField(page);
+      await setState(page, { status: 'standby', lives: 2 });
+      await expect(page.locator('body')).toHaveAttribute('data-status', 'standby');
+    };
+    const expectDeployed = async () => {
+      await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
+      const s = await getState(page);
+      expect(s.launcherX).toBe(240);
+      expect(s.missile.isLaunched).toBe(false);
+      await expect(page.locator('#standby-hint')).toBeHidden();
+      // 少し待っても発射していない
+      await page.waitForTimeout(300);
+      await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
+    };
+    const box = async () => (await page.locator('#game').boundingBox())!;
+    if (isMobile) {
+      for (const target of ['#game', '#control-area']) {
+        await toStandby();
+        const b = (await page.locator(target).boundingBox())!;
+        await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height * 0.8);
+        await expectDeployed();
+      }
+    } else {
+      await toStandby();
+      const b = await box();
+      await page.mouse.click(b.x + b.width / 2, b.y + b.height * 0.8);
+      await expectDeployed();
+      await toStandby();
+      await page.keyboard.press('Space');
+      await expectDeployed();
+    }
+    // 次のタップ（PC は Space）で発射する
+    if (isMobile) {
+      const b = await box();
+      await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height * 0.8);
+    } else {
+      await page.keyboard.press('Space');
+    }
+    await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
+  });
 
   test('ゲームオーバーの表示と、最初の READY', async ({ page }) => {
     await openPlay(page);

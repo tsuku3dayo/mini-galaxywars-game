@@ -1,8 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { advance, clearField, countRuns, freeze, getState, hasInk, openPlay, setState } from './helpers';
 
-// 左下の控えの発射台のアイコン（y 625〜631）の、横いっぱいに塗った行で、数字（x 12〜28）より右の塊を数える
-const lifeIcons = (page: Page) => countRuns(page, 628, 34, 480);
+// 左下の控えの発射台のアイコン（y 625〜631）の、1 つにつながった行（y 627）で、数字（x 12〜28）より右の塊を数える。
+// すぐ下の y 629 は点線の行なので、倍率によって読む画素の行がずれても点線にかからない行を選ぶ
+const lifeIcons = (page: Page) => countRuns(page, 627, 34, 480);
 
 test.describe('HUD', () => {
   test('MGW-TC-0015-01 HUD 帯（y 0–48）に「SCORE」「HIGH」が出て、残機は画面の左下（地面の下）に出る', async ({ page }) => {

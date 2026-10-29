@@ -1,8 +1,18 @@
 /* 共通の画面の枠（MGW-GUI-0001） */
 :root {
-  --bar: 44px;
   --fg: #fff;
   --bg: #000;
+  /* 紺の画面と部品（「ブロック崩しミニ」と同じ。MGW-GUI-0001 §5.1） */
+  --navy-bg: #0b1020;
+  --navy-panel: #141b2e;
+  --navy-line: #2e3a5c;
+  --navy-text: #e6eaf2;
+  --navy-sub: #8c96ad;
+  --navy-accent: #ffd54a;
+  --navy-mine: #2a2620;
+  --navy-font: system-ui, -apple-system, 'Hiragino Sans', sans-serif;
+  /* まわりの余白（app/layout.ts の MARGIN と同じ） */
+  --margin: 8px;
 }
 
 * {
@@ -39,24 +49,11 @@ body {
   align-items: center;
 }
 
-#topbar {
-  width: 100%;
-  height: var(--bar);
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
 /* 操作空間（タッチ端末だけ。MGW-GUI-0003 §2）。拡大・長押しのメニュー・文字の選択をさせない */
 #control-area {
   flex: none;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  border-top: 2px solid var(--fg);
-  font-size: 16px;
+  padding-top: var(--margin);
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
@@ -66,32 +63,92 @@ body {
   display: none;
 }
 
-/* 枠はどの画面でも空けておき、中身はプレイ中だけ出す */
-body:not([data-screen='play']) #control-area > * {
+/* 「ブロック崩しミニ」と同じ、角の丸い枠と案内（MGW-GUI-0001 §5.1） */
+.control-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 1px solid var(--navy-line);
+  border-radius: 12px;
+  background: var(--navy-panel);
+  color: var(--navy-sub);
+  font: 16px var(--navy-font);
+  text-align: center;
+}
+
+/* ボタンの段（一時停止・効果音。MGW-GUI-0001 §2）。左右の端に置く */
+#play-buttons {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* 枠はどの画面でも空けておき（画面を切り替えても枠が動かないように）、中身はプレイ中だけ出す */
+body:not([data-screen='play']) #control-area > *,
+body:not([data-screen='play']) #play-buttons > * {
   visibility: hidden;
 }
 
-body:not([data-screen='play']) #control-area {
-  border-top-color: transparent;
+/* ボタンの段のボタン（紺の部品） */
+#play-buttons button {
+  gap: 8px;
+  height: calc(100% - 12px);
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--navy-line);
+  border-radius: 12px;
+  background: var(--navy-panel);
+  color: var(--navy-text);
+  font: 18px var(--navy-font);
 }
 
-/* Pause はプレイ中だけ（終わったあとは出さない） */
-#pause-button {
-  font-size: 18px;
-  padding: 0 12px;
+#play-buttons button:active {
+  background: var(--navy-line);
+  color: var(--navy-text);
 }
 
-body:not([data-screen='play']) #pause-button,
+.icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* 一時停止はプレイ中だけ（終わったあとは出さない） */
 body[data-status='cleared'] #pause-button,
 body[data-status='gameOver'] #pause-button {
-  display: none;
+  visibility: hidden;
 }
 
 #stage {
   /* 大きさ（480 × 640 × 倍率）は app/layout.ts が決める（MGW-GUI-0001 §3） */
   position: relative;
   flex: none;
+  margin-top: var(--margin);
   overflow: hidden;
+  /* ゲーム画面の細い枠。大きさを変えないよう、外側に描く */
+  outline: 1px solid var(--navy-line);
+}
+
+/* 出撃待ちの案内（MGW-GUI-0003 §4）。ゲーム画面の中ほどに、うすい色の端末の文字で重ねる。操作はじゃましない */
+#standby-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin: 0;
+  text-align: center;
+  color: var(--navy-sub);
+  font: 16px var(--navy-font);
+  pointer-events: none;
+}
+
+#standby-hint[hidden],
+body:not([data-screen='play']) #standby-hint {
+  display: none;
 }
 
 /* ゲーム画面。拡大でぼやけないようにし、拡大・長押しのメニューを出さない（MGW-GUI-0001 §4） */

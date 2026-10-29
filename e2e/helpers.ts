@@ -19,12 +19,13 @@ type Mgw = {
 
 /**
  * プレイ画面を ?debug=1 で開き、発射前（ready）になるまで待つ。
- * すでにプレイ画面にいても新しいゲームから始めるよう、タイトルを通ってから開く
+ * すでにプレイ画面にいても新しいゲームから始めるよう、タイトルを通ってから開く。
+ * 隕石の並びは種で変わるので、決めた種で始める（MGW-TST-0001 §1.1）
  */
-export async function openPlay(page: Page): Promise<void> {
-  await page.goto('./?debug=1#/title');
+export async function openPlay(page: Page, seed = 1): Promise<void> {
+  await page.goto(`./?debug=1&seed=${seed}#/title`);
   await expect(page.locator('body')).toHaveAttribute('data-screen', 'title');
-  await page.goto('./?debug=1#/play');
+  await page.goto(`./?debug=1&seed=${seed}#/play`);
   await expect(page.locator('body')).toHaveAttribute('data-screen', 'play');
   await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
 }

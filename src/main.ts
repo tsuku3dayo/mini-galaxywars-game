@@ -2,7 +2,7 @@
 import './style.css';
 import { displayHighScore, newGame, step, togglePause } from './core/game';
 import type { GameState, StepInput } from './core/types';
-import { createDebugPanel, exposeDebug, isDebug, setData } from './app/debug';
+import { createDebugPanel, exposeDebug, isDebug, newSeed, setData } from './app/debug';
 import { createInputEngine } from './app/input';
 import { watchLayout } from './app/layout';
 import { createLoop } from './app/loop';
@@ -109,7 +109,8 @@ const toggle = () => {
   input.reset();
   draw();
 };
-createPauseButton(document.getElementById('topbar')!, toggle);
+const playButtons = document.getElementById('play-buttons')!;
+createPauseButton(playButtons, toggle);
 // ランキング登録（MGW-GUI-0004）。終わって 3 秒たち、上位 10 件に入るときに重ねて出す
 let entryScore = 0;
 const entry = createEntryOverlay(stage, {
@@ -125,7 +126,7 @@ const entry = createEntryOverlay(stage, {
     location.hash = '#/title';
   },
 });
-const overlay = createPlayOverlay(stage, toggle, (score) => {
+const overlay = createPlayOverlay(stage, document.getElementById('standby-hint')!, touch, toggle, (score) => {
   const rank = ranking.rankOf(score);
   if (rank === null) return false;
   entryScore = score;
@@ -192,9 +193,7 @@ const loop = createLoop((steps, now) => {
   draw();
 });
 
-watchLayout(app, stage, control, touch, (layout) => {
-  // 上のバーはゲーム画面と同じ幅にし、Pause をゲーム画面の右端にそろえる
-  document.getElementById('topbar')!.style.width = `${layout.stageW}px`;
+watchLayout(app, stage, control, playButtons, touch, (layout) => {
   renderer.resize(layout.scale, devicePixelRatio || 1);
   draw();
 });
@@ -207,14 +206,17 @@ watchRoute((next) => {
   entry.hide();
   settings.hide();
   if (screen === 'play') {
-    // HIGH はランキングの 1 位から始める（MGW-TD-0004 §1）。種の決め方は MGW-TASK-0028 で入れるので、それまでは決まった種
-    state = newGame(topScore(), 0);
+    // HIGH はランキングの 1 位から始める。隕石の初めの並びは、ゲームごとに決める種で変える（MGW-TD-0004 §1）
+    const seed = newSeed();
+    state = newGame(topScore(), seed);
+    setData('seed', seed);
     input.reset();
     loop.start();
   } else {
     loop.stop();
     synth.stopAll();
     state = null;
+    setData('seed', '');
     if (screen === 'title') title.refresh(topScore());
     if (screen === 'ranking') rankingScreen.refresh();
   }

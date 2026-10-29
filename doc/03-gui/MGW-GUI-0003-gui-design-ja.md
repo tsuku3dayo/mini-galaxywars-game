@@ -6,7 +6,7 @@ status: stable
 version: 1.2
 updated: 2026-10-29
 sources:
-  - MGW-GUI-0001（v1.3）
+  - MGW-GUI-0001（v1.4）
   - MGW-US-0005（v1.1）
   - MGW-US-0006（v1.1）
   - MGW-US-0007（v1.1）

@@ -2,14 +2,29 @@
 import type { GameState, StepInput } from '../core/types';
 import type { StepStats } from './step-stats';
 
-export type DataKey = 'screen' | 'overlay' | 'status' | 'score' | 'high' | 'lives' | 'displayMode' | 'touch' | 'update' | 'audio';
+export type DataKey = 'screen' | 'overlay' | 'status' | 'score' | 'high' | 'lives' | 'displayMode' | 'touch' | 'update' | 'audio' | 'seed';
 
 /** body の data 属性（いつも付ける） */
 export function setData(key: DataKey, value: string | number): void {
   document.body.dataset[key] = String(value);
 }
 
-export const isDebug = new URLSearchParams(location.search).get('debug') === '1';
+const params = new URLSearchParams(location.search);
+export const isDebug = params.get('debug') === '1';
+
+/**
+ * ゲームを始めるときの種（MGW-TD-0004 §1）。?debug=1&seed=<整数> ならその値、
+ * そうでなければ crypto.getRandomValues（使えなければ時刻）で決める
+ */
+export function newSeed(): number {
+  const fixed = isDebug ? params.get('seed') : null;
+  if (fixed !== null && /^\d+$/.test(fixed)) return Number(fixed) >>> 0;
+  try {
+    return crypto.getRandomValues(new Uint32Array(1))[0]!;
+  } catch {
+    return Date.now() >>> 0;
+  }
+}
 
 export interface DebugApi {
   simulateUpdate?: () => void;

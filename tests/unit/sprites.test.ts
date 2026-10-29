@@ -17,6 +17,7 @@ import { meteorAt } from "../../src/core/physics";
 import {
   BACKFIRE,
   BEAM,
+  beamFrame,
   EXPLOSION,
   FONT,
   LAUNCHER,
@@ -89,6 +90,30 @@ describe("ドット絵とフォント（MGW-TD-0003 §3・§4）", () => {
     for (let t = 1; t <= STEPS_PER_SECOND; t++)
       if (ufoFrame(t) !== ufoFrame(t - 1)) changes++;
     expect(changes).toBe(4);
+  });
+
+  it("MGW-TC-0009-06 光線は波の形で描き、形のはっきり違う 2 コマを、UFO と同じく 0.25 秒ごとに切り替える", () => {
+    expect(BEAM).toHaveLength(2);
+    for (const frame of BEAM) expectSize(frame, BEAM_W, BEAM_H);
+    // 2 コマ目は、1 コマ目を上下にずらしたものでも、左右に裏返したものでもない（ずらしただけでは違いが見えない）
+    const [a, b] = [BEAM[0]!.rows, BEAM[1]!.rows];
+    for (let shift = 0; shift < BEAM_H; shift++) {
+      const shifted = a.map((_, i) => a[(i + shift) % BEAM_H]!);
+      expect(b).not.toEqual(shifted);
+      expect(b).not.toEqual(shifted.map((r) => [...r].reverse().join("")));
+    }
+    // どの行にも点があり、波の形（となりの行とつながる）
+    for (const frame of BEAM)
+      frame.rows.forEach((row, i) => {
+        expect(row).toContain("#");
+        if (i > 0) {
+          const prev = frame.rows[i - 1]!;
+          const touches = [...row].some((c, x) => c === "#" && [x - 1, x, x + 1].some((px) => prev[px] === "#"));
+          expect(touches).toBe(true);
+        }
+      });
+    // UFO と同じ時に切り替える（0.25 秒ごと）
+    for (let t = 0; t < STEPS_PER_SECOND * 2; t++) expect(beamFrame(t)).toBe(ufoFrame(t));
   });
 
   it("MGW-TC-0010-05 隕石には、進む向きの後ろに尾が付き、向きが分かる", () => {

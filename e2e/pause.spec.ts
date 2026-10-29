@@ -22,19 +22,26 @@ async function expectResumed(page: Page, status: string) {
 }
 
 test.describe('一時停止', () => {
-  test('MGW-TC-0018-01 P・Esc・「Pause」ボタンで一時停止し、もう一度押すと再開する', async ({ page, isMobile }) => {
+  test('MGW-TC-0018-01 P・Esc・「一時停止」ボタンで一時停止し、もう一度押すと再開する', async ({ page, isMobile }) => {
     await openPlay(page);
     await clearField(page);
-    const pauseButton = page.locator('#topbar').getByRole('button', { name: 'Pause' });
+    // 操作空間の下（PC はゲーム画面の下）のボタンの段の左
+    const pauseButton = page.locator('#play-buttons').getByRole('button', { name: '一時停止' });
     await expect(pauseButton).toBeVisible();
+    // ゲーム画面（タッチ端末は操作空間）より下の、左の端
+    const game = (await page.locator('#game').boundingBox())!;
+    const above = isMobile ? (await page.locator('#control-area').boundingBox())! : game;
+    const button = (await pauseButton.boundingBox())!;
+    expect(button.y).toBeGreaterThanOrEqual(above.y + above.height - 0.5);
+    expect(button.x).toBeCloseTo(game.x, 0);
 
-    // Pause ボタン → もう一度 Pause
+    // 一時停止ボタン → もう一度押す
     await pauseButton.click();
     await expectPaused(page);
     await pauseButton.click();
     await expectResumed(page, 'ready');
 
-    // Pause ボタン → RESUME
+    // 一時停止ボタン → RESUME
     await pauseButton.click();
     await expectPaused(page);
     await page.locator('#overlay-message').getByRole('button', { name: 'RESUME' }).click();
@@ -52,7 +59,7 @@ test.describe('一時停止', () => {
       }
     }
 
-    // Pause はプレイ中だけ（タイトルでは出さない）
+    // 一時停止はプレイ中だけ（タイトルでは出さない）
     await page.evaluate(() => (location.hash = '#/title'));
     await expect(pauseButton).toBeHidden();
   });

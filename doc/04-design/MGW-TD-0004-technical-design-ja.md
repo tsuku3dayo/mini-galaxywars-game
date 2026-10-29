@@ -3,13 +3,13 @@ id: MGW-TD-0004
 type: technical-design
 title: app の設計（ルーティング・画面・入力・ループ・テスト用の入口）
 status: stable
-version: 1.1
+version: 1.2
 updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
   - MGW-TD-0002（v1.5）
   - MGW-ADR-0002（v1.1）
-  - MGW-GUI-0001（v1.3）
+  - MGW-GUI-0001（v1.4）
   - MGW-GUI-0002（v1.2）
   - MGW-GUI-0003（v1.2）
   - MGW-GUI-0004（v1.1）
@@ -84,7 +84,7 @@ verified: null
 
 MGW-GUI-0001 §3・§4 のとおり。
 
-- `computeLayout({ innerWidth, innerHeight, insets, touch }) → { scale, stageW, stageH, controlH, buttonsH }` は DOM に触れない関数にし、単体テストで確かめる。上のバーの 44 をやめ、まわりの余白 8 とボタンの段（論理 64）で計算する（仕様書 v1.7）。
+- `computeLayout({ innerWidth, innerHeight, insets, touch }) → { scale, stageW, stageH, controlH, buttonsH }` は DOM に触れない関数にし、単体テストで確かめる。上のバーの 44 をやめ、まわりの余白 8 とボタンの段（論理 64）で計算する（仕様書 v1.7）。ボタンの段が 48 px より低くなるとき（小さい画面）は段を 48 にし、残りの高さでゲーム画面と操作空間の倍率を決める（ボタン 44 が段からはみ出さないように。MGW-GUI-0001 §3）。
 - `resize`・`orientationchange` で計算し直す。名前の入力欄にフォーカスがあるときは計算し直さない。
 - `scroll` と `visualViewport` の `scroll`・`resize` で、スクロールが 0 でなければ 0 に戻す（入力欄にフォーカスがあるときを除く）。入力欄の `blur` のあとにも戻す。
 
@@ -173,3 +173,4 @@ frame(now):
 | :--- | :--- | :--- |
 | 1.0 | 2026-10-26 | 初版 |
 | 1.1 | 2026-10-29 | 仕様書 v1.7：§1 の `#/credits`・種・登録のあとの目立たせ方、§2 の骨組み（上のバーをなくし、ボタンの段・出撃待ちの案内・クレジット・消去の確認・効果音のボタン）、§3 のボタンの段、§4 のタップの判定と standby、§5 の出撃待ちの案内と効果音、§6 の `data-sound`・`data-seed`、§7 |
+| 1.2 | 2026-10-29 | §3：ボタンの段の高さは 48 px より低くしない（MGW-TASK-0028 の実装で、iPhone SE（320 × 568）でボタンが段からはみ出したため） |
