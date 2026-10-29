@@ -2,9 +2,9 @@
 id: MGW-AC-0023
 type: attested-computation
 title: core の速さ・隕石の段・UFO を倒したときの流れの確認
-status: draft
+status: review
 version: 1.0
-updated: 2026-10-28
+updated: 2026-10-29
 sources:
   - MGW-TASK-0023（v1.1）
   - MGW-TC-0005（v1.1）
@@ -44,9 +44,9 @@ verified: null
 
 画面：この TASK では描き方を変えていない（地面・残機・倒したときの表示は MGW-TASK-0024）。倒したときの爆発と得点の出し分けは、描画から使う関数 `killEffectView`（`src/render/kill-effect.ts`）として先に作った。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0009 の終わり、2026-10-29、オーナー、iPhone 11・PC）
 
-この TASK に手動の確認 ID はない。遅くした速さで遊びにくくないかは、WS-0009 の終わりに見てもらう。
+この TASK に手動の確認 ID はない。あわせて、速さ 1/4（光線 1/2）で遊びにくくないか、永久パターン防止の 90 秒・150 秒が短すぎないかを遊んで見てもらい、どちらも OK だった（直さない）。
 
 ## 3. 設計と違う作りにしたこと
 
