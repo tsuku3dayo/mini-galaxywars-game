@@ -18,7 +18,7 @@ sources:
   - MGW-US-0028（v1.0）
   - MGW-US-0029（v1.0）
   - MGW-ADR-0007（v1.2）
-  - doc/specification.md (v1.10) §2、§19
+  - doc/specification.md (v1.11) §2、§19
 verified: null
 ---
 

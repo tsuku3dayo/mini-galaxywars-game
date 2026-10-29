@@ -25,7 +25,7 @@ sources:
   - MGW-US-0023（v1.3）
   - MGW-US-0030（v1.1）
   - MGW-GUI-0003（v1.4）
-  - doc/specification.md (v1.10) §2、§3、§5、§6、§7、§11、§17、§22
+  - doc/specification.md (v1.11) §2、§3、§5、§6、§7、§11、§17、§22
   - doc/requests/2026-10-26-spec-1.4-design-values.md
 verified: null
 ---
