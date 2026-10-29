@@ -1,5 +1,6 @@
 // プレイ画面の中央の表示・出撃待ちの案内・一時停止のボタン（MGW-GUI-0003 §2・§4、MGW-TD-0004 §2・§4・§5）
 import { STEPS_PER_SECOND } from '../../core/config';
+import { clearTimeMs } from '../../core/scoring';
 import type { GameState } from '../../core/types';
 import { setData } from '../debug';
 import { icon } from '../icons';
@@ -31,6 +32,19 @@ export function createPauseButton(row: HTMLElement, onToggle: () => void): void 
   row.append(pause);
 }
 
+const pad5 = (n: number) => String(Math.max(0, Math.min(99_999, n))).padStart(5, '0');
+
+/** クリアの表示の 4 行（MGW-TD-0004 §5）：UFO の得点・タイム（小数第 1 位で切り捨て）・時間ボーナス・合計 */
+export function clearResultLines(state: Pick<GameState, 'score' | 'timeBonus' | 'playSteps'>): string[] {
+  // 等幅の文字で、値の始まりをそろえる（ラベルは 5 文字にそろえて空白 1 つ）
+  return [
+    `UFO   ${pad5(state.score - state.timeBonus)}`,
+    `TIME  ${(clearTimeMs(state.playSteps) / 1000).toFixed(1)}`,
+    `BONUS ${pad5(state.timeBonus)}`,
+    `TOTAL ${pad5(state.score)}`,
+  ];
+}
+
 /**
  * onEnd は、終わってから END_WAIT_MS たったときに 1 回だけ呼ぶ。
  * ランキング登録（名前の入力）に進んだら true を返す。false なら「TITLE」を出す。
@@ -50,12 +64,15 @@ export function createPlayOverlay(
   main.className = 'message-main';
   const sub = document.createElement('p');
   sub.className = 'message-sub';
+  // クリアの結果：UFO・TIME・BONUS・TOTAL（仕様書 v1.9）
+  const result = document.createElement('div');
+  result.className = 'message-result';
   const resume = button('RESUME', onResume);
   const title = document.createElement('a');
   title.className = 'button';
   title.href = '#/title';
   title.textContent = 'TITLE';
-  section.append(main, sub, resume, title);
+  section.append(main, sub, result, resume, title);
   root.append(section);
 
   let endedAt: number | null = null;
@@ -66,6 +83,7 @@ export function createPlayOverlay(
     update(state) {
       let mainText = '';
       let subText = '';
+      let resultLines: string[] = [];
       let overlay = 'none';
       let showTitle = false;
       const paused = state?.status === 'paused';
@@ -76,12 +94,14 @@ export function createPlayOverlay(
         mainText = cleared ? 'GOOD!!' : 'GAME OVER';
         subText = cleared ? 'STAGE CLEAR' : '';
         overlay = cleared ? 'clear' : 'gameover';
+        if (cleared) resultLines = clearResultLines(state);
         if (now - endedAt >= END_WAIT_MS) {
           toEntry ??= onEnd(state.score);
           showTitle = !toEntry;
           if (toEntry) {
             // 名前の入力を重ねるので、中央の表示は消す
             mainText = '';
+            resultLines = [];
             overlay = 'entry';
           }
         }
@@ -99,6 +119,8 @@ export function createPlayOverlay(
       main.textContent = mainText;
       sub.textContent = subText;
       sub.hidden = subText === '';
+      result.replaceChildren(...resultLines.map((line) => Object.assign(document.createElement('p'), { textContent: line })));
+      result.hidden = resultLines.length === 0;
       resume.hidden = !paused;
       title.hidden = !showTitle;
       section.hidden = mainText === '';

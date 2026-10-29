@@ -158,10 +158,10 @@ test.describe('ランキング', () => {
     await expect(page.locator('.title-high')).toHaveText('HIGH 00700');
   });
 
-  test('MGW-TC-0026-01 #/ranking に、上位 10 件の順位・名前・スコアと、名前の下に結果と日時が出る。1〜3 位は 1st・2nd・3rd', async ({ page }) => {
+  test('MGW-TC-0026-01 #/ranking に、上位 10 件の順位・名前・スコアと、名前の下に結果と日時が出る。クリアの記録はタイムも出る。1〜3 位は 1st・2nd・3rd', async ({ page }) => {
     await page.goto('./#/title');
     // 1 位はクリア、2 位はゲームオーバー、ほかは前からの記録（結果なし）
-    await seedRanking(page, [{ ...TEN[0]!, result: 'clear' }, { ...TEN[1]!, result: 'gameOver' }, ...TEN.slice(2)]);
+    await seedRanking(page, [{ ...TEN[0]!, result: 'clear', time: 95_700 }, { ...TEN[1]!, result: 'gameOver' }, { ...TEN[2]!, result: 'clear' }, ...TEN.slice(3)]);
     await page.locator('#screen-title').getByRole('link', { name: 'RANKING' }).click();
     await expect(page.locator('#screen-ranking table')).toBeVisible();
     await expect(page.locator('#screen-ranking h2')).toHaveText('ハイスコアランキング');
@@ -171,16 +171,19 @@ test.describe('ランキング', () => {
     // 日時は端末の時刻で YYYY/MM/DD HH:MM（CI は UTC なので、時刻の部分は形だけを見る）
     const date = (d: string) => new RegExp(`^${d}\\s\\d{2}:\\d{2}$`);
     expect(short(all[0]!)).toEqual(['1st', 'ABCDEFGH', '1,650']);
-    expect(all[0]![2]).toMatch(/^CLEAR · 2026\/10\/26 \d{2}:\d{2}$/);
+    // クリアの記録はタイムも出る（仕様書 v1.9）
+    expect(all[0]![2]).toMatch(/^CLEAR · 95\.7 秒 · 2026\/10\/26 \d{2}:\d{2}$/);
     expect(short(all[1]!)).toEqual(['2nd', 'PLAYER', '1,300']);
     expect(all[1]![2]).toMatch(/^GAME OVER · 2026\/10\/25 \d{2}:\d{2}$/);
     expect(short(all[2]!)).toEqual(['3rd', 'A B', '1,250']);
-    expect(all[2]![2]).toMatch(date('2026/10/24'));
+    // タイムのない前からのクリアの記録は、結果と日時だけ
+    expect(all[2]![2]).toMatch(/^CLEAR · 2026\/10\/24 \d{2}:\d{2}$/);
+    expect(all[3]![2]).toMatch(date('2026/10/23'));
     expect(short(all[3]!)).toEqual(['4', 'HARU', '1,100']);
     expect(short(all[9]!)).toEqual(['10', 'GALAXY', '350']);
     // 結果の印（✓・✕）は、結果のある記録だけ
     await expect(page.locator('#screen-ranking tbody tr').nth(0).locator('.ranking-meta svg')).toHaveCount(1);
-    await expect(page.locator('#screen-ranking tbody tr').nth(2).locator('.ranking-meta svg')).toHaveCount(0);
+    await expect(page.locator('#screen-ranking tbody tr').nth(3).locator('.ranking-meta svg')).toHaveCount(0);
     // 1〜3 位は黄色
     const color = await page.locator('#screen-ranking tbody tr').nth(0).locator('td').first().evaluate((td) => getComputedStyle(td).color);
     expect(color).toBe('rgb(255, 213, 74)');

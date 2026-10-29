@@ -168,6 +168,24 @@ test.describe('プレイ', () => {
     await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
   });
 
+  test('MGW-TC-0017-04 クリアの表示の下に、UFO の得点・タイム（小数第 1 位で切り捨て）・時間ボーナス・合計が出る。ゲームオーバーでは出ない', async ({ page }) => {
+    await openPlay(page);
+    await seedRanking(page, FULL_RANKING);
+    const message = page.locator('#overlay-message');
+    const result = message.locator('.message-result');
+    // 95.7 秒（11,484 ステップ）飛んで、UFO 1,050 点のところで 8 機目の下部中央（100 点）を倒す → 1,150 ＋ 425 ＝ 1,575
+    await endGame(page, 'clear', 1050, 95 * 120 + 83);
+    await expect(message.locator('.message-main')).toHaveText('GOOD!!');
+    await expect(result).toBeVisible();
+    expect(await result.locator('p').allTextContents()).toEqual(['UFO   01150', 'TIME  95.7', 'BONUS 00425', 'TOTAL 01575']);
+    await expect(page.locator('body')).toHaveAttribute('data-score', '1575');
+    // ゲームオーバーでは出さない
+    await page.goto('./?debug=1#/title');
+    await openPlay(page);
+    await endGame(page, 'gameOver', 700);
+    await expect(message.locator('.message-main')).toHaveText('GAME OVER');
+    await expect(result).toBeHidden();
+  });
   test('ゲームオーバーの表示と、最初の READY', async ({ page }) => {
     await openPlay(page);
     // 始めの 1 秒は READY を出し、そのあと消す

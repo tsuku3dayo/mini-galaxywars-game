@@ -10,6 +10,8 @@ export interface RankingEntry {
   date: string;
   /** 前からの記録にはない */
   result?: RankingResult;
+  /** クリアのタイム（ミリ秒。0.1 秒単位で切り捨て。仕様書 v1.9）。クリアの記録だけにあり、前からの記録にはない */
+  time?: number;
 }
 
 export type ImportResult = { ok: true; entries: RankingEntry[] } | { ok: false };
@@ -20,7 +22,7 @@ export interface RankingStore {
   /** 入るなら順位（1〜10）、入らないなら null。0 点は入らない */
   rankOf(score: number): number | null;
   /** 足して並べ直し、10 件に切って保存する。入った順位を返す（入らないときは rankOf が null なので呼ばない） */
-  add(score: number, name: string, result: RankingResult): number;
+  add(score: number, name: string, result: RankingResult, time?: number): number;
   /** 今の内容を保存の形で（2 文字の字下げ） */
   exportJson(): string;
   /** 読み込む JSON を調べる。今の記録は変えない */
@@ -38,6 +40,7 @@ export const RANKING_SIZE = 10;
 export const DEFAULT_NAME = 'PLAYER';
 const NAME_MAX = 8;
 const SCORE_MAX = 99_999;
+const TIME_MAX = 1_000_000;
 const CONTROL = /\p{Cc}/gu;
 
 /** 見た目の 1 文字（書記素）ごとに分ける。Intl.Segmenter がなければコードポイントごと（MGW-TD-0006 §1.4） */
@@ -89,7 +92,7 @@ export function toLocalIso(d: Date): string {
 
 function isEntry(e: unknown): e is RankingEntry {
   if (typeof e !== 'object' || e === null) return false;
-  const { score, name, date, result } = e as Record<string, unknown>;
+  const { score, name, date, result, time } = e as Record<string, unknown>;
   return (
     Number.isInteger(score) &&
     (score as number) >= 0 &&
@@ -97,7 +100,9 @@ function isEntry(e: unknown): e is RankingEntry {
     isValidName(name) &&
     typeof date === 'string' &&
     !Number.isNaN(Date.parse(date)) &&
-    (result === undefined || result === 'clear' || result === 'gameOver')
+    (result === undefined || result === 'clear' || result === 'gameOver') &&
+    // タイムはクリアの記録だけ。0〜1,000,000 ミリ秒の整数（仕様書 v1.9）
+    (time === undefined || (result === 'clear' && Number.isInteger(time) && (time as number) >= 0 && (time as number) <= TIME_MAX))
   );
 }
 
@@ -116,7 +121,7 @@ function parseRanking(text: string | null): RankingEntry[] | null {
   if (!Array.isArray(entries) || entries.length > RANKING_SIZE) return null;
   if (!entries.every(isEntry)) return null;
   // 前からの記録（result なし）は、そのまま（足さない）
-  return entries.map(({ score, name, date, result }) => (result === undefined ? { score, name, date } : { score, name, date, result }));
+  return entries.map(({ score, name, date, result, time }) => ({ score, name, date, ...(result === undefined ? {} : { result }), ...(time === undefined ? {} : { time }) }));
 }
 
 /** スコアの高い順。同じスコアなら、先に登録した方（date が古い方）を上にする */
@@ -148,8 +153,8 @@ export function createRankingStore(storage: Storage, now: () => Date): RankingSt
       const rank = load().filter((e) => e.score >= score).length + 1;
       return rank <= RANKING_SIZE ? rank : null;
     },
-    add(score, name, result) {
-      const entry: RankingEntry = { score, name: finalizeName(name), date: toLocalIso(now()), result };
+    add(score, name, result, time) {
+      const entry: RankingEntry = { score, name: finalizeName(name), date: toLocalIso(now()), result, ...(result === 'clear' && time !== undefined ? { time } : {}) };
       const entries = sortEntries([...load(), entry]);
       save(entries.slice(0, RANKING_SIZE));
       return entries.indexOf(entry) + 1;

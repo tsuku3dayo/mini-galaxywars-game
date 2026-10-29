@@ -3,7 +3,8 @@ import { advance, clearField, countRuns, freeze, getState, hasInk, openPlay, set
 
 // 左下の控えの発射台のアイコン（y 625〜631）の、1 つにつながった行（y 627）で、数字（x 12〜28）より右の塊を数える。
 // すぐ下の y 629 は点線の行なので、倍率によって読む画素の行がずれても点線にかからない行を選ぶ
-const lifeIcons = (page: Page) => countRuns(page, 627, 34, 480);
+// 同じ行の右（x 340〜468）には経過時間の TIME があるので、その手前（x 330）までで数える（仕様書 v1.9）
+const lifeIcons = (page: Page) => countRuns(page, 627, 34, 330);
 
 test.describe('HUD', () => {
   test('MGW-TC-0015-01 HUD 帯（y 0–48）に「SCORE」「HIGH」が出て、残機は画面の左下（地面の下）に出る', async ({ page }) => {
@@ -44,5 +45,33 @@ test.describe('HUD', () => {
     await expect(body).toHaveAttribute('data-score', '1050');
     await expect(body).toHaveAttribute('data-lives', '4');
     expect(await lifeIcons(page)).toBe(3);
+  });
+
+  test('MGW-TC-0015-08 左下の残機の行の右に、経過時間が TIME 095 で出る。SCORE は UFO の得点だけ', async ({ page }) => {
+    await openPlay(page);
+    await freeze(page, true);
+    await clearField(page);
+    // 経過時間 0 秒でも TIME 000 を出す（残機の行の右、x 340〜468、y 620〜636）
+    await advance(page, 0);
+    expect(await hasInk(page, 340, 620, 128, 16)).toBe(true);
+    // 左の残機のアイコンと TIME の間（x 100〜330）には何もない
+    expect(await hasInk(page, 100, 620, 230, 16)).toBe(false);
+    // 発射して飛んでいる間だけ進む（2 秒分）
+    await advance(page, 1, { launch: true });
+    await advance(page, 240);
+    expect((await getState(page)).playSteps).toBe(240);
+    // クリアで時間ボーナスを足しても、data-score は合計、HUD の SCORE は UFO の得点（単体の MGW-TC-0015-07）
+    const ufo = ((await getState(page)).ufos as { x: number; y: number }[])[5]!;
+    await setState(page, {
+      score: 1050,
+      killCount: 7,
+      ufos: ((await getState(page)).ufos as { id: number; isAlive: boolean }[]).map((u) => ({ ...u, isAlive: u.id === 5 })),
+      missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: false },
+    });
+    await advance(page, 1);
+    const s = await getState(page);
+    expect(s.status).toBe('cleared');
+    expect(s.timeBonus).toBe((180 - 2) * 5);
+    await expect(page.locator('body')).toHaveAttribute('data-score', String(1150 + 890));
   });
 });

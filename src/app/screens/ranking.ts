@@ -25,10 +25,10 @@ export function rankLabel(rank: number): string {
   return rank === 1 ? '1st' : rank === 2 ? '2nd' : rank === 3 ? '3rd' : String(rank);
 }
 
-/** 名前の下の行：結果と日時（結果のない前からの記録は日時だけ） */
+/** 名前の下の行：結果とクリアのタイムと日時（結果やタイムのない前からの記録は、あるものだけ） */
 export function metaText(entry: RankingEntry): string {
   const date = formatDate(entry.date);
-  if (entry.result === 'clear') return `CLEAR · ${date}`;
+  if (entry.result === 'clear') return entry.time === undefined ? `CLEAR · ${date}` : `CLEAR · ${(entry.time / 1000).toFixed(1)} 秒 · ${date}`;
   if (entry.result === 'gameOver') return `GAME OVER · ${date}`;
   return date;
 }

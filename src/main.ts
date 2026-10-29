@@ -23,6 +23,7 @@ import { createUpdateBanner } from './app/screens/update-banner';
 import { createRenderer } from './render/canvas';
 import { createSynthesizer } from './audio/synthesizer';
 import { planSounds, type SoundCommand } from './core/sound-plan';
+import { clearTimeMs } from './core/scoring';
 
 declare global {
   interface Window {
@@ -155,12 +156,14 @@ createSoundToggle([title.soundSlot, playButtons], savedSettings.sound, (on) => {
 // ランキング登録（MGW-GUI-0004）。終わって 3 秒たち、上位 10 件に入るときに重ねて出す
 let entryScore = 0;
 let entryResult: RankingResult = 'gameOver';
+/** クリアのタイム（ミリ秒）。ゲームオーバーでは付けない（仕様書 v1.9） */
+let entryTime: number | undefined;
 /** 登録した記録の順位。ランキング画面で目立たせる（MGW-TD-0004 §1） */
 let mine: number | null = null;
 const entry = createEntryOverlay(stage, {
   onSubmit(name) {
     try {
-      mine = ranking.add(entryScore, name, entryResult);
+      mine = ranking.add(entryScore, name, entryResult, entryTime);
     } catch {
       // 保存できなくても（容量・設定など）、ランキング画面へは進む
     }
@@ -175,6 +178,7 @@ const overlay = createPlayOverlay(stage, document.getElementById('standby-hint')
   if (rank === null) return false;
   entryScore = score;
   entryResult = state?.status === 'cleared' ? 'clear' : 'gameOver';
+  entryTime = state && entryResult === 'clear' ? clearTimeMs(state.playSteps) : undefined;
   entry.show(rank, score);
   return true;
 });

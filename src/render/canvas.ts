@@ -16,6 +16,7 @@ import {
   lifeModel,
   LIVES_X,
   LIVES_Y,
+  timeText,
 } from './hud';
 import { killEffectView } from './kill-effect';
 import { showsLauncher, showsMissile } from './view';
@@ -147,6 +148,9 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
         const lives = lifeModel(state.lives);
         text(lives.count, LIVES_X, LIVES_Y);
         for (let i = 0; i < lives.icons; i++) ctx.drawImage(art.lifeIcon.image, LIFE_ICONS_X + i * LIFE_ICON_STEP, LIFE_ICON_Y);
+        // 同じ行の右に経過時間（仕様書 v1.9）
+        const time = timeText(state.playSteps);
+        text(time, HUD_RIGHT - time.length * HUD_CHAR, LIVES_Y);
       }
       // 4. HUD（SCORE・HIGH）
       if (view.showHud) {

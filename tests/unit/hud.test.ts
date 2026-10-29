@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { newGame } from '../../src/core/game';
-import { hudModel, lifeModel, pad5 } from '../../src/render/hud';
+import { hudModel, lifeModel, pad5, timeText } from '../../src/render/hud';
 import { LIFE_ICON } from '../../src/render/sprites';
 
 describe('HUD', () => {
@@ -28,5 +28,18 @@ describe('HUD', () => {
     expect([LIFE_ICON.w, LIFE_ICON.h]).toEqual([16, 6]);
     // HUD の文字には残機を出さない
     expect(Object.keys(hudModel(newGame(0, 1))).sort()).toEqual(['high', 'score']);
+  });
+
+  it('MGW-TC-0015-07 左下の残機の行の右に、経過時間が TIME 095（経過秒を切り捨てて 3 桁）で出る。SCORE は UFO の得点だけ', () => {
+    expect(timeText(0)).toBe('TIME 000');
+    expect(timeText(119)).toBe('TIME 000');
+    expect(timeText(95 * 120 + 84)).toBe('TIME 095');
+    expect(timeText(180 * 120)).toBe('TIME 180');
+    // 999 で止める
+    expect(timeText(2000 * 120)).toBe('TIME 999');
+    // クリアで時間ボーナスを足しても、SCORE は UFO の得点だけ。HIGH は合計で比べる
+    const cleared = { ...newGame(0, 1), status: 'cleared' as const, score: 1575, timeBonus: 425 };
+    expect(hudModel(cleared).score).toBe('SCORE 01150');
+    expect(hudModel(cleared).high).toBe('HIGH 01575');
   });
 });
