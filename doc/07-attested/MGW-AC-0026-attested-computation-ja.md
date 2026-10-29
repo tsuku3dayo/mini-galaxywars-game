@@ -2,14 +2,16 @@
 id: MGW-AC-0026
 type: attested-computation
 title: 名前「銀河戦争ミニ」とタイトル画面の確認
-status: draft
+status: stable
 version: 1.0
-updated: 2026-10-28
+updated: 2026-10-29
 sources:
   - MGW-TASK-0026（v1.0）
   - MGW-TC-0002（v1.1）
   - MGW-TC-0014（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:09:17+09:00
 ---
 
 # MGW-AC-0026 名前「銀河戦争ミニ」とタイトル画面の確認
@@ -30,11 +32,11 @@ verified: null
 
 画面：iPhone SE の幅で、タイトル画面（HIGH・銀河戦争ミニ・UFO・START・RANKING・SETTINGS・操作の案内）のスクリーンショットを見た。原作の表記を消したので、下に余白ができた。WS-0007 のふりかえりで持ち越した「タイトル画面も iPhone SE の高さで枠に収まることを E2E で確かめる」は、MGW-TC-0014-01 の枠の判定（`iphonese-webkit` でも通る）で確かめられている。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0009 の終わり、2026-10-29、オーナー、iPhone 11）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0002-05 | Safari の共有 →「ホーム画面に追加」。アイコンの下の名前が「銀河戦争ミニ」で切れていない | 未実施（WS の終わりに確かめる） |
+| MGW-TC-0002-05 | Safari の共有 →「ホーム画面に追加」。アイコンの下の名前が「銀河戦争ミニ」で切れていない | OK（iPhone 11 の Safari から追加し直して確かめた） |
 
 ## 3. 設計と違う作りにしたこと
 

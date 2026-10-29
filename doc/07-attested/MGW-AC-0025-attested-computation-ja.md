@@ -2,13 +2,15 @@
 id: MGW-AC-0025
 type: attested-computation
 title: ミサイルの噴射音の確認
-status: draft
+status: stable
 version: 1.0
-updated: 2026-10-28
+updated: 2026-10-29
 sources:
   - MGW-TASK-0025（v1.0）
   - MGW-TC-0023（v1.2）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:09:17+09:00
 ---
 
 # MGW-AC-0025 ミサイルの噴射音の確認
@@ -26,11 +28,11 @@ verified: null
 
 画面：この TASK は画面を変えていない。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0009 の終わり、2026-10-29、オーナー、iPhone 11・PC）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0023-02 | 噴射の間だけ、「シュー」という噴射音が鳴る | 未実施（WS の終わりに確かめる） |
+| MGW-TC-0023-02 | 噴射の間だけ、「シュー」という噴射音が鳴る | OK（iPhone のホーム画面の本物のアプリ・PC） |
 
 ## 3. 設計と違う作りにしたこと
 
@@ -38,5 +40,5 @@ verified: null
 
 ## 4. 確認できなかったこと
 
-- 音色そのものは自動では確かめられないので、WS の終わりに PC と iPhone で聞いてもらう。
+- 音色そのものは自動では確かめられない。WS の終わりに PC と iPhone で聞いてもらい、OK だった（§2）。
 - Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。
