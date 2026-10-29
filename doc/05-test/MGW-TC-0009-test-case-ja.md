@@ -3,13 +3,13 @@ id: MGW-TC-0009
 type: test-case
 title: UFO が光線を撃ってくる
 status: stable
-version: 1.1
-updated: 2026-10-28
+version: 1.2
+updated: 2026-10-29
 sources:
   - MGW-US-0009（v1.2）
-  - MGW-TST-0001（v1.2）
-  - MGW-TD-0002（v1.4）
-  - MGW-TD-0003（v1.1）
+  - MGW-TST-0001（v1.3）
+  - MGW-TD-0002（v1.5）
+  - MGW-TD-0003（v1.2）
 verified: null
 ---
 
@@ -28,4 +28,5 @@ verified: null
 | MGW-TC-0009-02 | 2 | 画面内の光線は、UFO が 5 機以上なら 3 発まで、4 機以下なら 4 発まで。上限のときは撃たない | 自動（単体） | `tests/unit/beam.test.ts` |
 | MGW-TC-0009-03 | 3 | 光線は 90 px/秒で落ちる | 自動（単体） | `tests/unit/beam.test.ts` |
 | MGW-TC-0009-04 | 4 | 光線は隕石に当たると消える（隕石が盾になる） | 自動（単体） | `tests/unit/beam.test.ts` |
-| MGW-TC-0009-05 | 5 | 光線は波の形（ニョロニョロ線）で描く | 手動（PC） | 光線が波の形で揺れて見える |
+| MGW-TC-0009-05 | 5 | 光線は波の形（ニョロニョロ線）で描き、形のはっきり違う 2 コマを、UFO と同じく 0.25 秒ごとに切り替える | 手動（PC） | 光線が、形の違う 2 つの波を UFO の羽ばたきと同じ速さで行き来して見える |
+| MGW-TC-0009-06 | 5 | 光線は波の形（ニョロニョロ線）で描き、形のはっきり違う 2 コマを、UFO と同じく 0.25 秒ごとに切り替える | 自動（単体） | `tests/unit/sprites.test.ts` |

@@ -3,13 +3,13 @@ id: MGW-TC-0006
 type: test-case
 title: 発射台を動かしてミサイルを発射する
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-29
 sources:
   - MGW-US-0006（v1.1）
-  - MGW-TST-0001（v1.2）
-  - MGW-TD-0002（v1.4）
-  - MGW-TD-0004（v1.0）
+  - MGW-TST-0001（v1.3）
+  - MGW-TD-0002（v1.5）
+  - MGW-TD-0004（v1.1）
 verified: null
 ---
 
@@ -27,6 +27,9 @@ verified: null
 | MGW-TC-0006-01 | 1 | 発射前、ミサイルは発射台の上（中心 y = 596、先端 y = 584）に乗っている | 自動（単体） | `tests/unit/launcher.test.ts` |
 | MGW-TC-0006-02 | 2 | `←` `→`・`A` `D`・マウスの移動で、発射台がミサイルといっしょに横に動き、画面の端で止まる | 自動（単体） | `tests/unit/launcher.test.ts` |
 | MGW-TC-0006-03 | 2 | `←` `→`・`A` `D`・マウスの移動で、発射台がミサイルといっしょに横に動き、画面の端で止まる | 自動（E2E） | `e2e/pc-controls.spec.ts` |
-| MGW-TC-0006-04 | 3 | `Space` かクリックで発射し、ミサイルが上昇を始める | 自動（単体） | `tests/unit/launcher.test.ts` |
-| MGW-TC-0006-05 | 3 | `Space` かクリックで発射し、ミサイルが上昇を始める | 自動（E2E） | `e2e/pc-controls.spec.ts` |
+| MGW-TC-0006-04 | 3 | `Space` かクリック（ボタンを押してから離すまでにマウスが 10 px 未満しか動かないもの）で発射し、ミサイルが上昇を始める | 自動（単体） | `tests/unit/launcher.test.ts` |
+| MGW-TC-0006-05 | 3 | `Space` かクリック（ボタンを押してから離すまでにマウスが 10 px 未満しか動かないもの）で発射し、ミサイルが上昇を始める | 自動（E2E） | `e2e/pc-controls.spec.ts` |
 | MGW-TC-0006-06 | 4 | 発射台は幅 48 × 高さ 16、ミサイルは幅 12 × 高さ 24 | 自動（単体） | `tests/unit/launcher.test.ts` |
+| MGW-TC-0006-07 | 3 | ポインターを押してから離すまでに 10 px 以上動いたときは、発射しない（タップの判定） | 自動（単体） | `tests/unit/input.test.ts` |
+| MGW-TC-0006-08 | 5 | 発射したら、発射台は消える（発射前だけ描く） | 自動（単体） | `tests/unit/render-view.test.ts` |
+| MGW-TC-0006-09 | 5 | 発射したら、発射台は消える（発射前だけ描く） | 自動（E2E） | `e2e/pc-controls.spec.ts` |

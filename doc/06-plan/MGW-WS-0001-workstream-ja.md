@@ -3,18 +3,18 @@ id: MGW-WS-0001
 type: workstream
 title: 土台（公開・PWA）
 status: stable
-version: 1.2
-updated: 2026-10-28
+version: 1.3
+updated: 2026-10-29
 sources:
   - MGW-EP-0001（v1.0）
-  - MGW-TST-0001（v1.2）
+  - MGW-TST-0001（v1.3）
 verified: null
 ---
 
 # MGW-WS-0001 土台（公開・PWA）
 
 * **epic**：MGW-EP-0001
-* **実施の順**：1 / 9（最初、次：MGW-WS-0002）
+* **実施の順**：1 / 10（最初、次：MGW-WS-0002）
 
 ## ねらい
 

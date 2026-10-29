@@ -3,13 +3,13 @@ id: MGW-TC-0023
 type: test-case
 title: 効果音が鳴る
 status: stable
-version: 1.2
-updated: 2026-10-28
+version: 1.3
+updated: 2026-10-29
 sources:
   - MGW-US-0023（v1.3）
-  - MGW-TST-0001（v1.2）
-  - MGW-TD-0002（v1.4）
-  - MGW-TD-0005（v1.1）
+  - MGW-TST-0001（v1.3）
+  - MGW-TD-0002（v1.5）
+  - MGW-TD-0005（v1.2）
   - MGW-TD-0007（v1.4）
 verified: null
 ---
@@ -34,3 +34,4 @@ verified: null
 | MGW-TC-0023-07 | 4 | ミスすると爆発音（重低音のノイズ）が鳴る | 自動（単体） | `tests/unit/sound-plan.test.ts` |
 | MGW-TC-0023-08 | 4 | ミスすると爆発音（重低音のノイズ）が鳴る | 手動（iPhone・PC） | ミスすると、低い爆発音が鳴る |
 | MGW-TC-0023-09 | 5 | 音のファイルを使わず、Web Audio で合成する | 自動（dist の検査） | `scripts/check-dist.mjs` |
+| MGW-TC-0023-10 | 6 | 上の音は、効果音がオンのときだけ鳴る（オン・オフは MGW-US-0034） | 自動（単体） | `tests/unit/synthesizer.test.ts` |
