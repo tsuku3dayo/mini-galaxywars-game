@@ -10,7 +10,7 @@ sources:
   - MGW-US-0016（v1.3）
   - MGW-US-0017（v1.1）
   - MGW-US-0025（v1.2）
-  - doc/specification.md (v1.10) §7、§9
+  - doc/specification.md (v1.11) §7、§9
 verified:
   by: tsuku3dayo
   at: 2026-10-29T17:36:28+09:00

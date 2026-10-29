@@ -26,7 +26,7 @@ sources:
   - MGW-US-0030（v1.1）
   - MGW-US-0031（v1.0）
   - MGW-US-0034（v1.0）
-  - doc/specification.md (v1.10) §2、§3、§4、§7、§8、§19、§20
+  - doc/specification.md (v1.11) §2、§3、§4、§7、§8、§19、§20
 verified:
   by: tsuku3dayo
   at: 2026-10-29T17:36:28+09:00
