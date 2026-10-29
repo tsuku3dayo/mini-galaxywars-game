@@ -57,9 +57,13 @@ export function createTitleScreen(
     clearRanking.blur();
     onClearRanking();
   });
+  const credits = document.createElement('a');
+  credits.className = 'button';
+  credits.href = '#/credits';
+  credits.textContent = 'CREDITS';
   const sub = document.createElement('div');
   sub.className = 'title-sub';
-  sub.append(clearRanking);
+  sub.append(credits, clearRanking);
 
   const guide = document.createElement('p');
   guide.className = 'title-guide';
