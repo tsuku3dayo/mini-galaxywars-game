@@ -3,18 +3,18 @@ id: MGW-WS-0006
 type: workstream
 title: ランキング
 status: stable
-version: 1.3
+version: 1.4
 updated: 2026-10-29
 sources:
   - MGW-EP-0006（v1.1）
-  - MGW-TST-0001（v1.3）
+  - MGW-TST-0001（v1.4）
 verified: null
 ---
 
 # MGW-WS-0006 ランキング
 
 * **epic**：MGW-EP-0006
-* **実施の順**：7 / 10（前：MGW-WS-0008、次：MGW-WS-0007）
+* **実施の順**：7 / 11（前：MGW-WS-0008、次：MGW-WS-0007）
 
 ## ねらい
 
