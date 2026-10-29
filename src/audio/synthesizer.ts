@@ -10,6 +10,11 @@ export interface Synthesizer {
   /** 鳴っている音（噴射音）を止める */
   stopAll(): void;
   state(): AudioState;
+  /**
+   * 効果音のオン・オフ（仕様書 v1.7）。オフにしたら噴射音をすぐ止め、オフの間の play は何もしない。
+   * AudioContext は閉じず、unlock も効く（オンに戻したらすぐ鳴るように）
+   */
+  setEnabled(on: boolean): void;
 }
 
 const MASTER_GAIN = 0.3;
@@ -44,6 +49,7 @@ const silent: Synthesizer = {
   play: () => {},
   stopAll: () => {},
   state: () => 'unavailable',
+  setEnabled: () => {},
 };
 
 export function createSynthesizer(make: () => AudioContext = () => new AudioContext()): Synthesizer {
@@ -142,8 +148,17 @@ export function createSynthesizer(make: () => AudioContext = () => new AudioCont
     },
   };
 
+  // 効果音をオフにしたときは、0.08 秒かけずにすぐ止める
+  const jetStopNow = () => {
+    if (!jet) return;
+    jet.env.gain.setValueAtTime(0, ctx.currentTime);
+    jet.src.stop(ctx.currentTime);
+    jet = null;
+  };
+
   // 有効にできなかったら、鳴らせないものとして扱う（ゲームは進める。MGW-TD-0004 §7）
   let failed = false;
+  let enabled = true;
   return {
     unlock: () =>
       ctx.resume().then(
@@ -155,6 +170,8 @@ export function createSynthesizer(make: () => AudioContext = () => new AudioCont
         },
       ),
     play(commands) {
+      // 効果音がオフのときは何も鳴らさない（噴射音はオフにしたときに止めてある）
+      if (!enabled) return;
       // 止まっている（iPhone で有効にする前など）ときは鳴らさない。噴射音だけは止める
       if (ctx.state !== 'running') {
         if (commands.includes('jetOff')) jetOff();
@@ -164,5 +181,9 @@ export function createSynthesizer(make: () => AudioContext = () => new AudioCont
     },
     stopAll: jetOff,
     state: () => (failed ? 'unavailable' : ctx.state === 'running' ? 'running' : 'suspended'),
+    setEnabled(on) {
+      enabled = on;
+      if (!on) jetStopNow();
+    },
   };
 }

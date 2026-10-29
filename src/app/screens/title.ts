@@ -4,6 +4,8 @@ import { bake, UFO } from '../../render/sprites';
 export interface TitleScreen {
   /** HIGH（ランキングの 1 位。記録がなければ 0）を出し直す */
   refresh(high: number): void;
+  /** 効果音のボタンを置く場所（MGW-GUI-0002 §1。CREDITS・ランキング消去の下） */
+  soundSlot: HTMLElement;
 }
 
 const pad5 = (n: number) => String(n).padStart(5, '0');
@@ -69,11 +71,15 @@ export function createTitleScreen(
   guide.className = 'title-guide';
   guide.textContent = touch ? 'なぞって移動 タップで発射' : '←→/マウスで移動 SPACEで発射';
 
-  root.append(high, name, ufos, menu, sub, guide);
+  const soundSlot = document.createElement('div');
+  soundSlot.className = 'title-sub';
+
+  root.append(high, name, ufos, menu, sub, soundSlot, guide);
 
   return {
     refresh(value) {
       high.textContent = `HIGH ${pad5(value)}`;
     },
+    soundSlot,
   };
 }

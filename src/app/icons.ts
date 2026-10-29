@@ -1,7 +1,7 @@
 // 画面の印（← ‖ スピーカー ⤓ ⤒ ✓ ✕）。インラインの SVG で描く（MGW-GUI-0001 §5.1。Web フォント・画像のファイルは使わない）
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-export type IconName = 'back' | 'pause' | 'download' | 'upload' | 'check' | 'cross';
+export type IconName = 'back' | 'pause' | 'download' | 'upload' | 'check' | 'cross' | 'soundOn' | 'soundOff';
 
 /** 16 × 16 の中に描く線（stroke）と、塗る形（fill） */
 const SHAPES: Record<IconName, { strokes?: string[]; fills?: string[]; circle?: boolean }> = {
@@ -11,6 +11,9 @@ const SHAPES: Record<IconName, { strokes?: string[]; fills?: string[]; circle?: 
   upload: { strokes: ['M8 11V3', 'M4 6l4-4 4 4', 'M2 14h12'] },
   check: { circle: true, strokes: ['M5 8.2l2 2 4-4.2'] },
   cross: { circle: true, strokes: ['M5.5 5.5l5 5', 'M10.5 5.5l-5 5'] },
+  // スピーカーと音の波（オン）・×（オフ）
+  soundOn: { fills: ['M2 6h3l4-3.5v11L5 10H2z'], strokes: ['M11 5.5a3.5 3.5 0 0 1 0 5', 'M12.8 3.5a6.3 6.3 0 0 1 0 9'] },
+  soundOff: { fills: ['M2 6h3l4-3.5v11L5 10H2z'], strokes: ['M11 6l4 4', 'M15 6l-4 4'] },
 };
 
 export function icon(name: IconName): SVGSVGElement {
