@@ -61,7 +61,7 @@ test.describe('効果音のオン・オフ', () => {
     await expect(body(page)).toHaveAttribute('data-display-mode', 'pixel');
   });
 
-  test('MGW-TC-0034-07 プレイ中に押しても、ゲームは止まらず、発射・移動にもならない', async ({ page }) => {
+  test('MGW-TC-0034-07 プレイ中に押しても、ゲームは止まらず、発射・移動にもならない', async ({ page, isMobile }) => {
     await openPlay(page);
     await clearField(page);
     const before = await getState(page);
@@ -73,11 +73,12 @@ test.describe('効果音のオン・オフ', () => {
     expect(after.status).toBe('ready');
     expect(after.launcherX).toBe(before.launcherX);
     expect(after.stepCount as number).toBeGreaterThan(before.stepCount as number);
-    // 上昇中に押しても止まらず、上昇を続ける
-    await page.keyboard.press('Space');
-    if ((await getState(page)).status !== 'playing') {
+    // 上昇中に押しても止まらず、上昇を続ける（発射は PC は Space、iPhone はタップ。状態が変わるのを待ってから見る）
+    if (isMobile) {
       const b = (await page.locator('#game').boundingBox())!;
       await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height * 0.8);
+    } else {
+      await page.keyboard.press('Space');
     }
     await expect(body(page)).toHaveAttribute('data-status', 'playing');
     const y0 = (await getState(page)).missile.y;
