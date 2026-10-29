@@ -3,15 +3,15 @@ id: MGW-GUI-0008
 type: gui-design
 title: クレジット画面
 status: stable
-version: 1.0
+version: 1.1
 updated: 2026-10-29
 sources:
-  - MGW-GUI-0001（v1.4）
-  - MGW-US-0033（v1.0）
-  - doc/specification.md (v1.7) §18
+  - MGW-GUI-0001（v1.5）
+  - MGW-US-0033（v1.1）
+  - doc/specification.md (v1.8) §18
 verified:
   by: tsuku3dayo
-  at: 2026-10-29T10:42:24+09:00
+  at: 2026-10-29T15:03:15+09:00
 ---
 
 # MGW-GUI-0008 クレジット画面（`#/credits`）
@@ -23,13 +23,13 @@ verified:
 │ [← BACK]       クレジット            │
 │                                    │
 │             PRODUCER               │ ← 役割：小さく、うすい字、字の間を少しあける
-│         YOSHIHARU TSUKUDA          │ ← 名前：太字
+│          つくだ よしはる            │ ← 名前：太字
 │                                    │
 │             DIRECTOR               │
-│         YOSHIHARU TSUKUDA          │
+│          つくだ よしはる            │
 │                                    │
 │           GAME DESIGNER            │
-│         YOSHIHARU TSUKUDA          │
+│          つくだ よしはる            │
 │                                    │
 │         GRAPHIC DESIGNER           │
 │            CLAUDE CODE             │

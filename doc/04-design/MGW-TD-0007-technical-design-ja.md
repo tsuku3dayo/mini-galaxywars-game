@@ -13,14 +13,14 @@ sources:
   - MGW-ADR-0005（v1.1）
   - MGW-ADR-0006（v1.0）
   - MGW-ADR-0007（v1.2）
-  - MGW-GUI-0001（v1.4）
+  - MGW-GUI-0001（v1.5）
   - MGW-GUI-0007（v1.0）
   - MGW-US-0001（v1.0）
   - MGW-US-0002（v1.1）
   - MGW-US-0003（v1.0）
   - MGW-US-0004（v1.0）
   - MGW-US-0022（v1.0）
-  - doc/specification.md (v1.7) §13〜§15、§23〜§25
+  - doc/specification.md (v1.8) §13〜§15、§23〜§25
 verified: null
 ---
 
