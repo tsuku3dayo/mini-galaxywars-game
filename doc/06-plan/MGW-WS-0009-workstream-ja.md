@@ -3,13 +3,13 @@ id: MGW-WS-0009
 type: workstream
 title: 元のゲームに寄せる修正（修正用）
 status: stable
-version: 1.0
-updated: 2026-10-28
+version: 1.1
+updated: 2026-10-29
 sources:
   - MGW-EP-0002（v1.0）
   - MGW-EP-0003（v1.3）
   - MGW-EP-0005（v1.1）
-  - MGW-TST-0001（v1.2）
+  - MGW-TST-0001（v1.3）
   - doc/requests/2026-10-28-spec-1.6-video-review.md
 verified: null
 ---
@@ -17,7 +17,7 @@ verified: null
 # MGW-WS-0009 元のゲームに寄せる修正（修正用）
 
 * **epic**：MGW-EP-0002、MGW-EP-0003、MGW-EP-0005
-* **実施の順**：9 / 9（前：MGW-WS-0007。このあとリリース）
+* **実施の順**：9 / 10（前：MGW-WS-0007、次：MGW-WS-0010）
 
 ## ねらい
 
@@ -34,6 +34,7 @@ verified: null
 | 7 | MGW-WS-0006 | ランキング（完了） |
 | 8 | MGW-WS-0007 | 表示方式（完了） |
 | 9 | **MGW-WS-0009** | 元のゲームに寄せる修正 |
+| 10 | MGW-WS-0010 | 遊んでみて気になった所の修正と、ランキング・クレジット・効果音（修正用、仕様書 v1.7） |
 
 ## user-story
 

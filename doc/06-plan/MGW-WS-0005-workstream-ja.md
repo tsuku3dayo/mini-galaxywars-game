@@ -3,18 +3,18 @@ id: MGW-WS-0005
 type: workstream
 title: 音
 status: stable
-version: 1.2
-updated: 2026-10-28
+version: 1.3
+updated: 2026-10-29
 sources:
   - MGW-EP-0005（v1.1）
-  - MGW-TST-0001（v1.2）
+  - MGW-TST-0001（v1.3）
 verified: null
 ---
 
 # MGW-WS-0005 音
 
 * **epic**：MGW-EP-0005
-* **実施の順**：5 / 9（前：MGW-WS-0004、次：MGW-WS-0008）
+* **実施の順**：5 / 10（前：MGW-WS-0004、次：MGW-WS-0008）
 
 ## ねらい
 

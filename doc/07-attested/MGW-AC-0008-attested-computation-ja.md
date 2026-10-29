@@ -8,11 +8,11 @@ updated: 2026-10-27
 sources:
   - MGW-TASK-0008（v1.0）
   - MGW-TC-0005（v1.1）
-  - MGW-TC-0006（v1.0）
+  - MGW-TC-0006（v1.1）
   - MGW-TC-0007（v1.1）
-  - MGW-TC-0009（v1.1）
+  - MGW-TC-0009（v1.2）
   - MGW-TC-0011（v1.1）
-  - MGW-TC-0030（v1.0）
+  - MGW-TC-0030（v1.1）
 verified:
   by: tsuku3dayo
   at: 2026-10-27T14:36:24+09:00

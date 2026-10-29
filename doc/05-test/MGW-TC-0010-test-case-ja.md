@@ -3,12 +3,12 @@ id: MGW-TC-0010
 type: test-case
 title: 隕石が牛耕式に動く
 status: stable
-version: 1.1
-updated: 2026-10-28
+version: 1.2
+updated: 2026-10-29
 sources:
   - MGW-US-0010（v1.2）
-  - MGW-TST-0001（v1.2）
-  - MGW-TD-0002（v1.4）
+  - MGW-TST-0001（v1.3）
+  - MGW-TD-0002（v1.5）
 verified: null
 ---
 
@@ -29,3 +29,5 @@ verified: null
 | MGW-TC-0010-04 | 4 | 隕石は 11 段で、最下段（y = 536）は発射前のミサイルの先端（y = 584）より上を通る（発射前のミサイルには当たらない） | 自動（単体） | `tests/unit/meteor.test.ts` |
 | MGW-TC-0010-05 | 5 | 隕石には、進む向きの後ろに尾が付き、向きが分かる | 自動（単体） | `tests/unit/sprites.test.ts` |
 | MGW-TC-0010-06 | 5 | 隕石には、進む向きの後ろに尾が付き、向きが分かる | 手動（PC） | 右へ進む隕石は左に、左へ進む隕石は右に、3 本線の尾が見える |
+| MGW-TC-0010-07 | 6 | 隕石の初めの並びはゲームごとに変わる（種から決める）。となりどうしは、1 周の道のりの 1/10 以上離れている | 自動（単体） | `tests/unit/meteor.test.ts` |
+| MGW-TC-0010-08 | 6 | 隕石の初めの並びはゲームごとに変わる（種から決める）。となりどうしは、1 周の道のりの 1/10 以上離れている | 自動（E2E） | `e2e/gameplay.spec.ts` |

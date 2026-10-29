@@ -3,13 +3,13 @@ id: MGW-TC-0026
 type: test-case
 title: ランキングを見る
 status: stable
-version: 1.0
-updated: 2026-10-26
+version: 1.1
+updated: 2026-10-29
 sources:
   - MGW-US-0026（v1.1）
-  - MGW-TST-0001（v1.2）
-  - MGW-TD-0006（v1.0）
-  - MGW-TD-0004（v1.0）
+  - MGW-TST-0001（v1.3）
+  - MGW-TD-0006（v1.1）
+  - MGW-TD-0004（v1.1）
 verified: null
 ---
 
@@ -24,6 +24,8 @@ verified: null
 
 | 確認 ID | 条件 No | 確かめること | 種類 | 確かめる場所・手動の手順 |
 | :--- | :--- | :--- | :--- | :--- |
-| MGW-TC-0026-01 | 1 | `#/ranking` に、上位 10 件の順位・スコア・名前・日時が出る | 自動（E2E） | `e2e/ranking.spec.ts` |
+| MGW-TC-0026-01 | 1 | `#/ranking` に、上位 10 件の順位・名前・スコアと、名前の下に結果（`CLEAR`・`GAME OVER`）と日時が出る。1〜3 位は `1st`・`2nd`・`3rd` | 自動（E2E） | `e2e/ranking.spec.ts` |
 | MGW-TC-0026-02 | 2 | 記録がないときは、記録がないことが分かる表示が出る | 自動（E2E） | `e2e/ranking.spec.ts` |
-| MGW-TC-0026-03 | 3 | 「TITLE」でタイトルに戻る | 自動（E2E） | `e2e/ranking.spec.ts` |
+| MGW-TC-0026-03 | 3 | 「← BACK」でタイトルに戻る | 自動（E2E） | `e2e/ranking.spec.ts` |
+| MGW-TC-0026-04 | 4 | 登録したあとに開いたときは、今登録した記録の行が目立ち、名前に「（あなた）」が付く | 自動（E2E） | `e2e/ranking.spec.ts` |
+| MGW-TC-0026-05 | 5 | 見た目は「ブロック崩しミニ」のランキング画面と同じ形（紺の画面、上に BACK とタイトル、下に記録のバックアップ） | 手動（iPhone・PC） | ランキング画面を開き、「ブロック崩しミニ」と同じ形（紺の画面、BACK とタイトル、1〜3 位の黄色、名前の下の結果と日時、自分の記録の目立たせ方、記録のバックアップの枠）に見え、スクロールしても BACK とタイトルが上に残る |
