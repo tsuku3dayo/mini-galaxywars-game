@@ -2,14 +2,16 @@
 id: MGW-GUI-0008
 type: gui-design
 title: クレジット画面
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-GUI-0001（v1.3）
   - MGW-US-0033（v1.0）
   - doc/specification.md (v1.7) §18
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-GUI-0008 クレジット画面（`#/credits`）

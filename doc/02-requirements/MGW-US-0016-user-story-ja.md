@@ -2,13 +2,15 @@
 id: MGW-US-0016
 type: user-story
 title: ミスのあとに再登場し、残機がなくなると終わる
-status: review
+status: stable
 version: 1.2
 updated: 2026-10-29
 sources:
   - MGW-EP-0003（v1.3）
   - doc/specification.md (v1.7) §3.1、§6.3、§7、§11
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-US-0016 ミスのあとに再登場し、残機がなくなると終わる

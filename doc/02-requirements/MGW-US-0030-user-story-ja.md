@@ -2,7 +2,7 @@
 id: MGW-US-0030
 type: user-story
 title: 同じ入力から同じ展開になる（決定性）
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-29
 sources:
@@ -10,7 +10,9 @@ sources:
   - doc/specification.md (v1.7) §1.2、§5.1、§10、§25
   - MGW-ADR-0001（v1.0）
   - MGW-ADR-0002（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-US-0030 同じ入力から同じ展開になる（決定性）

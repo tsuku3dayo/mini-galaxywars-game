@@ -2,7 +2,7 @@
 id: MGW-GUI-0001
 type: gui-design
 title: 共通の画面の枠（大きさ・安全領域・色・文字）
-status: review
+status: stable
 version: 1.3
 updated: 2026-10-29
 sources:
@@ -12,7 +12,9 @@ sources:
   - MGW-US-0022（v1.0）
   - MGW-ADR-0007（v1.2）
   - doc/specification.md (v1.7) §1.2、§2、§18
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-GUI-0001 共通の画面の枠

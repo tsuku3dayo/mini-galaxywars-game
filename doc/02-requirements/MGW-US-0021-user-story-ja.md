@@ -2,13 +2,15 @@
 id: MGW-US-0021
 type: user-story
 title: タッチで操作する（操作空間・プレイ空間）
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-29
 sources:
   - MGW-EP-0004（v1.0）
   - doc/specification.md (v1.7) §2、§2.1、§4.1、§20
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-US-0021 タッチで操作する（操作空間・プレイ空間）

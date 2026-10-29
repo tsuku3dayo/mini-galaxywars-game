@@ -2,14 +2,16 @@
 id: MGW-EP-0006
 type: epic
 title: ランキング
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-29
 sources:
   - MGW-PB-0001（v1.3） §2
   - MGW-ADR-0005（v1.1）
   - doc/specification.md (v1.7) §9、§21
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-EP-0006 ランキング

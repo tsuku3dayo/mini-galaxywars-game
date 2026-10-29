@@ -2,13 +2,15 @@
 id: MGW-US-0034
 type: user-story
 title: 効果音をオン・オフする
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-EP-0005（v1.1）
   - doc/specification.md (v1.7) §1.1、§4.1、§18、§21、§22
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-US-0034 効果音をオン・オフする

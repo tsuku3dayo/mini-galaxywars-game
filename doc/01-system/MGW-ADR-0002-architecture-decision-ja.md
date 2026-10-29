@@ -2,12 +2,14 @@
 id: MGW-ADR-0002
 type: architecture-decision
 title: 固定タイムステップと入力の記録
-status: review
+status: stable
 version: 1.1
 updated: 2026-10-29
 sources:
   - doc/specification.md (v1.7) §1.2、§5.1、§10、§25
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T10:42:24+09:00
 ---
 
 # MGW-ADR-0002 固定タイムステップと入力の記録
