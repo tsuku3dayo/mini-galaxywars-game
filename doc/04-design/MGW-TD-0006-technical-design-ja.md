@@ -8,7 +8,7 @@ updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
   - MGW-ADR-0005（v1.1）
-  - MGW-GUI-0004（v1.1）
+  - MGW-GUI-0004（v1.2）
   - MGW-GUI-0005（v1.2）
   - MGW-GUI-0006（v1.0）
   - MGW-US-0025（v1.2）
@@ -17,7 +17,7 @@ sources:
   - MGW-US-0029（v1.0）
   - MGW-US-0032（v1.0）
   - MGW-US-0034（v1.0）
-  - doc/specification.md (v1.9) §9、§21
+  - doc/specification.md (v1.10) §9、§21
   - doc/requests/2026-10-26-spec-1.4-design-values.md
 verified: null
 ---

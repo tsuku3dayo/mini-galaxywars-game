@@ -10,7 +10,7 @@ sources:
   - MGW-US-0003（v1.0）
   - MGW-US-0004（v1.0）
   - MGW-ADR-0004（v1.1）
-  - doc/specification.md (v1.9) §23
+  - doc/specification.md (v1.10) §23
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:52:10+09:00
