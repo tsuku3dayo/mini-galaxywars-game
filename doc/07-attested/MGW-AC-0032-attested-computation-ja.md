@@ -2,7 +2,7 @@
 id: MGW-AC-0032
 type: attested-computation
 title: タイトル画面の点数の説明・ボタン、クレジットの名前、E2E の小さい端末の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -10,7 +10,9 @@ sources:
   - MGW-TC-0014（v1.3）
   - MGW-TC-0022（v1.0）
   - MGW-TC-0033（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T15:59:36+09:00
 ---
 
 # MGW-AC-0032 タイトル画面の点数の説明・ボタン、クレジットの名前、E2E の小さい端末の確認
