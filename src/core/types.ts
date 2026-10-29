@@ -64,6 +64,10 @@ export interface GameState {
   lastKill: { part: UfoPart; points: number } | null;
   /** 倒した UFO の位置の爆発と得点（MGW-TD-0002 §6.4）。steps は残り */
   killEffect: { x: number; y: number; points: number; steps: number } | null;
+  /** 時間ボーナスの経過時間。ステップの始まりが playing のときだけ 1 足す（仕様書 v1.9 §6.4） */
+  playSteps: number;
+  /** クリアしたときの時間ボーナス（それまでは 0。MGW-TD-0002 §7.3） */
+  timeBonus: number;
 }
 
 export interface StepInput {
