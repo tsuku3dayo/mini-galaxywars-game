@@ -2,7 +2,7 @@
 id: MGW-AC-0035
 type: attested-computation
 title: 弾の絵・隕石の尾の 2 コマ・出撃の位置・名前の入力欄の幅の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -11,7 +11,9 @@ sources:
   - MGW-TC-0010（v1.3）
   - MGW-TC-0016（v1.3）
   - MGW-TC-0025（v1.3）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T18:29:49+09:00
 ---
 
 # MGW-AC-0035 弾の絵・隕石の尾の 2 コマ・出撃の位置・名前の入力欄の幅の確認
