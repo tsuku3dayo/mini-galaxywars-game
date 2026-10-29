@@ -2,6 +2,7 @@
 import { STEPS_PER_SECOND } from '../../core/config';
 import type { GameState } from '../../core/types';
 import { setData } from '../debug';
+import { icon } from '../icons';
 
 /** 終わったあと、TITLE を出すまでの時間（時刻で数える） */
 export const END_WAIT_MS = 3000;
@@ -22,32 +23,11 @@ function button(label: string, onClick: () => void): HTMLButtonElement {
   return b;
 }
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
-
-/** 一時停止の印（‖）。インラインの SVG で描く（MGW-GUI-0001 §5.1） */
-function pauseIcon(): SVGSVGElement {
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('viewBox', '0 0 16 16');
-  svg.setAttribute('aria-hidden', 'true');
-  svg.classList.add('icon');
-  for (const x of ['4', '10']) {
-    const bar = document.createElementNS(SVG_NS, 'rect');
-    bar.setAttribute('x', x);
-    bar.setAttribute('y', '2');
-    bar.setAttribute('width', '2.5');
-    bar.setAttribute('height', '12');
-    bar.setAttribute('rx', '1');
-    bar.setAttribute('fill', 'currentColor');
-    svg.append(bar);
-  }
-  return svg;
-}
-
 /** ボタンの段の左の一時停止（プレイ中だけ。押しても発射・移動しない） */
 export function createPauseButton(row: HTMLElement, onToggle: () => void): void {
   const pause = button('一時停止', onToggle);
   pause.id = 'pause-button';
-  pause.prepend(pauseIcon());
+  pause.prepend(icon('pause'));
   row.append(pause);
 }
 

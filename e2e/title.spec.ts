@@ -48,7 +48,7 @@ test.describe('タイトル画面とルーティング', () => {
     const body = page.locator('body');
     await page.goto('./#/ranking');
     await expect(body).toHaveAttribute('data-screen', 'ranking');
-    await expect(page.locator('#screen-ranking h2')).toHaveText('RANKING');
+    await expect(page.locator('#screen-ranking h2')).toHaveText('ハイスコアランキング');
     await expect(page.locator('#screen-ranking')).toContainText('まだ記録がありません');
     await expect(page.locator('#screen-title')).toBeHidden();
     await expect(page.locator('#game')).toBeHidden();
@@ -65,10 +65,10 @@ test.describe('タイトル画面とルーティング', () => {
     // プレイを離れたら、状態はなくなる
     await expect(body).toHaveAttribute('data-status', '');
 
-    // タイトルの RANKING とランキングの TITLE でも行き来できる。知らないハッシュはタイトル
+    // タイトルの RANKING とランキングの BACK でも行き来できる。知らないハッシュはタイトル
     await page.locator('#screen-title').getByRole('link', { name: 'RANKING' }).click();
     await expect(body).toHaveAttribute('data-screen', 'ranking');
-    await page.locator('#screen-ranking').getByRole('link', { name: 'TITLE' }).click();
+    await page.locator('#screen-ranking').getByRole('link', { name: 'BACK' }).click();
     await expect(body).toHaveAttribute('data-screen', 'title');
     await page.evaluate(() => (location.hash = '#/unknown'));
     await expect(body).toHaveAttribute('data-screen', 'title');

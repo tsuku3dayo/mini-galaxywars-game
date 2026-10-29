@@ -321,42 +321,157 @@ body:not([data-screen='play']) #overlay-message {
   margin: 0;
 }
 
-/*
- * iPhone SE の高さでも、10 件・書き出し・読み込み・知らせ・TITLE が収まるよう詰める。
- * フォントで行の高さが変わらないよう（CI の Linux は少し高い）、行の高さを決めておく
- */
-#screen-ranking {
-  gap: 8px;
-  padding: 8px;
-  line-height: 20px;
+/* 紺の画面（ランキング・クレジット。「ブロック崩しミニ」と同じ。MGW-GUI-0001 §5.1） */
+.screen.navy {
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  text-align: left;
+  background: var(--navy-bg);
+  color: var(--navy-text);
+  font: 16px var(--navy-font);
 }
 
-#screen-ranking h2 {
-  font-size: 24px;
-  line-height: 28px;
+/* 上に残る BACK とタイトル */
+.navy-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: var(--navy-bg);
+}
+
+.navy-header h2 {
   margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.screen.navy button,
+.screen.navy .button,
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--navy-line);
+  border-radius: 10px;
+  background: var(--navy-panel);
+  color: var(--navy-text);
+  font: 17px var(--navy-font);
+  text-decoration: none;
+}
+
+.screen.navy button:active,
+.back-button:active {
+  background: var(--navy-line);
+  color: var(--navy-text);
+}
+
+/* 一覧から下は、ゲーム画面の枠の中でスクロールする（ページは動かさない。MGW-GUI-0001 §4） */
+.navy-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 12px 16px;
+  touch-action: pan-y;
 }
 
 /* ランキングの一覧（MGW-GUI-0005 §2）。名前の空白も詰めずに出す */
 .ranking-table {
+  width: 100%;
   border-collapse: collapse;
-  font-size: 16px;
-}
-
-.ranking-table th,
-.ranking-table td {
-  padding: 0 6px;
-  line-height: 18px;
-  text-align: left;
-  white-space: pre;
 }
 
 .ranking-table th {
-  border-bottom: 2px solid var(--fg);
+  padding: 8px 6px;
+  color: var(--navy-sub);
+  font-weight: normal;
+  text-align: left;
+  border-bottom: 1px solid var(--navy-line);
 }
 
-.ranking-table td:nth-child(-n + 2) {
+.ranking-table td {
+  padding: 8px 6px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--navy-line);
+}
+
+.ranking-table th:last-child,
+.ranking-table td:last-child {
   text-align: right;
+}
+
+.ranking-table td:first-child {
+  width: 3.2em;
+  font: 20px ui-monospace, Menlo, Consolas, monospace;
+}
+
+.ranking-table td:last-child {
+  font: 20px ui-monospace, Menlo, Consolas, monospace;
+}
+
+/* 1〜3 位は黄色 */
+.ranking-table tr.top td:first-child {
+  color: var(--navy-accent);
+  font-weight: bold;
+}
+
+/* 今登録した記録：左に黄色の線、背景を少し明るく */
+.ranking-table tr.mine td {
+  background: var(--navy-mine);
+}
+
+.ranking-table tr.mine td:first-child {
+  box-shadow: inset 4px 0 0 var(--navy-accent);
+}
+
+.ranking-name {
+  font-size: 18px;
+  white-space: pre;
+}
+
+.ranking-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  color: var(--navy-sub);
+  font-size: 14px;
+}
+
+.ranking-meta .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.ranking-empty {
+  margin: 24px 0;
+  text-align: center;
+  color: var(--navy-sub);
+}
+
+/* 記録のバックアップの枠 */
+.ranking-backup {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid var(--navy-line);
+  border-radius: 14px;
+}
+
+.ranking-backup h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.ranking-backup .ranking-buttons button {
+  flex: 1;
+  padding: 0 8px;
 }
 
 .ranking-table[hidden],
@@ -365,14 +480,13 @@ body:not([data-screen='play']) #overlay-message {
   display: none;
 }
 
-/* 書き出し・読み込み（MGW-GUI-0005 §2） */
 .ranking-buttons {
   display: flex;
-  gap: 16px;
+  gap: 12px;
 }
 
 .ranking-message {
-  margin: 0;
+  margin: 12px 0 0;
 }
 
 /* 読み込みの確認。一覧の上に重ねる */
@@ -385,11 +499,51 @@ body:not([data-screen='play']) #overlay-message {
   justify-content: center;
   gap: 16px;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.9);
+  text-align: center;
+  background: rgba(11, 16, 32, 0.95);
 }
 
 .ranking-confirm p {
   margin: 0;
+}
+
+/* タイトル画面の小さめのボタン（CREDITS・ランキング消去・効果音。MGW-GUI-0002 §1） */
+.title-sub {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.title-sub button,
+.title-sub .button {
+  font-size: 16px;
+  padding: 4px 12px;
+}
+
+/* ランキング消去の確認（MGW-GUI-0002 §2）。タイトル画面の上に重ねる */
+#overlay-clear {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.92);
+}
+
+#overlay-clear p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+#overlay-clear[hidden],
+#overlay-clear [hidden],
+body:not([data-screen='title']) #overlay-clear {
+  display: none;
 }
 
 /* ランキング登録（MGW-GUI-0004）。キーボードに隠れないよう、画面の上半分に置く */
@@ -445,7 +599,6 @@ body:not([data-screen='play']) #overlay-entry {
   background: var(--bg);
   border: 2px solid var(--fg);
   border-radius: 0;
-  text-transform: uppercase;
   -webkit-user-select: text;
   user-select: text;
 }

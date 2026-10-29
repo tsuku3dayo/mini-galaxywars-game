@@ -1,10 +1,15 @@
 // ランキングの保存（MGW-TD-0006 §1）。localStorage と今の時刻は外から渡す（テストで差し替えるため）
 
+/** クリアかゲームオーバーか（仕様書 v1.7） */
+export type RankingResult = 'clear' | 'gameOver';
+
 export interface RankingEntry {
   score: number;
   name: string;
   /** タイムゾーン付きの ISO 8601（例：2026-10-26T16:52:10+09:00） */
   date: string;
+  /** 前からの記録にはない */
+  result?: RankingResult;
 }
 
 export type ImportResult = { ok: true; entries: RankingEntry[] } | { ok: false };
@@ -15,13 +20,15 @@ export interface RankingStore {
   /** 入るなら順位（1〜10）、入らないなら null。0 点は入らない */
   rankOf(score: number): number | null;
   /** 足して並べ直し、10 件に切って保存する。入った順位を返す（入らないときは rankOf が null なので呼ばない） */
-  add(score: number, name: string): number;
+  add(score: number, name: string, result: RankingResult): number;
   /** 今の内容を保存の形で（2 文字の字下げ） */
   exportJson(): string;
   /** 読み込む JSON を調べる。今の記録は変えない */
   parseImport(text: string): ImportResult;
   /** 読み込みの確認のあとに、まるごと置き換える */
   replaceAll(entries: RankingEntry[]): void;
+  /** 全消去（仕様書 v1.7）。空の記録を保存する。設定には触れない */
+  clearAll(): void;
 }
 
 export const RANKING_KEY = 'galaxy-wars-scores';
@@ -31,20 +38,40 @@ export const RANKING_SIZE = 10;
 export const DEFAULT_NAME = 'PLAYER';
 const NAME_MAX = 8;
 const SCORE_MAX = 99_999;
-const NAME_RE = /^[A-Z0-9 ]{1,8}$/;
+const CONTROL = /\p{Cc}/gu;
 
-/** 入力のたびに：大文字にし、A-Z・0-9・空白以外を取り除き、8 文字で切る（MGW-TD-0006 §1.4） */
+/** 見た目の 1 文字（書記素）ごとに分ける。Intl.Segmenter がなければコードポイントごと（MGW-TD-0006 §1.4） */
+function graphemes(text: string): string[] {
+  if (typeof Intl !== 'undefined' && 'Segmenter' in Intl) {
+    return [...new Intl.Segmenter('ja', { granularity: 'grapheme' }).segment(text)].map((s) => s.segment);
+  }
+  return [...text];
+}
+
+/** 名前の文字数（見た目の 1 文字を 1 と数える） */
+export function nameLength(text: string): number {
+  return graphemes(text).length;
+}
+
+/**
+ * 入力のたびに：制御文字を取り除き、8 文字で切る。大文字には直さない（仕様書 v1.7。日本語も入れられる）。
+ * 日本語の変換の途中は呼ばない（entry.ts）
+ */
 export function normalizeName(input: string): string {
-  return input
-    .toUpperCase()
-    .replace(/[^A-Z0-9 ]/g, '')
-    .slice(0, NAME_MAX);
+  return graphemes(input.replace(CONTROL, '')).slice(0, NAME_MAX).join('');
 }
 
 /** 登録するとき：前後の空白を取り、空なら PLAYER */
 export function finalizeName(input: string): string {
   const name = normalizeName(input).trim();
   return name === '' ? DEFAULT_NAME : name;
+}
+
+/** 保存できる名前：1〜8 文字、制御文字なし、前後に空白なし */
+function isValidName(name: unknown): name is string {
+  if (typeof name !== 'string' || name !== name.trim() || /\p{Cc}/u.test(name)) return false;
+  const length = nameLength(name);
+  return length >= 1 && length <= NAME_MAX;
 }
 
 /** 端末の時刻のタイムゾーン付きの ISO 8601 */
@@ -62,15 +89,15 @@ export function toLocalIso(d: Date): string {
 
 function isEntry(e: unknown): e is RankingEntry {
   if (typeof e !== 'object' || e === null) return false;
-  const { score, name, date } = e as Record<string, unknown>;
+  const { score, name, date, result } = e as Record<string, unknown>;
   return (
     Number.isInteger(score) &&
     (score as number) >= 0 &&
     (score as number) <= SCORE_MAX &&
-    typeof name === 'string' &&
-    NAME_RE.test(name) &&
+    isValidName(name) &&
     typeof date === 'string' &&
-    !Number.isNaN(Date.parse(date))
+    !Number.isNaN(Date.parse(date)) &&
+    (result === undefined || result === 'clear' || result === 'gameOver')
   );
 }
 
@@ -88,7 +115,8 @@ function parseRanking(text: string | null): RankingEntry[] | null {
   if (app !== RANKING_APP || version !== RANKING_VERSION) return null;
   if (!Array.isArray(entries) || entries.length > RANKING_SIZE) return null;
   if (!entries.every(isEntry)) return null;
-  return entries.map(({ score, name, date }) => ({ score, name, date }));
+  // 前からの記録（result なし）は、そのまま（足さない）
+  return entries.map(({ score, name, date, result }) => (result === undefined ? { score, name, date } : { score, name, date, result }));
 }
 
 /** スコアの高い順。同じスコアなら、先に登録した方（date が古い方）を上にする */
@@ -120,8 +148,8 @@ export function createRankingStore(storage: Storage, now: () => Date): RankingSt
       const rank = load().filter((e) => e.score >= score).length + 1;
       return rank <= RANKING_SIZE ? rank : null;
     },
-    add(score, name) {
-      const entry: RankingEntry = { score, name: finalizeName(name), date: toLocalIso(now()) };
+    add(score, name, result) {
+      const entry: RankingEntry = { score, name: finalizeName(name), date: toLocalIso(now()), result };
       const entries = sortEntries([...load(), entry]);
       save(entries.slice(0, RANKING_SIZE));
       return entries.indexOf(entry) + 1;
@@ -133,6 +161,9 @@ export function createRankingStore(storage: Storage, now: () => Date): RankingSt
     },
     replaceAll(entries) {
       save(sortEntries(entries).slice(0, RANKING_SIZE));
+    },
+    clearAll() {
+      save([]);
     },
   };
 }

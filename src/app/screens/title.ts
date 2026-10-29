@@ -8,7 +8,13 @@ export interface TitleScreen {
 
 const pad5 = (n: number) => String(n).padStart(5, '0');
 
-export function createTitleScreen(root: HTMLElement, touch: boolean, onStart: () => void, onSettings: () => void): TitleScreen {
+export function createTitleScreen(
+  root: HTMLElement,
+  touch: boolean,
+  onStart: () => void,
+  onSettings: () => void,
+  onClearRanking: () => void,
+): TitleScreen {
   root.replaceChildren();
 
   const high = document.createElement('p');
@@ -43,11 +49,23 @@ export function createTitleScreen(root: HTMLElement, touch: boolean, onStart: ()
   menu.className = 'title-menu';
   menu.append(start, ranking, settings);
 
+  // 小さめのボタン（MGW-GUI-0002 §1）。押したらフォーカスを外し、Space で始めてしまわないようにする
+  const clearRanking = document.createElement('button');
+  clearRanking.type = 'button';
+  clearRanking.textContent = 'ランキング消去';
+  clearRanking.addEventListener('click', () => {
+    clearRanking.blur();
+    onClearRanking();
+  });
+  const sub = document.createElement('div');
+  sub.className = 'title-sub';
+  sub.append(clearRanking);
+
   const guide = document.createElement('p');
   guide.className = 'title-guide';
   guide.textContent = touch ? 'なぞって移動 タップで発射' : '←→/マウスで移動 SPACEで発射';
 
-  root.append(high, name, ufos, menu, guide);
+  root.append(high, name, ufos, menu, sub, guide);
 
   return {
     refresh(value) {
