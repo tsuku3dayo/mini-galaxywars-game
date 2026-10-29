@@ -34,7 +34,7 @@ test.describe('クレジット', () => {
     const roles = await page.locator('#screen-credits dt').allTextContents();
     const names = await page.locator('#screen-credits dd').allTextContents();
     expect(roles).toEqual(['PRODUCER', 'DIRECTOR', 'GAME DESIGNER', 'GRAPHIC DESIGNER', 'SOUND CREATOR', 'PROGRAMMER']);
-    expect(names).toEqual(['YOSHIHARU TSUKUDA', 'YOSHIHARU TSUKUDA', 'YOSHIHARU TSUKUDA', 'CLAUDE CODE', 'CLAUDE CODE', 'CLAUDE CODE']);
+    expect(names).toEqual(['つくだ よしはる', 'つくだ よしはる', 'つくだ よしはる', 'CLAUDE CODE', 'CLAUDE CODE', 'CLAUDE CODE']);
     // 上から 役割 → 名前 → 次の役割 … の順に縦に並ぶ（スクロールに左右されないよう、一覧の中の位置で比べる）
     const tops = await page.locator('#screen-credits dl').evaluate((dl) => [...dl.children].map((c) => (c as HTMLElement).offsetTop));
     expect(tops).toHaveLength(12);

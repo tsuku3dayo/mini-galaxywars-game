@@ -82,18 +82,17 @@ test.describe('大きさ', () => {
     expect(game.width).toBeLessThanOrEqual(414 - MARGIN * 2);
   });
 
-  test('MGW-TC-0022-03 iPhone SE 相当の画面でもはみ出さない', async ({ page }, testInfo) => {
+  test('MGW-TC-0022-03 iPhone SE 相当の画面（第 3 世代、375 × 667）でもはみ出さない', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'iphonese-webkit', 'iPhone SE で確かめる');
     await openPlay(page);
     await expectFitsOnIphone(page);
-    // タイトル画面の中身も、ゲーム画面の枠からはみ出さない
+    // タイトル画面の中身は、ゲーム画面の枠の中の箱に入り、はみ出す分は箱の中でスクロールする（仕様書 v1.8。MGW-TC-0014-04）
     await page.evaluate(() => (location.hash = '#/title'));
     const stage = (await page.locator('#stage').boundingBox())!;
-    for (const part of await page.locator('#screen-title').locator('h1, button, a, p').all()) {
-      const box = (await part.boundingBox())!;
-      expect(box.y + box.height).toBeLessThanOrEqual(stage.y + stage.height + 0.5);
-      expect(box.x + box.width).toBeLessThanOrEqual(stage.x + stage.width + 0.5);
-    }
+    const box = (await page.locator('#screen-title .title-scroll').boundingBox())!;
+    expect(box.y).toBeGreaterThanOrEqual(stage.y - 0.5);
+    expect(box.y + box.height).toBeLessThanOrEqual(stage.y + stage.height + 0.5);
+    expect(box.x + box.width).toBeLessThanOrEqual(stage.x + stage.width + 0.5);
   });
 
   test('安全領域（ノッチ・ホームバー）の余白を引いて合わせる', async ({ page, isMobile }) => {

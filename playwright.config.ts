@@ -16,7 +16,8 @@ export default defineConfig({
   projects: [
     { name: 'pc-chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } } },
     { name: 'iphone11-webkit', use: { ...devices['iPhone 11'] } },
-    { name: 'iphonese-webkit', use: { ...devices['iPhone SE'] } },
+    // 小さい方の確認は、MGW-GUI-0001 §1 の基準と同じ iPhone SE（第 3 世代、375 × 667）（仕様書 v1.8）
+    { name: 'iphonese-webkit', use: { ...devices['iPhone SE (3rd gen)'] } },
   ],
   webServer: {
     command: 'npm run preview -- --port 4173 --strictPort',
