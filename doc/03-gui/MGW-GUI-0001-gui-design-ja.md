@@ -2,8 +2,8 @@
 id: MGW-GUI-0001
 type: gui-design
 title: 共通の画面の枠（大きさ・安全領域・色・文字）
-status: stable
-version: 1.4
+status: review
+version: 1.5
 updated: 2026-10-29
 sources:
   - MGW-US-0002（v1.1）
@@ -11,10 +11,8 @@ sources:
   - MGW-US-0021（v1.1）
   - MGW-US-0022（v1.0）
   - MGW-ADR-0007（v1.2）
-  - doc/specification.md (v1.7) §1.2、§2、§18
-verified:
-  by: tsuku3dayo
-  at: 2026-10-29T11:43:06+09:00
+  - doc/specification.md (v1.8) §1.2、§2、§18
+verified: null
 ---
 
 # MGW-GUI-0001 共通の画面の枠
@@ -22,7 +20,7 @@ verified:
 ## 1. 基準の端末
 
 - 基準：iPhone 11（画面 414 × 896 pt、縦）。試作はこの実機で触って確かめる。
-- 小さい方の確認：iPhone SE（第 2・3 世代、375 × 667 pt）。E2E で、はみ出さないことを確かめる。
+- 小さい方の確認：iPhone SE（第 2・3 世代、375 × 667 pt）。E2E でも同じ大きさの端末（Playwright の「iPhone SE (3rd gen)」）で、はみ出さないことを確かめる（仕様書 v1.8。前は第 1 世代の 320 × 568 で確かめていた）。
 - PC：ブラウザの窓の大きさに合わせる。
 
 ## 2. 画面の組み立て
