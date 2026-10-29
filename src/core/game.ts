@@ -11,8 +11,6 @@ import {
   INITIAL_LIVES,
   KILL_EFFECT_STEPS,
   LAUNCHER_START_X,
-  METEOR_COUNT,
-  METEOR_PATH_LENGTH,
   MISS_RESPAWN,
   MISSILE_H,
   MISSILE_READY_Y,
@@ -37,19 +35,19 @@ import {
   overlaps,
   pickShooter,
 } from './physics';
+import { meteorStartPositions } from './random';
 import { addScore, hitPart, killPoints } from './scoring';
 import type { Beam, GameState, Missile, StepInput, UFO } from './types';
 
 const readyMissile = (x: number): Missile => ({ x, y: MISSILE_READY_Y, isLaunched: false, isBoosting: false });
 
-/** 1 面の初めの状態（MGW-TD-0002 §5） */
-export function newGame(highScore: number): GameState {
+/** 1 面の初めの状態（MGW-TD-0002 §5）。seed は隕石の初めの並びを決める種（app が決める） */
+export function newGame(highScore: number, seed: number): GameState {
   const ufos: UFO[] = [];
   for (const row of [0, 1] as const) {
     UFO_START_X.forEach((x, i) => ufos.push({ id: row * UFO_START_X.length + i, x, y: UFO_ROW_Y[row], row, isAlive: true }));
   }
-  const meteors = [];
-  for (let k = 0; k < METEOR_COUNT; k++) meteors.push(meteorAt((k * METEOR_PATH_LENGTH) / METEOR_COUNT));
+  const meteors = meteorStartPositions(seed).map(meteorAt);
 
   return {
     status: 'ready',
@@ -104,6 +102,11 @@ export function step(state: GameState, input: StepInput): GameState {
     }
   } else if (s.status === 'playing') {
     s.missile = { ...s.missile, ...moveMissile(s.missile.x, s.missile.y, input), isBoosting: input.boost };
+  } else if (s.status === 'standby' && input.launch) {
+    // 出撃：発射台を出して発射前に戻る。このタップでは発射しない（仕様書 v1.7）
+    s.status = 'ready';
+    s.launcherX = LAUNCHER_START_X;
+    s.missile = readyMissile(LAUNCHER_START_X);
   }
 
   // 6. 当たり判定（隕石 → UFO → 光線。ミス・UFO を倒した・クリアが決まったら、残りは調べない）
@@ -140,13 +143,8 @@ export function step(state: GameState, input: StepInput): GameState {
     if (s.waitSteps <= 0) {
       s.waitSteps = 0;
       s.waitReason = null;
-      if (s.lives <= 0) {
-        s.status = 'gameOver';
-      } else {
-        s.status = 'ready';
-        s.launcherX = LAUNCHER_START_X;
-        s.missile = readyMissile(LAUNCHER_START_X);
-      }
+      // 残機があれば出撃待ち。発射台はタップで出す（仕様書 v1.7）
+      s.status = s.lives <= 0 ? 'gameOver' : 'standby';
     }
   }
 
@@ -216,7 +214,7 @@ function miss(s: GameState): void {
   s.explosion = { x: s.missile.x, y: s.missile.y, steps: EXPLOSION_STEPS };
 }
 
-/** UFO を倒したとき（MGW-TD-0002 §6.4）。ミサイルを消し、1 秒後に発射台を出す。残機は減らさない */
+/** UFO を倒したとき（MGW-TD-0002 §6.4）。ミサイルを消し、1 秒後に出撃待ち。残機は減らさない */
 function kill(s: GameState): void {
   s.status = 'respawn';
   s.waitReason = 'kill';
@@ -224,12 +222,12 @@ function kill(s: GameState): void {
   s.missile = { ...s.missile, isLaunched: false };
 }
 
-/** ready・playing・respawn ⇔ paused。cleared・gameOver では何もしない */
+/** ready・playing・respawn・standby ⇔ paused。cleared・gameOver では何もしない */
 export function togglePause(state: GameState): GameState {
   if (state.status === 'paused') {
     return { ...state, status: state.pausedFrom ?? 'playing', pausedFrom: null };
   }
-  if (state.status === 'ready' || state.status === 'playing' || state.status === 'respawn') {
+  if (state.status === 'ready' || state.status === 'playing' || state.status === 'respawn' || state.status === 'standby') {
     return { ...state, status: 'paused', pausedFrom: state.status };
   }
   return state;

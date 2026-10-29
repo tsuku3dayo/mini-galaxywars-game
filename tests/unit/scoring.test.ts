@@ -10,7 +10,7 @@ const missileAt = (dx: number, dy: number) => ({ x: ufo.x + dx, y: ufo.y + dy, w
 
 /** 下段の UFO（id 4）の突起に、次のステップで当たる状態。killCount を決められる */
 function aboutToHitProng(killCount: number): GameState {
-  const base = newGame(0);
+  const base = newGame(0, 1);
   const target = base.ufos[4]!; // 下段、x 60、y 108
   return {
     ...base,

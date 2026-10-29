@@ -21,7 +21,7 @@ describe('フィールドの領域', () => {
 
     // 初めの状態の物が、それぞれの領域にある（中心で見る）
     const inside = (y: number, [top, bottom]: readonly [number, number]) => y > top && y < bottom;
-    const state = newGame(0);
+    const state = newGame(0, 1);
     for (const y of UFO_ROW_Y) expect(inside(y, REGIONS.ufo)).toBe(true);
     for (const ufo of state.ufos) expect(inside(ufo.y, REGIONS.ufo)).toBe(true);
     for (const meteor of state.meteors) expect(inside(meteor.y, REGIONS.meteor)).toBe(true);

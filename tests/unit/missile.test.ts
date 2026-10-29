@@ -6,7 +6,7 @@ import { input, launch, run } from './helpers';
 
 // 当たり判定はまだないが、念のため隕石と UFO を消して、上昇だけを見る
 function launchedAlone(): GameState {
-  return launch({ ...newGame(0), meteors: [], ufos: [] });
+  return launch({ ...newGame(0, 1), meteors: [], ufos: [] });
 }
 
 describe('ミサイル', () => {
@@ -34,7 +34,7 @@ describe('ミサイル', () => {
 
   it('MGW-TC-0007-03 噴射中だけ、バックファイアを描く（isBoosting）', () => {
     // 発射前は噴射の入力があっても描かない
-    expect(step(newGame(0), input({ boost: true })).missile.isBoosting).toBe(false);
+    expect(step(newGame(0, 1), input({ boost: true })).missile.isBoosting).toBe(false);
     const start = launchedAlone();
     const boosting = step(start, input({ boost: true }));
     expect(boosting.missile.isBoosting).toBe(true);
@@ -55,10 +55,9 @@ describe('ミサイル', () => {
     expect(s.lives).toBe(3);
     expect(s.flashSteps).toBe(0);
     expect(s.explosion).toBeNull();
-    // 1 秒の待ちのあと、残機はそのままで発射前に戻る
+    // 1 秒の待ちのあと、残機はそのままで出撃待ちになる（仕様書 v1.7）
     const back = run(s, EXIT_RESPAWN);
-    expect(back.status).toBe('ready');
+    expect(back.status).toBe('standby');
     expect(back.lives).toBe(3);
-    expect(back.missile).toEqual({ x: 240, y: 596, isLaunched: false, isBoosting: false });
   });
 });

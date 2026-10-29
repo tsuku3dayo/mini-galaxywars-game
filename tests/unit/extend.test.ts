@@ -7,7 +7,7 @@ import { NO_INPUT } from './helpers';
 
 /** 次のステップで下段の UFO（id 5）の下部中央（100 点）に当たる状態 */
 function aboutToScore100(patch: Partial<GameState>): GameState {
-  const base = newGame(0);
+  const base = newGame(0, 1);
   const ufo = base.ufos[5]!;
   return {
     ...base,
@@ -28,8 +28,8 @@ describe('増機', () => {
     expect(next.lives).toBe(4);
     expect(next.extended).toBe(true);
     // ちょうど 1,000 でも増える。届かなければ増えない
-    expect(addScore({ ...newGame(0), score: 900 }, 100)).toEqual({ score: 1000, lives: 4, extended: true });
-    expect(addScore({ ...newGame(0), score: 850 }, 100)).toEqual({ score: 950, lives: 3, extended: false });
+    expect(addScore({ ...newGame(0, 1), score: 900 }, 100)).toEqual({ score: 1000, lives: 4, extended: true });
+    expect(addScore({ ...newGame(0, 1), score: 850 }, 100)).toEqual({ score: 950, lives: 3, extended: false });
   });
 
   it('MGW-TC-0019-04 増えたときに増機音が鳴る', () => {
@@ -50,6 +50,6 @@ describe('増機', () => {
     expect(again.score).toBe(6050);
     expect(again.lives).toBe(4);
     // スコアは 99,999 で止まる
-    expect(addScore({ ...newGame(0), score: 99_950, extended: true }, 100).score).toBe(99_999);
+    expect(addScore({ ...newGame(0, 1), score: 99_950, extended: true }, 100).score).toBe(99_999);
   });
 });

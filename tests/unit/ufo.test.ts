@@ -9,7 +9,7 @@ const dx = (before: number, after: number) => ((after - before + 240 + 480) % 48
 
 describe('UFO', () => {
   it('MGW-TC-0008-01 上段の 4 機（y 64–88）は右へ、下段の 4 機（y 96–120）は左へ動く', () => {
-    const before = newGame(0);
+    const before = newGame(0, 1);
     const after = step(before, NO_INPUT);
     const top = before.ufos.filter((u) => u.row === 0);
     const bottom = before.ufos.filter((u) => u.row === 1);
@@ -40,7 +40,7 @@ describe('UFO', () => {
       [1, 80],
     ];
     for (const [alive, speed] of table) {
-      const base = newGame(0);
+      const base = newGame(0, 1);
       // id の大きいものから倒して、上段の id 0 は残す
       const state: GameState = { ...base, ufos: base.ufos.map((u) => ({ ...u, isAlive: u.id < alive })) };
       const next = step(state, NO_INPUT);

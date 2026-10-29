@@ -7,7 +7,7 @@ import { NO_INPUT } from './helpers';
 
 /** 次のステップで下段の UFO（id 5）の下部中央（100 点）に当たる状態 */
 function aboutToKill(patch: Partial<GameState> = {}): GameState {
-  const base = newGame(0);
+  const base = newGame(0, 1);
   const ufo = base.ufos[5]!;
   return {
     ...base,
@@ -41,12 +41,12 @@ describe('UFO を倒したときの表示', () => {
     // 爆発が先、得点があと
     expect(kinds.indexOf('points')).toBe(EXPLOSION_STEPS);
     expect(killEffectView({ x: 1, y: 2, points: 600, steps: 1 })).toEqual({ kind: 'points', x: 1, y: 2, points: 600 });
-    // 消えるのは、次の発射台が出るのと同じとき
-    expect(s.status).toBe('ready');
+    // 消えるのは、待ちが終わって出撃待ちになるのと同じとき
+    expect(s.status).toBe('standby');
     expect(s.killEffect).toBeNull();
 
     // 8 機目（クリア）のときは出さない（クリアの表示を出す）
-    const last = aboutToKill({ killCount: 7, ufos: newGame(0).ufos.map((u) => ({ ...u, isAlive: u.id === 5 })) });
+    const last = aboutToKill({ killCount: 7, ufos: newGame(0, 1).ufos.map((u) => ({ ...u, isAlive: u.id === 5 })) });
     const cleared = step(last, NO_INPUT);
     expect(cleared.status).toBe('cleared');
     expect(cleared.killEffect).toBeNull();

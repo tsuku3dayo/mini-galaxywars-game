@@ -6,7 +6,7 @@ import type { GameState } from '../../src/core/types';
 import { NO_INPUT, run } from './helpers';
 
 // 隕石・光線のない、何も起きない場面
-const quiet = (patch: Partial<GameState> = {}): GameState => ({ ...newGame(0), meteors: [], beams: [], beamTimer: 1e9, ...patch });
+const quiet = (patch: Partial<GameState> = {}): GameState => ({ ...newGame(0, 1), meteors: [], beams: [], beamTimer: 1e9, ...patch });
 
 describe('永久パターン防止', () => {
   it('MGW-TC-0020-01 UFO を 1 機も倒さないまま 90 秒たつと、残機が 1 になる', () => {
@@ -36,7 +36,7 @@ describe('永久パターン防止', () => {
 
   it('MGW-TC-0020-03 タイマーは UFO を倒すと 0 に戻る。ミスしても戻らない', () => {
     // UFO を倒したステップで 0 に戻る（そのステップの分を数えて 1）
-    const ufo = newGame(0).ufos[5]!;
+    const ufo = newGame(0, 1).ufos[5]!;
     const kill = step(quiet({ idleSteps: 5000, status: 'playing', missile: { x: ufo.x, y: ufo.y + 20, isLaunched: true, isBoosting: false } }), NO_INPUT);
     expect(kill.killCount).toBe(1);
     expect(kill.idleSteps).toBe(1);

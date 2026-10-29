@@ -1,7 +1,8 @@
 // 型（MGW-TD-0002 §3。仕様書 §17 を元にする）
 
-export type GameStatus = 'ready' | 'playing' | 'respawn' | 'paused' | 'cleared' | 'gameOver';
-// respawn：ミスのあと・最上部を抜けたあとの待ち（仕様書 §7 の「2 秒」「1 秒」）
+export type GameStatus = 'ready' | 'playing' | 'respawn' | 'standby' | 'paused' | 'cleared' | 'gameOver';
+// respawn：ミスのあと・最上部を抜けたあと・UFO を倒したあとの待ち（仕様書 §7 の「2 秒」「1 秒」）
+// standby：出撃待ち（respawn のあと。タップで ready へ。仕様書 v1.7）
 
 export type UfoPart = 'body' | 'bottom' | 'prong'; // 側面・上部 / 下部中央 / 突起
 
@@ -37,7 +38,7 @@ export interface Beam {
 
 export interface GameState {
   status: GameStatus;
-  pausedFrom: 'ready' | 'playing' | 'respawn' | null;
+  pausedFrom: 'ready' | 'playing' | 'respawn' | 'standby' | null;
   stepCount: number;
   score: number;
   /** 始めたときのランキング 1 位。表示は max(highScore, score) */
@@ -70,7 +71,7 @@ export interface StepInput {
   dir: -1 | 0 | 1;
   /** 指・マウスの x（なければ null） */
   targetX: number | null;
-  /** このステップで発射する（押した・離した瞬間だけ true） */
+  /** このステップでタップした（ready なら発射、standby なら出撃。その瞬間だけ true） */
   launch: boolean;
   /** 加速噴射を続けている */
   boost: boolean;

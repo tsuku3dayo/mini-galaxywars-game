@@ -28,7 +28,7 @@ describe('擬似カラーと被弾フラッシュ', () => {
     // 隕石に当ててミスにする
     const meteor = meteorAt(100);
     let state: GameState = {
-      ...newGame(0),
+      ...newGame(0, 1),
       status: 'playing',
       missile: { x: meteor.x, y: meteor.y + 21, isLaunched: true, isBoosting: false },
       meteors: [meteor],

@@ -1,15 +1,45 @@
 import { describe, expect, it } from 'vitest';
-import { METEOR_COUNT, METEOR_LANE_COUNT, MISSILE_H, MISSILE_READY_Y, MISSILE_W } from '../../src/core/config';
+import { METEOR_COUNT, METEOR_LANE_COUNT, METEOR_MIN_GAP, METEOR_PATH_LENGTH, MISSILE_H, MISSILE_READY_Y, MISSILE_W } from '../../src/core/config';
 import { newGame } from '../../src/core/game';
 import { meteorAt, meteorBox, moveMeteor, overlaps } from '../../src/core/physics';
+import { createRandom, meteorStartPositions } from '../../src/core/random';
 
 describe('隕石', () => {
   it('MGW-TC-0010-01 隕石は 5 個', () => {
     expect(METEOR_COUNT).toBe(5);
-    const meteors = newGame(0).meteors;
-    expect(meteors).toHaveLength(5);
-    // 道のりの上に等しい間をあけて並ぶ
-    meteors.forEach((m, k) => expect(m.pos).toBeCloseTo((k * 5016) / 5, 9));
+    for (const seed of [0, 1, 2 ** 32 - 1]) expect(newGame(0, seed).meteors).toHaveLength(5);
+  });
+
+  it('MGW-TC-0010-07 隕石の初めの並びはゲームごとに変わる（種から決める）。となりどうしは、1 周の道のりの 1/10 以上離れている', () => {
+    expect(METEOR_MIN_GAP).toBeCloseTo(501.6, 9);
+    // 同じ種なら同じ並び
+    expect(meteorStartPositions(12345)).toEqual(meteorStartPositions(12345));
+    expect(newGame(0, 12345).meteors).toEqual(newGame(0, 12345).meteors);
+    // 種が違えば並びが変わる（100 個の種で、並びがすべて違う）
+    const seen = new Set<string>();
+    for (let seed = 0; seed < 100; seed++) seen.add(meteorStartPositions(seed).map((p) => p.toFixed(3)).join(','));
+    expect(seen.size).toBe(100);
+    // どの種でも、5 個が道のりの上にあり、となりどうし（最後と最初を含む）の間は 501.6 以上
+    for (let seed = 0; seed < 2000; seed++) {
+      const positions = meteorStartPositions(Math.imul(seed, 2654435761) >>> 0);
+      expect(positions).toHaveLength(5);
+      for (const p of positions) {
+        expect(p).toBeGreaterThanOrEqual(0);
+        expect(p).toBeLessThan(METEOR_PATH_LENGTH);
+      }
+      const sorted = [...positions].sort((a, b) => a - b);
+      for (let k = 0; k < 5; k++) {
+        const gap = k < 4 ? sorted[k + 1]! - sorted[k]! : sorted[0]! + METEOR_PATH_LENGTH - sorted[4]!;
+        expect(gap).toBeGreaterThanOrEqual(METEOR_MIN_GAP - 1e-9);
+      }
+    }
+    // 乱数は 0 以上 1 未満
+    const r = createRandom(7);
+    for (let i = 0; i < 1000; i++) {
+      const v = r();
+      expect(v).toBeGreaterThanOrEqual(0);
+      expect(v).toBeLessThan(1);
+    }
   });
 
   it('MGW-TC-0010-02 隕石は画面の端で向きを変えて 1 段下がり、最下段のあとは最上段から出てくる', () => {

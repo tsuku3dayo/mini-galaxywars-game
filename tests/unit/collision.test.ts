@@ -9,7 +9,7 @@ import { NO_INPUT } from './helpers';
 /** 発射後のミサイルを (x, y) に置いた状態。ほかの物は引数で決める */
 function playing(x: number, y: number, rest: Partial<GameState> = {}): GameState {
   return {
-    ...newGame(0),
+    ...newGame(0, 1),
     status: 'playing',
     missile: { x, y, isLaunched: true, isBoosting: false },
     meteors: [],
@@ -37,7 +37,7 @@ describe('当たり判定', () => {
   });
 
   it('MGW-TC-0011-04 ミサイルが UFO に当たると、UFO が壊れ、得点が入り、ミサイルは消える', () => {
-    const ufo = newGame(0).ufos[5]!; // 下段、x 180、y 108
+    const ufo = newGame(0, 1).ufos[5]!; // 下段、x 180、y 108
     // 先端が下部中央の下端に接している。1 ステップ上がると、先端が下部中央に入る
     const next = step(playing(ufo.x, ufo.y + 20), NO_INPUT);
     expect(next.ufos[5]!.isAlive).toBe(false);
@@ -51,8 +51,8 @@ describe('当たり判定', () => {
     expect(next.lives).toBe(3);
 
     // 1 回の発射で倒せるのは 1 機：上段の UFO（id 1）を下段の UFO と同じ場所に重ねても（次のステップで両方に当たる位置）、倒れるのは先に調べる下段の 1 機だけ
-    const upper = newGame(0).ufos[1]!;
-    const both = playing(ufo.x, ufo.y + 20, { ufos: newGame(0).ufos.map((u) => (u.id === upper.id ? { ...u, x: ufo.x, y: ufo.y } : u)) });
+    const upper = newGame(0, 1).ufos[1]!;
+    const both = playing(ufo.x, ufo.y + 20, { ufos: newGame(0, 1).ufos.map((u) => (u.id === upper.id ? { ...u, x: ufo.x, y: ufo.y } : u)) });
     expect(hitPart(missileBox({ ...both.missile, y: both.missile.y - 0.375 }), { ...both.ufos[upper.id]!, x: ufo.x + 20 / 120 })).not.toBeNull();
     const one = step(both, NO_INPUT);
     expect(one.killCount).toBe(1);
@@ -70,7 +70,7 @@ describe('当たり判定', () => {
     // 当たった光線は消える
     expect(next.beams).toHaveLength(0);
     // 発射前の発射台（上端 600、x 216〜264）に当たってもミス。ミサイル（x 234〜246）には当たらない位置
-    const ready: GameState = { ...newGame(0), meteors: [], beamTimer: 1000, beams: [falling(225, 600 - 8 - 0.5)] };
+    const ready: GameState = { ...newGame(0, 1), meteors: [], beamTimer: 1000, beams: [falling(225, 600 - 8 - 0.5)] };
     expect(step(ready, NO_INPUT)).toMatchObject({ status: 'respawn', waitReason: 'miss', lives: 2 });
   });
 

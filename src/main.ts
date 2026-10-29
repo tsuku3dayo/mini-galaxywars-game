@@ -141,7 +141,7 @@ addEventListener('keydown', (e) => {
 });
 document.addEventListener('visibilitychange', () => {
   const s = state?.status;
-  if (document.visibilityState === 'hidden' && (s === 'ready' || s === 'playing' || s === 'respawn')) toggle();
+  if (document.visibilityState === 'hidden' && (s === 'ready' || s === 'playing' || s === 'respawn' || s === 'standby')) toggle();
 });
 const stats = createStepStats();
 const panel = isDebug ? createDebugPanel(stage) : null;
@@ -207,8 +207,8 @@ watchRoute((next) => {
   entry.hide();
   settings.hide();
   if (screen === 'play') {
-    // HIGH はランキングの 1 位から始める（MGW-TD-0004 §1）
-    state = newGame(topScore());
+    // HIGH はランキングの 1 位から始める（MGW-TD-0004 §1）。種の決め方は MGW-TASK-0028 で入れるので、それまでは決まった種
+    state = newGame(topScore(), 0);
     input.reset();
     loop.start();
   } else {

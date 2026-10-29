@@ -34,7 +34,7 @@ function applyStep(state: GameState, inputs: StepInput[], index: number): GameSt
 
 /** 描画 1 回ごとに planSteps でステップ数を決めて進める。進めたステップ数（planned）も返す */
 function runFramesWithCount(frameMs: number, seconds: number, inputs: StepInput[]): { state: GameState; planned: number } {
-  let state = newGame(3000);
+  let state = newGame(3000, 20261029);
   let acc = 0;
   let index = 0;
   const frames = Math.round((seconds * 1000) / frameMs);
@@ -49,10 +49,10 @@ function runFramesWithCount(frameMs: number, seconds: number, inputs: StepInput[
 const runFrames = (frameMs: number, seconds: number, inputs: StepInput[]) => runFramesWithCount(frameMs, seconds, inputs).state;
 
 describe('決定性', () => {
-  it('MGW-TC-0030-01 同じ入力の列を 2 回流すと、状態とスコアが毎回まったく同じになる', () => {
+  it('MGW-TC-0030-01 同じ種と同じ入力の列を 2 回流すと、状態とスコアが毎回まったく同じになる', () => {
     const inputs = makeInputs(3600, 42);
     const run = () => {
-      let state = newGame(3000);
+      let state = newGame(3000, 20261029);
       for (let i = 0; i < inputs.length; i++) state = applyStep(state, inputs, i);
       return state;
     };
@@ -64,7 +64,7 @@ describe('決定性', () => {
   });
 
   it('MGW-TC-0030-01 step は引数の状態を変えない', () => {
-    const state = newGame(0);
+    const state = newGame(0, 1);
     const before = structuredClone(state);
     step(state, { dir: 1, targetX: 100, launch: true, boost: true });
     expect(state).toEqual(before);
@@ -94,7 +94,7 @@ describe('決定性', () => {
     expect(runFrames(1000 / 60, 1, []).stepCount).toBe(120);
   });
 
-  it('MGW-TC-0030-03 画面の更新が 60 Hz でも 120 Hz でも、同じ入力の列なら同じ結果になる', () => {
+  it('MGW-TC-0030-03 画面の更新が 60 Hz でも 120 Hz でも、同じ種と同じ入力の列なら同じ結果になる', () => {
     const inputs = makeInputs(120 * 30, 7);
     const at60 = runFramesWithCount(1000 / 60, 30, inputs);
     const at120 = runFramesWithCount(1000 / 120, 30, inputs);
