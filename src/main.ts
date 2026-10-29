@@ -13,7 +13,8 @@ import { createEntryOverlay } from './app/screens/entry';
 import { createPauseButton, createPlayOverlay } from './app/screens/play';
 import { createRankingScreen } from './app/screens/ranking';
 import { createSettingsOverlay } from './app/screens/settings';
-import { createRankingStore } from './storage/ranking-store';
+import { createClearRankingOverlay } from './app/screens/clear-ranking';
+import { createRankingStore, type RankingResult } from './storage/ranking-store';
 import { createSettingsStore } from './storage/settings-store';
 import { createTitleScreen } from './app/screens/title';
 import { createUpdateBanner } from './app/screens/update-banner';
@@ -80,20 +81,42 @@ const settings = createSettingsOverlay(
   },
   () => setData('overlay', 'none'),
 );
-const title = createTitleScreen(document.getElementById('screen-title')!, touch, start, () => {
-  settings.show(displayMode);
-  setData('overlay', 'settings');
-});
 // ランキング（MGW-TD-0006）
 const ranking = createRankingStore(localStorage, () => new Date());
 const topScore = () => ranking.load()[0]?.score ?? 0;
 const rankingScreen = createRankingScreen(document.getElementById('screen-ranking')!, ranking);
+// ランキング消去の確認（MGW-GUI-0002 §2）。タイトルの上に重ねる
+const clearRanking = createClearRankingOverlay(
+  stage,
+  () => {
+    try {
+      ranking.clearAll();
+    } catch {
+      // 保存できなくても、画面は出し直す
+    }
+    title.refresh(topScore());
+  },
+  () => setData('overlay', 'none'),
+);
+const title = createTitleScreen(
+  document.getElementById('screen-title')!,
+  touch,
+  start,
+  () => {
+    settings.show(displayMode);
+    setData('overlay', 'settings');
+  },
+  () => {
+    clearRanking.show(ranking.load().length > 0);
+    setData('overlay', 'clear-ranking');
+  },
+);
 /** 名前の入力欄で打っているときは、ゲームのキー（Space・P など）として扱わない */
 const typing = (e: KeyboardEvent) => e.target instanceof HTMLInputElement;
 addEventListener('keydown', (e) => {
   if (typing(e)) return;
-  // 設定を開いている間は、Space で始めない
-  if (screen === 'title' && !settings.isOpen() && e.code === 'Space' && !e.repeat) {
+  // 設定・消去の確認を開いている間は、Space で始めない
+  if (screen === 'title' && !settings.isOpen() && !clearRanking.isOpen() && e.code === 'Space' && !e.repeat) {
     e.preventDefault();
     start();
   }
@@ -113,10 +136,13 @@ const playButtons = document.getElementById('play-buttons')!;
 createPauseButton(playButtons, toggle);
 // ランキング登録（MGW-GUI-0004）。終わって 3 秒たち、上位 10 件に入るときに重ねて出す
 let entryScore = 0;
+let entryResult: RankingResult = 'gameOver';
+/** 登録した記録の順位。ランキング画面で目立たせる（MGW-TD-0004 §1） */
+let mine: number | null = null;
 const entry = createEntryOverlay(stage, {
   onSubmit(name) {
     try {
-      ranking.add(entryScore, name);
+      mine = ranking.add(entryScore, name, entryResult);
     } catch {
       // 保存できなくても（容量・設定など）、ランキング画面へは進む
     }
@@ -130,6 +156,7 @@ const overlay = createPlayOverlay(stage, document.getElementById('standby-hint')
   const rank = ranking.rankOf(score);
   if (rank === null) return false;
   entryScore = score;
+  entryResult = state?.status === 'cleared' ? 'clear' : 'gameOver';
   entry.show(rank, score);
   return true;
 });
@@ -185,6 +212,7 @@ function draw(): void {
   setData('audio', synth.state());
   overlay.update(state);
   if (settings.isOpen()) setData('overlay', 'settings');
+  if (clearRanking.isOpen()) setData('overlay', 'clear-ranking');
   panel?.update(stats, state?.status ?? '');
 }
 
@@ -205,6 +233,7 @@ watchRoute((next) => {
   banner.refresh(screen, updateWaiting);
   entry.hide();
   settings.hide();
+  clearRanking.hide();
   if (screen === 'play') {
     // HIGH はランキングの 1 位から始める。隕石の初めの並びは、ゲームごとに決める種で変える（MGW-TD-0004 §1）
     const seed = newSeed();
@@ -218,7 +247,8 @@ watchRoute((next) => {
     state = null;
     setData('seed', '');
     if (screen === 'title') title.refresh(topScore());
-    if (screen === 'ranking') rankingScreen.refresh();
+    if (screen === 'ranking') rankingScreen.refresh(mine);
+    mine = null;
   }
   draw();
 });

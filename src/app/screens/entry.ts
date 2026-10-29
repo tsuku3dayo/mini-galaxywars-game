@@ -35,25 +35,38 @@ export function createEntryOverlay(
   const label = document.createElement('label');
   label.htmlFor = 'entry-name';
   label.textContent = '名前を入れてください';
+  // 日本語も入れられる（仕様書 v1.7）。maxLength は変換の途中で文字を切ってしまうので付けず、8 文字は normalizeName で守る
   const input = document.createElement('input');
   input.id = 'entry-name';
   input.type = 'text';
-  input.maxLength = 8;
   input.autocomplete = 'off';
   input.spellcheck = false;
-  input.setAttribute('autocapitalize', 'characters');
+  input.setAttribute('autocapitalize', 'off');
   input.setAttribute('autocorrect', 'off');
   input.enterKeyHint = 'done';
-  // 小文字は大文字に直し、英数字と空白以外は入れない
-  input.addEventListener('input', () => {
+  /** 日本語の変換の途中（確定する前）は文字を削らない */
+  let composing = false;
+  const fix = () => {
     const fixed = normalizeName(input.value);
     if (fixed !== input.value) input.value = fixed;
+  };
+  input.addEventListener('compositionstart', () => {
+    composing = true;
+  });
+  input.addEventListener('compositionend', () => {
+    composing = false;
+    fix();
+  });
+  // 制御文字を取り除き、8 文字で切る
+  input.addEventListener('input', (e) => {
+    if (composing || (e as InputEvent).isComposing) return;
+    fix();
   });
   // 触れたら全体を選び、打てば PLAYER を置き換えられるようにする
   input.addEventListener('focus', () => input.select());
   const hint = document.createElement('p');
   hint.className = 'entry-hint';
-  hint.textContent = '英数字 8 文字まで';
+  hint.textContent = '8 文字まで（日本語も使えます）';
 
   const submit = document.createElement('button');
   submit.type = 'submit';
@@ -72,6 +85,8 @@ export function createEntryOverlay(
   form.append(label, input, hint, buttons);
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    // 変換を確定する Enter では送らない
+    if (composing) return;
     input.blur();
     handlers.onSubmit(input.value);
   });

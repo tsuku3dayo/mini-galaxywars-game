@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { seedRanking, type RankingRow } from './helpers';
 
 const SAVED: RankingRow[] = [
-  { score: 1650, name: 'ABCDEFGH', date: '2026-10-26T12:00:00+09:00' },
+  { score: 1650, name: 'たあ', date: '2026-10-26T12:00:00+09:00', result: 'clear' },
   { score: 900, name: 'A B', date: '2026-10-25T12:00:00+09:00' },
 ];
 
@@ -16,26 +16,26 @@ async function openRanking(page: Page, entries: RankingRow[]): Promise<void> {
 }
 
 function names(page: Page): Promise<string[]> {
-  return page.locator('#screen-ranking tbody tr td:nth-child(3)').allTextContents();
+  return page.locator('#screen-ranking tbody .ranking-name').allTextContents();
 }
 
-/** 「読み込み」を押してファイルを選ぶ */
+/** 「記録を読み込む」を押してファイルを選ぶ */
 async function chooseFile(page: Page, text: string): Promise<void> {
   const chooser = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: '読み込み' }).click();
+  await page.getByRole('button', { name: '記録を読み込む' }).click();
   await (await chooser).setFiles({ name: 'ranking.json', mimeType: 'application/json', buffer: Buffer.from(text) });
 }
 
 /** 書き出したファイルの中身 */
 async function exportText(page: Page): Promise<{ name: string; text: string }> {
   const download = page.waitForEvent('download');
-  await page.getByRole('button', { name: '書き出し' }).click();
+  await page.getByRole('button', { name: '記録を書き出す' }).click();
   const d = await download;
   return { name: d.suggestedFilename(), text: await readFile((await d.path())!, 'utf8') };
 }
 
 test.describe('ランキングの書き出し・読み込み', () => {
-  test('MGW-TC-0027-01 「書き出し」で、ランキングを JSON のファイルとして保存できる', async ({ page }) => {
+  test('MGW-TC-0027-01 「記録を書き出す」で、ランキングを JSON のファイルとして保存できる', async ({ page }) => {
     await openRanking(page, SAVED);
     const { name, text } = await exportText(page);
     expect(name).toMatch(/^mini-galaxywars-ranking-\d{8}\.json$/);
@@ -44,7 +44,7 @@ test.describe('ランキングの書き出し・読み込み', () => {
     expect(text).toContain('\n  "app": "mini-galaxywars"');
   });
 
-  test('MGW-TC-0027-02 「読み込み」で、書き出した JSON からランキングを戻せる', async ({ page }) => {
+  test('MGW-TC-0027-02 「記録を読み込む」で、書き出した JSON からランキングを戻せる（日本語の名前・結果も戻る）', async ({ page }) => {
     await openRanking(page, SAVED);
     const { text } = await exportText(page);
 
@@ -65,9 +65,9 @@ test.describe('ランキングの書き出し・読み込み', () => {
     await chooseFile(page, text);
     await confirm.getByRole('button', { name: '置き換える' }).click();
     await expect(confirm).toBeHidden();
-    expect(await names(page)).toEqual(['ABCDEFGH', 'A B']);
+    expect(await names(page)).toEqual(['たあ', 'A B']);
     await page.reload();
-    expect(await names(page)).toEqual(['ABCDEFGH', 'A B']);
+    expect(await names(page)).toEqual(['たあ', 'A B']);
   });
 
   test('MGW-TC-0027-04 形の違う JSON や、ほかのアプリの JSON は読み込まず、今の記録を変えない', async ({ page }) => {
@@ -76,25 +76,38 @@ test.describe('ランキングの書き出し・読み込み', () => {
     for (const text of [
       'not json',
       JSON.stringify({ app: 'other-app', version: 1, entries: [] }),
-      JSON.stringify({ app: 'mini-galaxywars', version: 1, entries: [{ score: 100, name: 'lower', date: '2026-10-01' }] }),
+      JSON.stringify({ app: 'mini-galaxywars', version: 1, entries: [{ score: 100, name: 'ここのつのもじです', date: '2026-10-01' }] }),
     ]) {
       await chooseFile(page, text);
       await expect(message).toBeVisible();
       await expect(message).toHaveText('このファイルは読み込めません');
       await expect(page.getByRole('dialog')).toBeHidden();
-      expect(await names(page)).toEqual(['ABCDEFGH', 'A B']);
+      expect(await names(page)).toEqual(['たあ', 'A B']);
     }
     // 保存の中身も変わっていない
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('galaxy-wars-scores')!).entries);
     expect(saved).toEqual(SAVED);
   });
 
-  test('知らせが出ても、10 件・書き出し・読み込み・TITLE がゲーム画面の枠に収まる（iPhone SE の高さでも）', async ({ page }) => {
+  test('10 件あっても、BACK とタイトルは上に残り、記録のバックアップまでゲーム画面の枠の中でスクロールして届く（iPhone SE の高さでも）', async ({ page }) => {
     await openRanking(page, Array.from({ length: 10 }, () => SAVED[0]!));
+    const stage = (await page.locator('#stage').boundingBox())!;
+    const inside = async (selector: string) => {
+      const box = (await page.locator(selector).first().boundingBox())!;
+      expect(box.y).toBeGreaterThanOrEqual(stage.y - 0.5);
+      expect(box.y + box.height).toBeLessThanOrEqual(stage.y + stage.height + 0.5);
+    };
+    // 一番下（記録のバックアップの枠と知らせ）まで、枠の中でスクロールする
+    const toBottom = () => page.locator('#screen-ranking .navy-scroll').evaluate((el) => (el.scrollTop = el.scrollHeight));
+    await toBottom();
     await chooseFile(page, 'not json');
     await expect(page.getByRole('alert')).toBeVisible();
-    const stage = (await page.locator('#stage').boundingBox())!;
-    const title = (await page.locator('#screen-ranking').getByRole('link', { name: 'TITLE' }).boundingBox())!;
-    expect(title.y + title.height).toBeLessThanOrEqual(stage.y + stage.height);
+    await toBottom();
+    await inside('.ranking-backup');
+    // スクロールしても、BACK とタイトルは上に残る
+    await inside('#screen-ranking .back-button');
+    await inside('#screen-ranking h2');
+    // ページそのものはスクロールしない
+    expect(await page.evaluate(() => [scrollX, scrollY])).toEqual([0, 0]);
   });
 });
