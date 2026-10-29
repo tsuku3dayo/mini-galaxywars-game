@@ -2,16 +2,14 @@
 id: MGW-EP-0006
 type: epic
 title: ランキング
-status: stable
-version: 1.0
-updated: 2026-10-26
+status: review
+version: 1.1
+updated: 2026-10-29
 sources:
   - MGW-PB-0001（v1.3） §2
   - MGW-ADR-0005（v1.1）
-  - doc/specification.md (v1.6) §9、§21
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  - doc/specification.md (v1.7) §9、§21
+verified: null
 ---
 
 # MGW-EP-0006 ランキング
@@ -20,7 +18,7 @@ verified:
 
 ## ねらい
 
-上位 10 件を端末内に残し、見られ、JSON で書き出し・読み込みできる。
+上位 10 件を端末内に残し、見られ、JSON で書き出し・読み込みでき、全部消せる。
 
 ## ユーザーストーリー
 
@@ -29,6 +27,7 @@ verified:
 | 6-1 | MGW-US-0025 | ランキングに登録する |
 | 6-2 | MGW-US-0026 | ランキングを見る |
 | 6-3 | MGW-US-0027 | ランキングを書き出す・読み込む |
+| 6-4 | MGW-US-0032 | ランキングを全部消す |
 
 ## 終わりの条件
 

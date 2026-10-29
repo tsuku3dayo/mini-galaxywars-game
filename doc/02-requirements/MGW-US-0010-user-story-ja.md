@@ -2,15 +2,13 @@
 id: MGW-US-0010
 type: user-story
 title: 隕石が牛耕式に動く
-status: stable
-version: 1.1
-updated: 2026-10-28
+status: review
+version: 1.2
+updated: 2026-10-29
 sources:
   - MGW-EP-0002（v1.0）
-  - doc/specification.md (v1.6) §3.1、§3.3
-verified:
-  by: tsuku3dayo
-  at: 2026-10-28T17:12:02+09:00
+  - doc/specification.md (v1.7) §3.1、§3.3
+verified: null
 ---
 
 # MGW-US-0010 隕石が牛耕式に動く
@@ -34,6 +32,7 @@ verified:
 | 3 | 右へは 45 px/秒、左へは 30 px/秒で動く | 単体 |
 | 4 | 隕石は 11 段で、最下段（y = 536）は発射前のミサイルの先端（y = 584）より上を通る（発射前のミサイルには当たらない） | 単体 |
 | 5 | 隕石には、進む向きの後ろに尾が付き、向きが分かる | 単体・手動（PC） |
+| 6 | 隕石の初めの並びはゲームごとに変わる（種から決める）。となりどうしは、1 周の道のりの 1/10 以上離れている | 単体・E2E |
 
 ## メモ
 

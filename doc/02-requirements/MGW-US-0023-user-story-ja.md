@@ -2,15 +2,13 @@
 id: MGW-US-0023
 type: user-story
 title: 効果音が鳴る
-status: stable
-version: 1.2
-updated: 2026-10-28
+status: review
+version: 1.3
+updated: 2026-10-29
 sources:
-  - MGW-EP-0005（v1.0）
-  - doc/specification.md (v1.6) §3.1、§12、§22
-verified:
-  by: tsuku3dayo
-  at: 2026-10-28T17:12:02+09:00
+  - MGW-EP-0005（v1.1）
+  - doc/specification.md (v1.7) §3.1、§12、§22
+verified: null
 ---
 
 # MGW-US-0023 効果音が鳴る
@@ -34,6 +32,7 @@ verified:
 | 3 | 増機すると増機音（三角波 523 → 659 → 784 Hz のアルペジオ）が鳴る | 単体・手動（iPhone・PC） |
 | 4 | ミスすると爆発音（重低音のノイズ）が鳴る | 単体・手動（iPhone・PC） |
 | 5 | 音のファイルを使わず、Web Audio で合成する | check:dist |
+| 6 | 上の音は、効果音がオンのときだけ鳴る（オン・オフは MGW-US-0034） | 単体 |
 
 ## 仕様書 §12 の受け入れ基準との対応
 

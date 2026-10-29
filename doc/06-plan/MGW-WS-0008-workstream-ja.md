@@ -6,7 +6,7 @@ status: stable
 version: 1.1
 updated: 2026-10-28
 sources:
-  - MGW-EP-0003（v1.2）
+  - MGW-EP-0003（v1.3）
   - MGW-TST-0001（v1.2）
   - doc/requests/2026-10-27-spec-1.5-extend-score.md
 verified: null

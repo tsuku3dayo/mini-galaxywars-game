@@ -7,7 +7,7 @@ version: 1.1
 updated: 2026-10-26
 sources:
   - MGW-PB-0001（v1.3） §7
-  - doc/specification.md (v1.6) §9、§21
+  - doc/specification.md (v1.7) §9、§21
 verified:
   by: tsuku3dayo
   at: 2026-10-26T16:06:38+09:00

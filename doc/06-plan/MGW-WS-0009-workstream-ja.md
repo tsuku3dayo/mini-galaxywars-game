@@ -7,8 +7,8 @@ version: 1.0
 updated: 2026-10-28
 sources:
   - MGW-EP-0002（v1.0）
-  - MGW-EP-0003（v1.2）
-  - MGW-EP-0005（v1.0）
+  - MGW-EP-0003（v1.3）
+  - MGW-EP-0005（v1.1）
   - MGW-TST-0001（v1.2）
   - doc/requests/2026-10-28-spec-1.6-video-review.md
 verified: null

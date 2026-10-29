@@ -2,15 +2,13 @@
 id: MGW-US-0009
 type: user-story
 title: UFO が光線を撃ってくる
-status: stable
-version: 1.1
-updated: 2026-10-28
+status: review
+version: 1.2
+updated: 2026-10-29
 sources:
   - MGW-EP-0002（v1.0）
-  - doc/specification.md (v1.6) §3.2、§3.3、§11
-verified:
-  by: tsuku3dayo
-  at: 2026-10-28T17:12:02+09:00
+  - doc/specification.md (v1.7) §3.2、§3.3、§11
+verified: null
 ---
 
 # MGW-US-0009 UFO が光線を撃ってくる
@@ -33,7 +31,7 @@ verified:
 | 2 | 画面内の光線は、UFO が 5 機以上なら 3 発まで、4 機以下なら 4 発まで。上限のときは撃たない | 単体 |
 | 3 | 光線は 90 px/秒で落ちる | 単体 |
 | 4 | 光線は隕石に当たると消える（隕石が盾になる） | 単体 |
-| 5 | 光線は波の形（ニョロニョロ線）で描く | 手動（PC） |
+| 5 | 光線は波の形（ニョロニョロ線）で描き、形のはっきり違う 2 コマを、UFO と同じく 0.25 秒ごとに切り替える | 単体・手動（PC） |
 
 ## メモ
 

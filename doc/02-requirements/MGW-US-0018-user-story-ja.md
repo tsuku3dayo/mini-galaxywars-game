@@ -2,15 +2,13 @@
 id: MGW-US-0018
 type: user-story
 title: 一時停止する
-status: stable
-version: 1.0
-updated: 2026-10-26
+status: review
+version: 1.1
+updated: 2026-10-29
 sources:
-  - MGW-EP-0003（v1.2）
-  - doc/specification.md (v1.6) §4.1、§7
-verified:
-  by: tsuku3dayo
-  at: 2026-10-26T16:22:35+09:00
+  - MGW-EP-0003（v1.3）
+  - doc/specification.md (v1.7) §4.1、§7
+verified: null
 ---
 
 # MGW-US-0018 一時停止する
@@ -29,7 +27,7 @@ verified:
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | `P`・`Esc`・「Pause」ボタンで一時停止し、もう一度押すと再開する | E2E |
+| 1 | `P`・`Esc`・「一時停止」ボタンで一時停止し、もう一度押すと再開する | E2E |
 | 2 | タブが隠れたり、アプリが裏に回ったりすると、一時停止になる | E2E |
-| 3 | 再開すると、発射前に止めたときは Ready、上昇中に止めたときは Playing に戻る | 単体 |
+| 3 | 再開すると、発射前に止めたときは Ready、上昇中に止めたときは Playing、出撃待ちで止めたときは出撃待ちに戻る | 単体 |
 | 4 | 一時停止の間は、ゲームの時間（永久パターン防止のタイマーを含む）が進まない | 単体 |
