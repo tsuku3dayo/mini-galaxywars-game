@@ -2,7 +2,7 @@
 id: MGW-AC-0027
 type: attested-computation
 title: 出撃待ちと、種から決める隕石の初めの並びの確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -11,7 +11,9 @@ sources:
   - MGW-TC-0016（v1.2）
   - MGW-TC-0018（v1.1）
   - MGW-TC-0030（v1.1）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T14:47:07+09:00
 ---
 
 # MGW-AC-0027 出撃待ちと、種から決める隕石の初めの並びの確認

@@ -2,7 +2,7 @@
 id: MGW-AC-0029
 type: attested-computation
 title: ランキングの名前・結果・画面の形・自分の記録・全消去の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -11,7 +11,9 @@ sources:
   - MGW-TC-0026（v1.1）
   - MGW-TC-0027（v1.1）
   - MGW-TC-0032（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T14:47:07+09:00
 ---
 
 # MGW-AC-0029 ランキングの名前・結果・画面の形・自分の記録・全消去の確認

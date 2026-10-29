@@ -2,7 +2,7 @@
 id: MGW-AC-0031
 type: attested-computation
 title: 効果音のオン・オフの確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -10,7 +10,9 @@ sources:
   - MGW-TC-0014（v1.2）
   - MGW-TC-0023（v1.3）
   - MGW-TC-0034（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T14:47:07+09:00
 ---
 
 # MGW-AC-0031 効果音のオン・オフの確認

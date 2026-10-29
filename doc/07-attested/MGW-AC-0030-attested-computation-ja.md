@@ -2,14 +2,16 @@
 id: MGW-AC-0030
 type: attested-computation
 title: クレジット画面の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
   - MGW-TASK-0030（v1.0）
   - MGW-TC-0014（v1.2）
   - MGW-TC-0033（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T14:47:07+09:00
 ---
 
 # MGW-AC-0030 クレジット画面の確認

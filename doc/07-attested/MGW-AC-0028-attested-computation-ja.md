@@ -2,7 +2,7 @@
 id: MGW-AC-0028
 type: attested-computation
 title: タップの判定・発射後の発射台・出撃の案内・光線の 2 コマ・枠とボタンの段の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -15,7 +15,9 @@ sources:
   - MGW-TC-0018（v1.1）
   - MGW-TC-0021（v1.1）
   - MGW-TC-0022（v1.0）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T14:47:07+09:00
 ---
 
 # MGW-AC-0028 タップの判定・発射後の発射台・出撃の案内・光線の 2 コマ・枠とボタンの段の確認
