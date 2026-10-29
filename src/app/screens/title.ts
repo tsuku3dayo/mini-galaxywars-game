@@ -1,10 +1,10 @@
 // タイトル画面（MGW-GUI-0002）。原作の表記はタイトル画面に出さず、README に書く（仕様書 v1.6、MGW-ADR-0007）
-import { bake, UFO } from '../../render/sprites';
+import { createScoreGuide } from '../../render/score-guide';
 
 export interface TitleScreen {
   /** HIGH（ランキングの 1 位。記録がなければ 0）を出し直す */
   refresh(high: number): void;
-  /** 効果音のボタンを置く場所（MGW-GUI-0002 §1。CREDITS・ランキング消去の下） */
+  /** 効果音のボタンを置く場所（MGW-GUI-0002 §1。CREDITS の下に、同じ大きさで並べる） */
   soundSlot: HTMLElement;
 }
 
@@ -22,15 +22,21 @@ export function createTitleScreen(
   const high = document.createElement('p');
   high.className = 'title-high';
 
+  // 中身は、枠に収まらない小さい画面では枠の中でスクロールする（仕様書 v1.8、MGW-TD-0004 §2.1）
+  const scroll = document.createElement('div');
+  scroll.className = 'title-scroll';
+
   const name = document.createElement('h1');
   name.className = 'app-name';
   name.textContent = '銀河戦争ミニ';
 
-  // 飾りの UFO 3 機（ドット絵をそのまま拡大）
-  const ufos = document.createElement('div');
-  ufos.className = 'title-ufos';
-  ufos.setAttribute('aria-hidden', 'true');
-  for (let i = 0; i < 3; i++) ufos.append(bake(UFO));
+  // 点数の説明（UFO から線で 50・100・150）と 600 点のヒント（MGW-GUI-0002 §1）
+  const guideBox = document.createElement('div');
+  guideBox.className = 'title-score';
+  const bonus = document.createElement('p');
+  bonus.className = 'score-bonus';
+  bonus.textContent = '4 機目の突起は 600';
+  guideBox.append(createScoreGuide(), bonus);
 
   const start = document.createElement('button');
   start.type = 'button';
@@ -47,11 +53,21 @@ export function createTitleScreen(
   settings.textContent = 'SETTINGS';
   settings.addEventListener('click', onSettings);
 
+  const credits = document.createElement('a');
+  credits.className = 'button';
+  credits.href = '#/credits';
+  credits.textContent = 'CREDITS';
+
+  // START・RANKING・SETTINGS・CREDITS・効果音は同じ大きさ（効果音のボタンは main.ts が soundSlot に足す）
   const menu = document.createElement('div');
   menu.className = 'title-menu';
-  menu.append(start, ranking, settings);
+  menu.append(start, ranking, settings, credits);
 
-  // 小さめのボタン（MGW-GUI-0002 §1）。押したらフォーカスを外し、Space で始めてしまわないようにする
+  const guide = document.createElement('p');
+  guide.className = 'title-guide';
+  guide.textContent = touch ? 'なぞって移動 タップで発射' : '←→/マウスで移動 SPACEで発射';
+
+  // 小さめのボタン。操作の案内の下に置く。押したらフォーカスを外し、Space で始めてしまわないようにする
   const clearRanking = document.createElement('button');
   clearRanking.type = 'button';
   clearRanking.textContent = 'ランキング消去';
@@ -59,27 +75,18 @@ export function createTitleScreen(
     clearRanking.blur();
     onClearRanking();
   });
-  const credits = document.createElement('a');
-  credits.className = 'button';
-  credits.href = '#/credits';
-  credits.textContent = 'CREDITS';
   const sub = document.createElement('div');
   sub.className = 'title-sub';
-  sub.append(credits, clearRanking);
+  sub.append(clearRanking);
 
-  const guide = document.createElement('p');
-  guide.className = 'title-guide';
-  guide.textContent = touch ? 'なぞって移動 タップで発射' : '←→/マウスで移動 SPACEで発射';
-
-  const soundSlot = document.createElement('div');
-  soundSlot.className = 'title-sub';
-
-  root.append(high, name, ufos, menu, sub, soundSlot, guide);
+  scroll.append(name, guideBox, menu, guide, sub);
+  root.append(high, scroll);
 
   return {
     refresh(value) {
       high.textContent = `HIGH ${pad5(value)}`;
+      scroll.scrollTop = 0;
     },
-    soundSlot,
+    soundSlot: menu,
   };
 }

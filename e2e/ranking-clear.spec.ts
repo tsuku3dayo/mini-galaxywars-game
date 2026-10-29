@@ -21,6 +21,8 @@ const dialog = (page: Page) => page.locator('#overlay-clear');
 test.describe('ランキングの全消去', () => {
   test('MGW-TC-0032-01 タイトル画面に「ランキング消去」のボタンがある', async ({ page }) => {
     await openTitle(page, null);
+    // 操作の案内の下（小さい画面では、枠の中でスクロールすると出る）
+    await clearButton(page).scrollIntoViewIfNeeded();
     await expect(clearButton(page)).toBeVisible();
     // ゲーム画面の枠の中にある
     const stage = (await page.locator('#stage').boundingBox())!;

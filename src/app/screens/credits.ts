@@ -3,9 +3,9 @@ import { icon } from '../icons';
 
 /** 役割と名前（MGW-US-0033） */
 export const CREDITS: readonly { role: string; name: string }[] = [
-  { role: 'PRODUCER', name: 'YOSHIHARU TSUKUDA' },
-  { role: 'DIRECTOR', name: 'YOSHIHARU TSUKUDA' },
-  { role: 'GAME DESIGNER', name: 'YOSHIHARU TSUKUDA' },
+  { role: 'PRODUCER', name: 'つくだ よしはる' },
+  { role: 'DIRECTOR', name: 'つくだ よしはる' },
+  { role: 'GAME DESIGNER', name: 'つくだ よしはる' },
   { role: 'GRAPHIC DESIGNER', name: 'CLAUDE CODE' },
   { role: 'SOUND CREATOR', name: 'CLAUDE CODE' },
   { role: 'PROGRAMMER', name: 'CLAUDE CODE' },

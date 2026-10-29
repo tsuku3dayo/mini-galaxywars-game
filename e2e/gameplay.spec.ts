@@ -133,7 +133,8 @@ test.describe('プレイ', () => {
     const expectDeployed = async () => {
       await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
       const s = await getState(page);
-      expect(s.launcherX).toBe(240);
+      // 発射台は x = 240 に出る（そのあとは、タップした指の x へ近づくので、1 px までの差は許す）
+      expect(Math.abs(s.launcherX - 240)).toBeLessThan(1);
       expect(s.missile.isLaunched).toBe(false);
       await expect(page.locator('#standby-hint')).toBeHidden();
       // 少し待っても発射していない

@@ -290,7 +290,7 @@ body:not([data-screen='play']) #overlay-message {
 
 /* タイトル画面（MGW-GUI-0002） */
 #screen-title {
-  justify-content: space-evenly;
+  padding: 0;
 }
 
 .title-high {
@@ -298,28 +298,77 @@ body:not([data-screen='play']) #overlay-message {
   top: 8px;
   left: 12px;
   margin: 0;
+  z-index: 1;
 }
 
-.title-ufos {
+/*
+ * 中身は枠の中でスクロールする箱に入れる（仕様書 v1.8）。収まるときは上下の余白で真ん中に寄せ、
+ * 収まらない小さい画面（iPhone SE など）では、枠の中だけスクロールする（ページは動かさない。MGW-GUI-0001 §4）
+ */
+.title-scroll {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
   display: flex;
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 8px 8px;
 }
 
-.title-ufos canvas {
-  width: 48px;
-  height: 36px;
+.title-scroll > :first-child {
+  margin-top: auto;
+}
+
+.title-scroll > :last-child {
+  margin-bottom: auto;
+}
+
+/* 点数の説明（UFO から線で 50・100・150）と 600 点のヒント */
+.title-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.score-guide {
+  width: 160px;
+  height: 77px;
   image-rendering: pixelated;
 }
 
+.score-bonus {
+  margin: 0;
+  font-size: 14px;
+}
+
+#screen-title .app-name {
+  line-height: 32px;
+}
+
+.score-bonus {
+  line-height: 18px;
+}
+
+/* START・RANKING・SETTINGS・CREDITS・効果音は同じ大きさ */
 .title-menu {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-width: 180px;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.title-menu .sound-toggle {
+  gap: 8px;
 }
 
 .title-guide {
   margin: 0;
+  line-height: 20px;
 }
 
 /* 紺の画面（ランキング・クレジット。「ブロック崩しミニ」と同じ。MGW-GUI-0001 §5.1） */
@@ -545,47 +594,15 @@ body:not([data-screen='play']) #overlay-message {
   letter-spacing: 0.5px;
 }
 
-/* タイトル画面の小さめのボタン（CREDITS・ランキング消去・効果音。MGW-GUI-0002 §1） */
+/* タイトル画面の小さめのボタン（ランキング消去。操作の案内の下。MGW-GUI-0002 §1） */
 .title-sub {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
 }
 
-.title-sub button,
-.title-sub .button {
-  gap: 6px;
+.title-sub button {
   font-size: 16px;
   padding: 4px 12px;
-}
-
-/*
- * 背の低い画面（iPhone SE など）では、ボタンが 6 つになっても枠に収まるよう、間を詰め、飾りの UFO を小さくする。
- * ボタンは 44px のまま（MGW-GUI-0001 §5）。HIGH（左上）とアプリ名が重ならないよう、上は空けておく
- */
-@media (max-height: 620px) {
-  #screen-title {
-    gap: 6px;
-    padding: 30px 8px 8px;
-  }
-
-  #screen-title .app-name {
-    font-size: 24px;
-  }
-
-  .title-ufos canvas {
-    width: 32px;
-    height: 24px;
-  }
-
-  .title-menu {
-    gap: 8px;
-  }
-
-  .title-guide {
-    font-size: 14px;
-  }
 }
 
 /* ランキング消去の確認（MGW-GUI-0002 §2）。タイトル画面の上に重ねる */
