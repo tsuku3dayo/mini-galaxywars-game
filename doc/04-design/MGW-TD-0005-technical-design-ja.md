@@ -11,7 +11,7 @@ sources:
   - MGW-US-0023（v1.3）
   - MGW-US-0024（v1.0）
   - MGW-US-0034（v1.0）
-  - doc/specification.md (v1.8) §3.1、§22
+  - doc/specification.md (v1.9) §3.1、§22
 verified: null
 ---
 

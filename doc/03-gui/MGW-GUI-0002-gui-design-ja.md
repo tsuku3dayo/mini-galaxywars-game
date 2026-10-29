@@ -8,13 +8,13 @@ updated: 2026-10-29
 sources:
   - MGW-GUI-0001（v1.5）
   - MGW-US-0014（v1.3）
-  - MGW-US-0015（v1.1）
+  - MGW-US-0015（v1.2）
   - MGW-US-0024（v1.0）
   - MGW-US-0029（v1.0）
   - MGW-US-0032（v1.0）
   - MGW-US-0033（v1.1）
   - MGW-US-0034（v1.0）
-  - doc/specification.md (v1.8) §7、§18
+  - doc/specification.md (v1.9) §7、§18
 verified:
   by: tsuku3dayo
   at: 2026-10-29T15:03:15+09:00

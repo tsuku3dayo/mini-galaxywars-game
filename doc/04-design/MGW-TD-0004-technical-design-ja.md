@@ -11,27 +11,27 @@ sources:
   - MGW-ADR-0002（v1.1）
   - MGW-GUI-0001（v1.5）
   - MGW-GUI-0002（v1.3）
-  - MGW-GUI-0003（v1.2）
+  - MGW-GUI-0003（v1.3）
   - MGW-GUI-0004（v1.1）
-  - MGW-GUI-0005（v1.1）
+  - MGW-GUI-0005（v1.2）
   - MGW-GUI-0006（v1.0）
   - MGW-US-0006（v1.1）
   - MGW-US-0007（v1.1）
   - MGW-US-0014（v1.3）
   - MGW-US-0016（v1.2）
-  - MGW-US-0017（v1.0）
+  - MGW-US-0017（v1.1）
   - MGW-US-0018（v1.1）
   - MGW-US-0021（v1.1）
   - MGW-US-0022（v1.0）
   - MGW-US-0024（v1.0）
-  - MGW-US-0025（v1.1）
+  - MGW-US-0025（v1.2）
   - MGW-US-0030（v1.1）
   - MGW-US-0031（v1.0）
   - MGW-US-0032（v1.0）
   - MGW-US-0033（v1.1）
   - MGW-US-0034（v1.0）
   - MGW-GUI-0008（v1.1）
-  - doc/specification.md (v1.8) §4、§7、§18、§20
+  - doc/specification.md (v1.9) §4、§7、§18、§20
 verified: null
 ---
 

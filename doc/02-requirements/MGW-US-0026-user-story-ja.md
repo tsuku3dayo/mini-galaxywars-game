@@ -3,14 +3,14 @@ id: MGW-US-0026
 type: user-story
 title: ランキングを見る
 status: stable
-version: 1.1
+version: 1.2
 updated: 2026-10-29
 sources:
   - MGW-EP-0006（v1.1）
-  - doc/specification.md (v1.8) §9、§18
+  - doc/specification.md (v1.9) §9、§18
 verified:
   by: tsuku3dayo
-  at: 2026-10-29T10:42:24+09:00
+  at: 2026-10-29T16:15:02+09:00
 ---
 
 # MGW-US-0026 ランキングを見る
@@ -29,7 +29,7 @@ verified:
 
 | No | 条件 | 確かめ方 |
 | :--- | :--- | :--- |
-| 1 | `#/ranking` に、上位 10 件の順位・名前・スコアと、名前の下に結果（`CLEAR`・`GAME OVER`）と日時が出る。1〜3 位は `1st`・`2nd`・`3rd` | E2E |
+| 1 | `#/ranking` に、上位 10 件の順位・名前・スコアと、名前の下に結果（`CLEAR`・`GAME OVER`）と日時が出る。クリアの記録はタイムも出る（`CLEAR · 95.7 秒 · 日時`）。1〜3 位は `1st`・`2nd`・`3rd` | E2E |
 | 2 | 記録がないときは、記録がないことが分かる表示が出る | E2E |
 | 3 | 「← BACK」でタイトルに戻る | E2E |
 | 4 | 登録したあとに開いたときは、今登録した記録の行が目立ち、名前に「（あなた）」が付く | E2E |

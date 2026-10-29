@@ -3,14 +3,14 @@ id: MGW-US-0015
 type: user-story
 title: スコアと残機を見る
 status: stable
-version: 1.1
-updated: 2026-10-28
+version: 1.2
+updated: 2026-10-29
 sources:
   - MGW-EP-0003（v1.3）
-  - doc/specification.md (v1.8) §2、§2.1、§6.3
+  - doc/specification.md (v1.9) §2、§2.1、§6.3
 verified:
   by: tsuku3dayo
-  at: 2026-10-28T17:12:02+09:00
+  at: 2026-10-29T16:15:02+09:00
 ---
 
 # MGW-US-0015 スコアと残機を見る
@@ -34,6 +34,7 @@ verified:
 | 3 | 残機は、数（画面に出ている 1 基を含む）と、控えの発射台のアイコン（数 − 1 個）で出る。アイコンはミサイルではなく発射台の形 | 単体・手動（PC） |
 | 4 | HIGH は、ランキングの 1 位のスコアと、今のスコアの大きい方 | 単体 |
 | 5 | 発射台の下に、地面の横線が出る | 手動（PC） |
+| 6 | 左下の残機の行の右に、経過時間が `TIME 095`（経過秒を切り捨てて 3 桁）で出る。SCORE は UFO の得点だけ | 単体・E2E |
 
 ## メモ
 
