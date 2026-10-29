@@ -31,7 +31,8 @@ import {
   LAUNCHER,
   LIFE_ICON,
   METEOR,
-  METEOR_TRAIL,
+  METEOR_TRAIL_FRAMES,
+  meteorTrailFrame,
   meteorTrailX,
   MISSILE,
   type Sprite,
@@ -64,7 +65,7 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
     missile: make(MISSILE),
     launcher: make(LAUNCHER),
     meteor: make(METEOR),
-    meteorTrail: make(METEOR_TRAIL),
+    meteorTrail: METEOR_TRAIL_FRAMES.map(make),
     beam: BEAM.map(make),
     backfire: make(BACKFIRE),
     explosion: EXPLOSION.map(make),
@@ -104,9 +105,11 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
       if (!state) return;
 
       // 2. 隕石（尾つき）→ 光線（2 コマ）→ UFO（2 コマ）→ 発射台（発射前だけ）→ ミサイル → バックファイア → 爆発 → UFO を倒したときの爆発・得点
+      // 隕石の尾も UFO と同じ時に 2 コマを切り替える（仕様書 v1.10）
+      const trailArt = art.meteorTrail[meteorTrailFrame(view.tick)]!;
       for (const m of state.meteors) {
         put(art.meteor, m.x, m.y);
-        put(art.meteorTrail, meteorTrailX(m), m.y);
+        put(trailArt, meteorTrailX(m), m.y);
       }
       // 光線も UFO と同じ時にコマを切り替える
       const beamArt = art.beam[beamFrame(view.tick)]!;

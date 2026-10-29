@@ -9,7 +9,7 @@ sources:
   - MGW-US-0003（v1.0）
   - MGW-TST-0001（v1.6）
   - MGW-TD-0007（v1.5）
-  - MGW-TD-0004（v1.5）
+  - MGW-TD-0004（v1.6）
 verified: null
 ---
 

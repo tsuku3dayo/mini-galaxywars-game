@@ -109,6 +109,27 @@ test.describe('ランキング', () => {
     expect(short((await rows(page))[0]!)).toEqual(['1st', '銀河のはる（あなた）', expect.any(String)]);
   });
 
+  test('MGW-TC-0025-09 名前の入力欄に、日本語の名前 8 文字が全部見える（入力欄の幅は全角 8 文字ぶん）', async ({ page }) => {
+    await openPlay(page);
+    await endGame(page, 'gameOver', 700);
+    const name = page.locator('#entry-name');
+    await expect(name).toBeVisible({ timeout: 6000 });
+    for (const text of ['銀河戦争ミニのは', '１２３４５６７８', 'ＡＢＣＤＥＦＧＨ']) {
+      await name.fill(text);
+      await expect(name).toHaveValue(text);
+      // 中身が入力欄の幅に収まり、横にスクロールしない（8 文字とも見える）
+      const fits = await name.evaluate((el: HTMLInputElement) => {
+        el.scrollLeft = 0;
+        return { scroll: el.scrollWidth, client: el.clientWidth };
+      });
+      expect(fits.scroll).toBeLessThanOrEqual(fits.client);
+    }
+    // 入力欄はゲーム画面の枠からはみ出さない
+    const stage = (await page.locator('#stage').boundingBox())!;
+    const box = (await name.boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(stage.x - 0.5);
+    expect(box.x + box.width).toBeLessThanOrEqual(stage.x + stage.width + 0.5);
+  });
   test('MGW-TC-0025-08 登録すると、ランキング画面に移る', async ({ page }) => {
     await openPlay(page);
     await endGame(page, 'gameOver', 700);

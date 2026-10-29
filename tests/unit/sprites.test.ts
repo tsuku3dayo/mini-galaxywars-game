@@ -24,6 +24,8 @@ import {
   LIFE_ICON,
   METEOR,
   METEOR_TRAIL,
+  METEOR_TRAIL_FRAMES,
+  meteorTrailFrame,
   meteorTrailX,
   MISSILE,
   type Sprite,
@@ -92,30 +94,39 @@ describe("ドット絵とフォント（MGW-TD-0003 §3・§4）", () => {
     expect(changes).toBe(4);
   });
 
-  it("MGW-TC-0009-06 光線は波の形で描き、形のはっきり違う 2 コマを、UFO と同じく 0.25 秒ごとに切り替える", () => {
+  it("MGW-TC-0009-06 光線は波の形で描き、2 コマ（幅 1 点の細い波と、それを左右に裏返した波）を、UFO と同じく 0.25 秒ごとに切り替える", () => {
     expect(BEAM).toHaveLength(2);
     for (const frame of BEAM) expectSize(frame, BEAM_W, BEAM_H);
-    // 2 コマ目は、1 コマ目を上下にずらしたものでも、左右に裏返したものでもない（ずらしただけでは違いが見えない）
-    const [a, b] = [BEAM[0]!.rows, BEAM[1]!.rows];
-    for (let shift = 0; shift < BEAM_H; shift++) {
-      const shifted = a.map((_, i) => a[(i + shift) % BEAM_H]!);
-      expect(b).not.toEqual(shifted);
-      expect(b).not.toEqual(shifted.map((r) => [...r].reverse().join("")));
-    }
-    // どの行にも点があり、波の形（となりの行とつながる）
+    // オーナーの画像（銀河戦争ミニ_弾1・弾2）を点で読み取った 15 行。16 行目は同じ波の続き
+    const image1 = ["#...", ".#..", "..#.", "...#", "...#", "..#.", ".#..", "#...", ".#..", "..#.", "...#", "...#", "..#.", ".#..", "#..."];
+    const image2 = image1.map((r) => [...r].reverse().join(""));
+    expect(BEAM[0]!.rows.slice(0, 15)).toEqual(image1);
+    expect(BEAM[1]!.rows.slice(0, 15)).toEqual(image2);
+    expect(BEAM[0]!.rows[15]).toBe(".#..");
+    expect(BEAM[1]!.rows[15]).toBe("..#.");
+    // どの行にも点が 1 つ（幅 1 点）で、となりの行とつながる（波の形）
     for (const frame of BEAM)
       frame.rows.forEach((row, i) => {
-        expect(row).toContain("#");
-        if (i > 0) {
-          const prev = frame.rows[i - 1]!;
-          const touches = [...row].some((c, x) => c === "#" && [x - 1, x, x + 1].some((px) => prev[px] === "#"));
-          expect(touches).toBe(true);
-        }
+        expect([...row].filter((c) => c === "#")).toHaveLength(1);
+        if (i > 0) expect(Math.abs(row.indexOf("#") - frame.rows[i - 1]!.indexOf("#"))).toBeLessThanOrEqual(1);
       });
     // UFO と同じ時に切り替える（0.25 秒ごと）
     for (let t = 0; t < STEPS_PER_SECOND * 2; t++) expect(beamFrame(t)).toBe(ufoFrame(t));
   });
 
+  it("MGW-TC-0010-09 隕石の尾は 2 コマ（3 本とも長さ 8 と、上下の線を長さ 6 にしたもの）を、UFO と同じく 0.25 秒ごとに切り替える", () => {
+    expect(METEOR_TRAIL_FRAMES).toHaveLength(2);
+    for (const frame of METEOR_TRAIL_FRAMES) expectSize(frame, 8, 7);
+    const lines = (frame: Sprite) => frame.rows.filter((r) => r.includes("#"));
+    expect(lines(METEOR_TRAIL_FRAMES[0])).toEqual(["########", "########", "########"]);
+    expect(lines(METEOR_TRAIL_FRAMES[1])).toEqual([".######.", "########", ".######."]);
+    // 線の段（y 0・3・6）は 2 コマとも同じ。左右対称なので、向きで描き分けなくてよい
+    for (const frame of METEOR_TRAIL_FRAMES) {
+      expect([0, 3, 6].every((y) => frame.rows[y]!.includes("#"))).toBe(true);
+      for (const r of frame.rows) expect([...r].reverse().join("")).toBe(r);
+    }
+    for (let t = 0; t < STEPS_PER_SECOND * 2; t++) expect(meteorTrailFrame(t)).toBe(ufoFrame(t));
+  });
   it("MGW-TC-0010-05 隕石には、進む向きの後ろに尾が付き、向きが分かる", () => {
     expectSize(METEOR_TRAIL, 8, 7);
     // 3 本の横線

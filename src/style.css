@@ -695,7 +695,12 @@ body:not([data-screen='play']) #overlay-entry {
 #entry-name {
   font: inherit;
   font-size: 22px;
-  width: 12ch;
+  /*
+   * 全角の文字（日本語・全角数字）が 8 文字見える幅（仕様書 v1.10）。全角の文字の幅はフォントによって 1em より少し広い
+   * （PC で 1.14em）ので、9.5 文字ぶんと左右の余白・枠にする
+   */
+  width: calc(9.5em + 20px);
+  max-width: 100%;
   padding: 6px 8px;
   color: var(--fg);
   background: var(--bg);

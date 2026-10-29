@@ -123,51 +123,59 @@ test.describe('プレイ', () => {
     expect(s.beams).toEqual([]);
   });
 
-  test('MGW-TC-0016-10 出撃待ちで、タップ・クリック・Space を押すと、発射台が出て Ready に戻る。このタップでは発射しない', async ({ page, isMobile }) => {
+  test('MGW-TC-0016-10 出撃待ちで、タップ・クリック・Space を押すと、発射台が出て Ready に戻る。出る位置は、タップ・クリックした x。Space のときはマウスの x か 240。このタップでは発射しない', async ({ page, isMobile }) => {
     const toStandby = async () => {
       await openPlay(page);
       await clearField(page);
       await setState(page, { status: 'standby', lives: 2 });
       await expect(page.locator('body')).toHaveAttribute('data-status', 'standby');
     };
-    const expectDeployed = async () => {
+    /** 発射台が出て、x が want の近く（タップの座標の丸めで 1.5 px まで）で、発射していない */
+    const expectDeployed = async (want: number) => {
       await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
       const s = await getState(page);
-      // 発射台は x = 240 に出る（そのあとは、タップした指の x へ近づくので、1 px までの差は許す）
-      expect(Math.abs(s.launcherX - 240)).toBeLessThan(1);
+      expect(Math.abs(s.launcherX - want)).toBeLessThan(1.5);
       expect(s.missile.isLaunched).toBe(false);
       await expect(page.locator('#standby-hint')).toBeHidden();
       // 少し待っても発射していない
       await page.waitForTimeout(300);
       await expect(page.locator('body')).toHaveAttribute('data-status', 'ready');
     };
-    const box = async () => (await page.locator('#game').boundingBox())!;
+    const game = async () => (await page.locator('#game').boundingBox())!;
+    /** 論理 x（0〜480）を画面の x に */
+    const at = async (x: number) => {
+      const b = await game();
+      return b.x + (x / 480) * b.width;
+    };
     if (isMobile) {
-      for (const target of ['#game', '#control-area']) {
+      // ゲーム画面と操作空間のどちらでも、タップした x に出る
+      for (const [target, x] of [['#game', 120], ['#control-area', 360]] as const) {
         await toStandby();
         const b = (await page.locator(target).boundingBox())!;
-        await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height * 0.8);
-        await expectDeployed();
+        await page.touchscreen.tap(await at(x), b.y + b.height * 0.8);
+        await expectDeployed(x);
       }
     } else {
+      // クリックした x に出る
       await toStandby();
-      const b = await box();
-      await page.mouse.click(b.x + b.width / 2, b.y + b.height * 0.8);
-      await expectDeployed();
+      const b = await game();
+      await page.mouse.click(await at(100), b.y + b.height * 0.8);
+      await expectDeployed(100);
+      // Space：マウスの x に出る
       await toStandby();
+      await page.mouse.move(await at(400), b.y + b.height * 0.5);
       await page.keyboard.press('Space');
-      await expectDeployed();
+      await expectDeployed(400);
     }
     // 次のタップ（PC は Space）で発射する
     if (isMobile) {
-      const b = await box();
+      const b = await game();
       await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height * 0.8);
     } else {
       await page.keyboard.press('Space');
     }
     await expect(page.locator('body')).toHaveAttribute('data-status', 'playing');
   });
-
   test('MGW-TC-0017-04 クリアの表示の下に、UFO の得点・タイム（小数第 1 位で切り捨て）・時間ボーナス・合計が出る。ゲームオーバーでは出ない', async ({ page }) => {
     await openPlay(page);
     await seedRanking(page, FULL_RANKING);

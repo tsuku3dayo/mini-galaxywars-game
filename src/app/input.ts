@@ -72,6 +72,8 @@ export function createInputEngine(field: HTMLElement, surfaces: HTMLElement[] = 
     if (!pointerDown) return;
     pointerDown = false;
     track(e);
+    // 離した位置を、出撃する x にも使う（仕様書 v1.10）
+    if (e.type === 'pointerup') pointerX = toLogicalX(e.clientX);
     // タップ（ほとんど動かさずに離した）ときだけ発射・出撃する（ready・standby のときだけ使われる）。なぞって離したときは移動だけ
     if (e.type === 'pointerup' && isTap(maxDistance)) launchPending = true;
     downAt = null;
