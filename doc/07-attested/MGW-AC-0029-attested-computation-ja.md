@@ -2,7 +2,7 @@
 id: MGW-AC-0029
 type: attested-computation
 title: ランキングの名前・結果・画面の形・自分の記録・全消去の確認
-status: draft
+status: review
 version: 1.0
 updated: 2026-10-29
 sources:
@@ -53,12 +53,12 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 画面：iPhone 11・iPhone SE・PC（1280 × 800）で、名前の入力（日本語）、登録のあとのランキング画面（「たあ（あなた）」の行、1〜3 位の黄色、結果と日時、スクロールした下の記録のバックアップ）、タイトル画面の「ランキング消去」と確認のスクリーンショットを見た。
 
-## 2. 手動の確認
+## 2. 手動の確認（WS-0010 の終わり、2026-10-29、オーナー、iPhone 11・PC）
 
 | 確認 ID | 確かめること | 結果 |
 | :--- | :--- | :--- |
-| MGW-TC-0025-07 | 名前は 1〜8 文字で、ひらがな・カタカナ・漢字・英数字を入れられる。日本語の変換の途中で文字が消えない | 未実施（WS の終わりに確かめる） |
-| MGW-TC-0026-05 | 見た目は「ブロック崩しミニ」のランキング画面と同じ形 | 未実施（WS の終わりに確かめる） |
+| MGW-TC-0025-07 | 名前は 1〜8 文字で、ひらがな・カタカナ・漢字・英数字を入れられる。日本語の変換の途中で文字が消えない | OK（iPhone のホーム画面の本物のアプリ） |
+| MGW-TC-0026-05 | 見た目は「ブロック崩しミニ」のランキング画面と同じ形 | OK（iPhone・PC） |
 
 ## 3. 設計と違う作りにしたこと
 
@@ -68,5 +68,5 @@ E2E は 3 つの project（`pc-chromium`・`iphone11-webkit`・`iphonese-webkit`
 
 ## 4. 確認できなかったこと
 
-- 日本語の変換（IME）そのものは E2E で動かせないので、`compositionstart`・`compositionend` を送って確かめた。実際の変換は WS の終わりに iPhone で確かめる（MGW-TC-0025-07）。
+- 日本語の変換（IME）そのものは E2E で動かせないので、`compositionstart`・`compositionend` を送って確かめた。実際の変換は WS の終わりに iPhone で確かめ、OK だった（MGW-TC-0025-07）。
 - Android の端末では確かめていない（実機がない。MGW-TST-0001 §6.1）。
