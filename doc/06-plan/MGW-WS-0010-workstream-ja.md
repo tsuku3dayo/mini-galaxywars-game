@@ -3,7 +3,7 @@ id: MGW-WS-0010
 type: workstream
 title: 遊んでみて気になった所の修正と、ランキング・クレジット・効果音（修正用）
 status: stable
-version: 1.0
+version: 1.1
 updated: 2026-10-29
 sources:
   - MGW-EP-0002（v1.0）
@@ -11,7 +11,7 @@ sources:
   - MGW-EP-0004（v1.0）
   - MGW-EP-0005（v1.1）
   - MGW-EP-0006（v1.1）
-  - MGW-TST-0001（v1.3）
+  - MGW-TST-0001（v1.4）
   - doc/requests/2026-10-29-spec-1.7-playtest-feedback.md
 verified: null
 ---
@@ -19,7 +19,7 @@ verified: null
 # MGW-WS-0010 遊んでみて気になった所の修正と、ランキング・クレジット・効果音（修正用）
 
 * **epic**：MGW-EP-0002、MGW-EP-0003、MGW-EP-0004、MGW-EP-0005、MGW-EP-0006
-* **実施の順**：10 / 10（前：MGW-WS-0009。このあとリリース）
+* **実施の順**：10 / 11（前：MGW-WS-0009、次：MGW-WS-0011）
 
 ## ねらい
 
@@ -37,6 +37,7 @@ verified: null
 | 8 | MGW-WS-0007 | 表示方式（完了） |
 | 9 | MGW-WS-0009 | 元のゲームに寄せる修正（完了） |
 | 10 | **MGW-WS-0010** | 遊んでみて気になった所の修正と、ランキング・クレジット・効果音 |
+| 11 | MGW-WS-0011 | タイトル画面の点数の説明・ボタンとクレジットの名前（修正用、仕様書 v1.8） |
 
 ## user-story
 

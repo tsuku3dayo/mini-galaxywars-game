@@ -3,8 +3,8 @@ id: MGW-TD-0007
 type: technical-design
 title: PWA・起動の復旧・ビルド・CI・Lint の設計
 status: stable
-version: 1.4
-updated: 2026-10-28
+version: 1.5
+updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
   - MGW-TS-0001（v1.1）
@@ -91,7 +91,7 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 | :--- | :--- | :--- |
 | `pc-chromium` | Desktop Chrome（1280 × 800） | PC の操作（キー・マウス）、画面、保存 |
 | `iphone11-webkit` | `devices['iPhone 11']` | タッチ、操作空間、大きさ |
-| `iphonese-webkit` | `devices['iPhone SE']` | はみ出さないこと（MGW-US-0022） |
+| `iphonese-webkit` | `devices['iPhone SE (3rd gen)']`（375 × 667） | はみ出さないこと（MGW-US-0022）。仕様書 v1.8 で、第 1 世代（320 × 568）から MGW-GUI-0001 §1 の基準の大きさに替えた |
 
 - `webServer` は `npm run preview`（`vite preview`、base 付き）。
 - 文字の幅に頼るテストは書かない（CI と手元でフォントが違うため）。
@@ -111,3 +111,4 @@ MGW-TS-0001 §3 のとおり。`verify` は `lint` → `test` → `build` → `c
 | 1.2 | 2026-10-27 | §2：画面が見えたときにも新しい版を確かめる。待っていた版が次に開いたときに使われることを書いた（WS-0001 の手動テストで、iPhone に「更新」の案内が出なかったため） |
 | 1.3 | 2026-10-27 | §2：登録の直後にも新しい版を確かめる（WS-0001 の手動テストの診断で、iPhone のホーム画面のアプリは、登録の時点ではまだ確かめていなかったため） |
 | 1.4 | 2026-10-28 | §2 ほか：アプリ名を「銀河戦争ミニ」にする（`name`・`short_name`・`<title>`・`apple-mobile-web-app-title`。仕様書 v1.6） |
+| 1.5 | 2026-10-29 | §7：E2E の `iphonese-webkit` を iPhone SE (3rd gen)（375 × 667）にする（仕様書 v1.8） |
