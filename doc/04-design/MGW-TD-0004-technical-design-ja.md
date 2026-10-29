@@ -3,11 +3,11 @@ id: MGW-TD-0004
 type: technical-design
 title: app の設計（ルーティング・画面・入力・ループ・テスト用の入口）
 status: stable
-version: 1.4
+version: 1.5
 updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
-  - MGW-TD-0002（v1.6）
+  - MGW-TD-0002（v1.7）
   - MGW-ADR-0002（v1.1）
   - MGW-GUI-0001（v1.5）
   - MGW-GUI-0002（v1.3）
@@ -49,6 +49,7 @@ verified: null
 - 設定（`settings`）・名前の入力（`entry`）・ランキング消去の確認（`clear`）は、ハッシュを変えずに DOM を重ねて出す（MGW-GUI-0001 §7）。
 - `#/play` をじかに開いたときも、新しいゲームから始める。
 - **種**（仕様書 v1.7）：ゲームを始めるたびに `crypto.getRandomValues(new Uint32Array(1))[0]` で決める（使えなければ `Date.now() >>> 0`）。`?debug=1&seed=<整数>` のときは、その値を使う（E2E で並びをそろえるため）。今のゲームの種は `data-seed` と `__mgw.getState()` で読める。
+- **名前の入力欄**：幅は全角の文字が 8 文字見える幅（`8em` と余白。文字の大きさ 22 px。仕様書 v1.10）。
 - **登録するもの**：スコアは合計（`state.score`）、クリアのときはタイム（`clearTimeMs(playSteps)`）も渡す（仕様書 v1.9）。
 - **登録のあと**：`#/ranking` に移るとき、今登録した記録の順位を渡し（`ranking.highlight(rank)`）、その行を目立たせる。ほかから `#/ranking` を開いたときは目立たせない。
 
@@ -113,7 +114,7 @@ MGW-GUI-0001 §3・§4 のとおり。
 
 - ポインターの x は `(clientX − stage.left) ÷ scale` で論理座標にする。`setPointerCapture` で、指が枠の外へ出ても追う。
 - タップの判定は、`isTap(down, maxDistance) = maxDistance < TAP_SLOP（10）` の DOM に触れない関数にし、単体テストで確かめる。距離は CSS px（`clientX`・`clientY`）で測る（仕様書 §20。前は離せば必ず発射していた）。
-- standby のときの `launch` は、core が「出撃」として受ける（MGW-TD-0002 §6 の 5）。出撃したタップの `pointerup` で、そのまま発射にならないよう、`launch` は 1 度だけ true を返して消す（今までどおり）。
+- standby のときの `launch` は、core が「出撃」として受ける（MGW-TD-0002 §6 の 5）。そのステップの `targetX` は、タップ・クリックした x（`pointerup` の位置。Space のときは最後のマウスの x）にし、発射台はそこに出る（仕様書 v1.10）。出撃したタップの `pointerup` で、そのまま発射にならないよう、`launch` は 1 度だけ true を返して消す（今までどおり）。
 - 一時停止・効果音のボタンは `pointerdown` を止め、ゲームの入力にしない。
 - `visibilitychange` で隠れたら、ready・playing・respawn・standby なら `togglePause`。
 - タッチ端末かどうかは `matchMedia('(pointer: coarse)')`。
@@ -184,3 +185,4 @@ frame(now):
 | 1.2 | 2026-10-29 | §3：ボタンの段の高さは 48 px より低くしない（MGW-TASK-0028 の実装で、iPhone SE（320 × 568）でボタンが段からはみ出したため） |
 | 1.3 | 2026-10-29 | §2.1：タイトル画面の並び（点数の説明・同じ大きさの 5 つのボタン・操作の案内の下のランキング消去）と、収まらないときの枠の中のスクロール（仕様書 v1.8） |
 | 1.4 | 2026-10-29 | 仕様書 v1.9：§1 の登録するもの（合計とタイム）、§5 のクリアの表示の 4 行 |
+| 1.5 | 2026-10-29 | 仕様書 v1.10：§4 の出撃の位置（`targetX`）、§1 の名前の入力欄の幅 |

@@ -6,8 +6,8 @@ status: stable
 version: 1.0
 updated: 2026-10-29
 sources:
-  - MGW-WS-0012（v1.0）
-  - MGW-TD-0002（v1.6）
+  - MGW-WS-0012（v1.1）
+  - MGW-TD-0002（v1.7）
   - MGW-TC-0013（v1.2）
 verified: null
 ---

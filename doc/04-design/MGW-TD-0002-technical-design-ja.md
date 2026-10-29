@@ -3,7 +3,7 @@ id: MGW-TD-0002
 type: technical-design
 title: core の設計（定数・状態・ステップ・当たり判定・得点・音の計画）
 status: stable
-version: 1.6
+version: 1.7
 updated: 2026-10-29
 sources:
   - MGW-TD-0001（v1.1）
@@ -179,7 +179,7 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
    - ready：入力から発射台の x を決める（`dir` があれば 60 px/秒、`targetX` があれば 120 px/秒を上限に近づく）。ミサイルは発射台の上。`launch` なら status を playing にし、`isLaunched = true`。
    - playing：`isBoosting = input.boost`。上昇は 45／70、横は 30／60 px/秒で、`dir` か `targetX` の方へ動く。
    - respawn：発射台もミサイルも出さない。
-   - standby：発射台もミサイルも出さない。`launch` なら status を ready にし、発射台を x = 240 に出してミサイルを乗せる（このステップでは発射しない。発射は次のタップ）。
+   - standby：発射台もミサイルも出さない。`launch` なら status を ready にし、発射台を出してミサイルを乗せる（このステップでは発射しない。発射は次のタップ）。出る位置は、`targetX`（タップ・クリックした x、Space のときはマウスの x）があればそれを 24〜456 に収めた x、なければ x = 240（仕様書 v1.10）。
 6. **当たり判定**（ready・playing のとき。仕様書 §5.2 の順。ミスかクリアが決まったら、残りは調べない）
    1. ミサイル × 隕石 → ミス（ready のときも。隕石の段は発射前のミサイルに届かないので、実際に当たるのは playing のとき）。
    2. ミサイル × UFO → §7 の得点。8 機目ならクリア。そうでなければ §6.4（ミサイルを消して待つ）。当たる UFO は 1 機だけ（下段を先に調べ、最初に当たった 1 機）。
@@ -278,3 +278,4 @@ paused・cleared・gameOver のときは何もしない（`stepCount` も進め�
 | 1.4 | 2026-10-28 | 仕様書 v1.6：§2 の速さ（1/4、光線 1/2）・隕石 11 段・新しい定数、§3 の `waitReason` と `killEffect`、§5 の隕石の道のり、§6 の手順と §6.4（UFO を倒したらミサイルを消して 1 秒待つ）、§8 の音 |
 | 1.5 | 2026-10-29 | 仕様書 v1.7：§2 の `METEOR_PATH_LENGTH`・`METEOR_MIN_GAP`、§3 の `standby`、§4 の `newGame` の種・`random.ts`、§5 の隕石の初めの並び、§6 の出撃待ち、§9 のテスト、§10 の乱数 |
 | 1.6 | 2026-10-29 | 仕様書 v1.9：§2 の `TIME_BONUS_BASE`・`TIME_BONUS_PER_SEC`、§3 の `playSteps`・`timeBonus`、§7.3 時間ボーナス、§9 のテスト |
+| 1.7 | 2026-10-29 | 仕様書 v1.10：§6 の 5 の出撃の位置（`targetX` があればその x） |
