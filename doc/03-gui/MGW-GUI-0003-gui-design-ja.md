@@ -2,7 +2,7 @@
 id: MGW-GUI-0003
 type: gui-design
 title: プレイ画面（HUD・操作空間・一時停止・表示）
-status: review
+status: stable
 version: 1.3
 updated: 2026-10-29
 sources:
@@ -27,7 +27,9 @@ sources:
   - MGW-US-0031（v1.0）
   - MGW-US-0034（v1.0）
   - doc/specification.md (v1.9) §2、§3、§4、§7、§8、§19、§20
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T16:15:02+09:00
 ---
 
 # MGW-GUI-0003 プレイ画面（`#/play`）

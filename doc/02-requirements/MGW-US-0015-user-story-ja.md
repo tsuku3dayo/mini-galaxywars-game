@@ -2,13 +2,15 @@
 id: MGW-US-0015
 type: user-story
 title: スコアと残機を見る
-status: review
+status: stable
 version: 1.2
 updated: 2026-10-29
 sources:
   - MGW-EP-0003（v1.3）
   - doc/specification.md (v1.9) §2、§2.1、§6.3
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-29T16:15:02+09:00
 ---
 
 # MGW-US-0015 スコアと残機を見る
