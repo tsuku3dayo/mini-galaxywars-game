@@ -20,5 +20,5 @@
 
 ## T（つぎにやること）
 
-- 画面に版を出すかどうかと、その場所を、03 の画面設計で決めておく → workflow.txt の「段階ごとに先に確かめておくこと」の 03 に足す。
-- リリースの `--strict` は `node scripts/check-docs.mjs --strict` で動かす → workflow.txt の【リリース】に足す。メモ（環境の落とし穴）にも残す。
+- 画面に版を出すかどうかと、その場所を、03 の画面設計で決めておく → workflow.txt の「段階ごとに先に確かめておくこと」の 03 に足した。
+- リリースの `--strict` は `node scripts/check-docs.mjs --strict` で動かす → workflow.txt の【リリース】に足した。メモ（環境の落とし穴）にも残した。

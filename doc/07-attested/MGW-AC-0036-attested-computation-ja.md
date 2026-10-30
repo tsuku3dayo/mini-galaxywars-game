@@ -2,14 +2,16 @@
 id: MGW-AC-0036
 type: attested-computation
 title: タイトル画面の版とリリース 1.0.0 の確認
-status: review
+status: stable
 version: 1.0
 updated: 2026-10-30
 sources:
   - MGW-TASK-0036（v1.0）
   - MGW-TC-0014（v1.4）
   - MGW-TST-0001（v1.7）
-verified: null
+verified:
+  by: tsuku3dayo
+  at: 2026-10-30T09:36:27+09:00
 ---
 
 # MGW-AC-0036 タイトル画面の版とリリース 1.0.0 の確認
