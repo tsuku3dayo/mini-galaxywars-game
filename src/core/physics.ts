@@ -72,7 +72,7 @@ export function moveLauncher(x: number, input: StepInput): number {
   return clamp(moveX(x, input, LAUNCHER_KEY_SPEED, LAUNCHER_POINTER_SPEED), LAUNCHER_X_MIN, LAUNCHER_X_MAX);
 }
 
-/** 発射後：ミサイルの位置。噴射中は上昇 280・横 240、そうでなければ上昇 180・横 120 */
+/** 発射後：ミサイルの位置。噴射中は上昇 MISSILE_SPEED_BOOST・横 MISSILE_LATERAL_HIGH、そうでなければ上昇 MISSILE_SPEED_NORMAL・横 MISSILE_LATERAL_LOW（px/秒） */
 export function moveMissile(x: number, y: number, input: StepInput): { x: number; y: number } {
   const up = input.boost ? MISSILE_SPEED_BOOST : MISSILE_SPEED_NORMAL;
   const lateral = input.boost ? MISSILE_LATERAL_HIGH : MISSILE_LATERAL_LOW;

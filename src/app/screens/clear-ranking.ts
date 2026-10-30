@@ -1,21 +1,11 @@
 // ランキング消去の確認（MGW-GUI-0002 §2。仕様書 v1.7）。タイトル画面の上に重ねて出す
+import { button } from '../button';
+
 export interface ClearRankingOverlay {
   /** 記録があれば確認を、なければ「記録がありません」を出す */
   show(hasRecords: boolean): void;
   hide(): void;
   isOpen(): boolean;
-}
-
-/** 押したあとに枠が残ると、Space でもう一度押されてしまうので、押したらすぐ外す */
-function button(label: string, onClick: () => void): HTMLButtonElement {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.textContent = label;
-  b.addEventListener('click', () => {
-    onClick();
-    b.blur();
-  });
-  return b;
 }
 
 export function createClearRankingOverlay(root: HTMLElement, onClear: () => void, onClose: () => void): ClearRankingOverlay {
