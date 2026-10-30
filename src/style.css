@@ -319,6 +319,18 @@ body:not([data-screen='play']) #overlay-message {
   z-index: 1;
 }
 
+/* 版（仕様書 v1.11）。HIGH の行の右端に小さく、うすい色で。行の高さは増やさない */
+.title-version {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: #888;
+  z-index: 1;
+}
+
 /*
  * 中身は枠の中でスクロールする箱に入れる（仕様書 v1.8）。収まるときは上下の余白で真ん中に寄せ、
  * 収まらない小さい画面（iPhone SE など）では、枠の中だけスクロールする（ページは動かさない。MGW-GUI-0001 §4）

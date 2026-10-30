@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 test.describe('タイトル画面とルーティング', () => {
@@ -112,6 +113,29 @@ test.describe('タイトル画面とルーティング', () => {
     await page.keyboard.press('Space');
     await expect(page.locator('body')).toHaveAttribute('data-screen', 'play');
   });
+  test('MGW-TC-0014-08 HIGH と同じ行の右端に、v と package.json の版が出て、HIGH と重ならず、HIGH より小さく、枠からはみ出さない', async ({ page }) => {
+    const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string };
+    await page.goto('./#/title');
+    const title = page.locator('#screen-title');
+    const label = title.locator('.title-version');
+    await expect(label).toHaveText(`v${version}`);
+    await expect(label).toHaveAttribute('aria-label', `バージョン ${version}`);
+    const high = (await title.locator('.title-high').boundingBox())!;
+    const box = (await label.boundingBox())!;
+    const stage = (await page.locator('#stage').boundingBox())!;
+    // 同じ行（縦の真ん中がそろう）で、HIGH より右。右端は枠の中
+    expect(Math.abs(box.y + box.height / 2 - (high.y + high.height / 2))).toBeLessThanOrEqual(2);
+    expect(box.x).toBeGreaterThan(high.x + high.width);
+    expect(box.x + box.width).toBeLessThanOrEqual(stage.x + stage.width + 0.5);
+    expect(stage.x + stage.width - (box.x + box.width)).toBeLessThan(32);
+    // HIGH より小さい文字
+    const sizes = await Promise.all([label, title.locator('.title-high')].map((l) => l.evaluate((el) => parseFloat(getComputedStyle(el).fontSize))));
+    expect(sizes[0]!).toBeLessThan(sizes[1]!);
+    // スクロールしても動かない（中身のスクロールの外）
+    await title.locator('.title-scroll').evaluate((el) => (el.scrollTop = el.scrollHeight));
+    expect((await label.boundingBox())!.y).toBeCloseTo(box.y, 0);
+  });
+
   test('MGW-TC-0014-02 「START」（または Space）で #/play に移り、発射前（Ready）から始まる', async ({ page, isMobile }) => {
     await page.goto('./');
     await page.locator('#screen-title').getByRole('button', { name: 'START' }).click();
