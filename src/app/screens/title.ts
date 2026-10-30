@@ -22,6 +22,12 @@ export function createTitleScreen(
   const high = document.createElement('p');
   high.className = 'title-high';
 
+  // 版（仕様書 v1.11、MGW-TD-0004 §2.1）。HIGH と同じ行の右端。ビルドで package.json の version を埋め込む
+  const version = document.createElement('p');
+  version.className = 'title-version';
+  version.textContent = `v${__APP_VERSION__}`;
+  version.setAttribute('aria-label', `バージョン ${__APP_VERSION__}`);
+
   // 中身は、枠に収まらない小さい画面では枠の中でスクロールする（仕様書 v1.8、MGW-TD-0004 §2.1）
   const scroll = document.createElement('div');
   scroll.className = 'title-scroll';
@@ -80,7 +86,7 @@ export function createTitleScreen(
   sub.append(clearRanking);
 
   scroll.append(name, guideBox, menu, guide, sub);
-  root.append(high, scroll);
+  root.append(high, version, scroll);
 
   return {
     refresh(value) {

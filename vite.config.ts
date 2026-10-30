@@ -1,11 +1,18 @@
+import { readFileSync } from 'node:fs';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 
 // 公開 URL は https://tsuku3dayo.github.io/mini-galaxywars-game/（MGW-ADR-0003）
 const BASE = '/mini-galaxywars-game/';
 
+// タイトル画面に出す版（仕様書 v1.11、MGW-TD-0004 §2.1）
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
+
 export default defineConfig({
   base: BASE,
+  define: {
+    __APP_VERSION__: JSON.stringify(version),
+  },
   build: {
     target: 'es2022',
   },
