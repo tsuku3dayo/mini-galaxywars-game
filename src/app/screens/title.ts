@@ -1,4 +1,5 @@
 // タイトル画面（MGW-GUI-0002）。原作の表記はタイトル画面に出さず、README に書く（仕様書 v1.6、MGW-ADR-0007）
+import { pad5 } from '../../render/hud';
 import { createScoreGuide } from '../../render/score-guide';
 
 export interface TitleScreen {
@@ -7,8 +8,6 @@ export interface TitleScreen {
   /** 効果音のボタンを置く場所（MGW-GUI-0002 §1。CREDITS の下に、同じ大きさで並べる） */
   soundSlot: HTMLElement;
 }
-
-const pad5 = (n: number) => String(n).padStart(5, '0');
 
 export function createTitleScreen(
   root: HTMLElement,

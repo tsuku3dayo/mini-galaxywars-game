@@ -2,11 +2,6 @@
 import { setData } from './debug';
 import { icon } from './icons';
 
-export interface SoundToggle {
-  /** 今の設定 */
-  isOn(): boolean;
-}
-
 /** ボタンの文言 */
 export const soundLabel = (on: boolean) => (on ? '効果音：オン' : '効果音：オフ');
 
@@ -14,7 +9,7 @@ export const soundLabel = (on: boolean) => (on ? '効果音：オン' : '効果�
  * places のそれぞれに効果音のボタンを置く。押すたびに切り替え、onChange で保存・音に伝える。
  * 押したらフォーカスを外し、ゲームの入力（発射・移動）にしない
  */
-export function createSoundToggle(places: HTMLElement[], initial: boolean, onChange: (on: boolean) => void): SoundToggle {
+export function createSoundToggle(places: HTMLElement[], initial: boolean, onChange: (on: boolean) => void): void {
   let on = initial;
   const buttons = places.map((place) => {
     const b = document.createElement('button');
@@ -39,5 +34,4 @@ export function createSoundToggle(places: HTMLElement[], initial: boolean, onCha
     setData('sound', on ? 'on' : 'off');
   };
   render();
-  return { isOn: () => on };
 }

@@ -3,8 +3,8 @@ id: MGW-TD-0003
 type: technical-design
 title: render の設計（描く順番・ドット絵・フォント・擬似カラー）
 status: stable
-version: 1.7
-updated: 2026-10-29
+version: 1.8
+updated: 2026-10-30
 sources:
   - MGW-TD-0001（v1.2）
   - MGW-TD-0002（v1.7）
@@ -30,7 +30,7 @@ verified: null
 | :--- | :--- |
 | `createRenderer(canvas): Renderer` | 2D コンテキストを取り、`imageSmoothingEnabled = false` にする |
 | `renderer.resize(scale, dpr)` | Canvas の画素を `480 × scale × dpr` × `640 × scale × dpr` にし、`setTransform(scale × dpr, …)` で論理座標のまま描けるようにする |
-| `renderer.draw(state: GameState \| null, view: { mode: 'cellophane' \| 'pixel'; showHud: boolean; tick: number })` | 1 回の描画。`state` が null（タイトル・ランキング）のときは背景と飾りだけ |
+| `renderer.draw(state: GameState \| null, view: { mode: 'cellophane' \| 'pixel'; tick: number })` | 1 回の描画。`state` が null（タイトル・ランキング）のときは背景と飾りだけ |
 
 render は `GameState` を読むだけで、書き換えない（MGW-ADR-0001）。
 
@@ -129,3 +129,4 @@ render は `GameState` を読むだけで、書き換えない（MGW-ADR-0001）
 | 1.5 | 2026-10-29 | 仕様書 v1.9：§6 に経過時間（`TIME 095`、`timeText`） |
 | 1.6 | 2026-10-29 | 仕様書 v1.10：§3 の光線の 2 コマ（オーナーの画像）、隕石の尾の 2 コマ |
 | 1.7 | 2026-10-29 | §3：光線の波を、画像の点の位置どおり 7 行のくり返しにした（v1.6 では 8 行と書いていた。MGW-TASK-0035 の実装で画像と比べて分かった） |
+| 1.8 | 2026-10-30 | §1：`view` の `showHud` をなくした（いつも HUD を描いていたため。リファクタリング、doc/refactoring/2026-10-30-refactoring.md） |

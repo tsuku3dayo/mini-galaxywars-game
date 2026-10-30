@@ -1,4 +1,5 @@
 // ランキング登録（名前の入力。MGW-GUI-0004）。プレイ画面の上に重ねて出す
+import { pad5 } from '../../render/hud';
 import { DEFAULT_NAME, normalizeName } from '../../storage/ranking-store';
 
 export interface EntryOverlay {
@@ -7,8 +8,6 @@ export interface EntryOverlay {
   hide(): void;
   isOpen(): boolean;
 }
-
-const pad5 = (n: number) => String(n).padStart(5, '0');
 
 /** 1ST・2ND・3RD・4TH〜10TH */
 export function ordinal(rank: number): string {

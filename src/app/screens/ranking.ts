@@ -1,5 +1,6 @@
 // ランキング画面（MGW-GUI-0005）。「ブロック崩しミニ」と同じ形の紺の画面：BACK とタイトル・一覧・記録のバックアップ
 import type { RankingEntry, RankingStore } from '../../storage/ranking-store';
+import { button } from '../button';
 import { icon } from '../icons';
 
 export interface RankingScreen {
@@ -36,18 +37,6 @@ export function metaText(entry: RankingEntry): string {
 /** 書き出しのファイル名 mini-galaxywars-ranking-YYYYMMDD.json（MGW-TD-0006 §1.1） */
 export function exportFileName(now: Date): string {
   return `mini-galaxywars-ranking-${now.getFullYear()}${pad2(now.getMonth() + 1)}${pad2(now.getDate())}.json`;
-}
-
-function button(label: string, onClick: () => void, iconName?: Parameters<typeof icon>[0]): HTMLButtonElement {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.textContent = label;
-  if (iconName) b.prepend(icon(iconName));
-  b.addEventListener('click', () => {
-    onClick();
-    b.blur();
-  });
-  return b;
 }
 
 export function createRankingScreen(root: HTMLElement, store: RankingStore): RankingScreen {
@@ -147,7 +136,11 @@ export function createRankingScreen(root: HTMLElement, store: RankingStore): Ran
   confirmButtons.className = 'ranking-buttons';
   confirmButtons.append(
     button('置き換える', () => {
-      if (pending) store.replaceAll(pending);
+      try {
+        if (pending) store.replaceAll(pending);
+      } catch {
+        // 保存できなくても（容量・設定など）、確認を閉じて今の記録を出し直す（ほかの保存と同じ）
+      }
       closeConfirm();
       show(null);
     }),

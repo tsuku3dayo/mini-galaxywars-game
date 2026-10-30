@@ -67,6 +67,14 @@ const start = () => {
   unlockAudio();
   location.hash = '#/play';
 };
+/** 保存する。保存できなくても（容量・設定など）、今回は選んだとおりに続ける */
+const trySave = (save: () => void) => {
+  try {
+    save();
+  } catch {
+    // 続ける
+  }
+};
 // 設定（表示方式。MGW-GUI-0006、MGW-TD-0006 §2）。タイトルの上に重ねる
 const settingsStore = createSettingsStore(localStorage);
 const savedSettings = settingsStore.load();
@@ -78,11 +86,7 @@ const settings = createSettingsOverlay(
   stage,
   (mode) => {
     displayMode = mode;
-    try {
-      settingsStore.save({ displayMode: mode });
-    } catch {
-      // 保存できなくても、今回は選んだ方式で描く
-    }
+    trySave(() => settingsStore.save({ displayMode: mode }));
     setData('displayMode', mode);
   },
   () => setData('overlay', 'none'),
@@ -97,11 +101,7 @@ createCreditsScreen(document.getElementById('screen-credits')!);
 const clearRanking = createClearRankingOverlay(
   stage,
   () => {
-    try {
-      ranking.clearAll();
-    } catch {
-      // 保存できなくても、画面は出し直す
-    }
+    trySave(() => ranking.clearAll());
     title.refresh(topScore());
   },
   () => setData('overlay', 'none'),
@@ -144,11 +144,7 @@ const playButtons = document.getElementById('play-buttons')!;
 createPauseButton(playButtons, toggle);
 // 効果音のボタン：タイトル画面とボタンの段の右（MGW-GUI-0002・0003）。押してもゲームは止めない
 createSoundToggle([title.soundSlot, playButtons], savedSettings.sound, (on) => {
-  try {
-    settingsStore.save({ sound: on });
-  } catch {
-    // 保存できなくても、今回は選んだとおりにする
-  }
+  trySave(() => settingsStore.save({ sound: on }));
   synth.setEnabled(on);
   // ボタンの click の中で音を有効にしておく（iPhone。MGW-TD-0004 §7）
   unlockAudio();
@@ -162,11 +158,10 @@ let entryTime: number | undefined;
 let mine: number | null = null;
 const entry = createEntryOverlay(stage, {
   onSubmit(name) {
-    try {
+    // 保存できなくても、ランキング画面へは進む
+    trySave(() => {
       mine = ranking.add(entryScore, name, entryResult, entryTime);
-    } catch {
-      // 保存できなくても（容量・設定など）、ランキング画面へは進む
-    }
+    });
     location.hash = '#/ranking';
   },
   onSkip() {
@@ -196,11 +191,13 @@ document.addEventListener('visibilitychange', () => {
 const stats = createStepStats();
 const panel = isDebug ? createDebugPanel(stage) : null;
 
-const updater = setupPwa(() => {
+/** 新しい版が待っている（本物の更新と、テスト用の simulateUpdate で同じ） */
+const markUpdateWaiting = () => {
   updateWaiting = true;
   setData('update', 'waiting');
   banner.refresh(screen, updateWaiting);
-});
+};
+const updater = setupPwa(markUpdateWaiting);
 
 const banner = createUpdateBanner(stage, () => {
   if (isDebug && !updater.isWaiting()) {
@@ -226,7 +223,7 @@ function runSteps(count: number, fixed?: StepInput): number {
 
 /** 描いて、状態を body の data 属性に出す（MGW-TD-0004 §6.1） */
 function draw(): void {
-  renderer.draw(state, { mode: displayMode, showHud: true, tick: state?.stepCount ?? 0 });
+  renderer.draw(state, { mode: displayMode, tick: state?.stepCount ?? 0 });
   setData('status', state?.status ?? '');
   setData('score', state?.score ?? 0);
   setData('high', state ? displayHighScore(state) : 0);
@@ -279,11 +276,7 @@ watchRoute((next) => {
 window.__mgwBooted?.();
 
 exposeDebug({
-  simulateUpdate() {
-    updateWaiting = true;
-    setData('update', 'waiting');
-    banner.refresh(screen, updateWaiting);
-  },
+  simulateUpdate: markUpdateWaiting,
   getState: () => (state ? structuredClone(state) : null),
   setState(patch) {
     if (state) state = { ...state, ...patch };

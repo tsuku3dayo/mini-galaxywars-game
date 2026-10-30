@@ -18,7 +18,7 @@ import {
   LIVES_Y,
   timeText,
 } from './hud';
-import { killEffectView } from './kill-effect';
+import { explosionFrame, killEffectView } from './kill-effect';
 import { showsLauncher, showsMissile } from './view';
 import {
   BACKFIRE,
@@ -42,7 +42,6 @@ import {
 
 export interface View {
   mode: DisplayMode;
-  showHud: boolean;
   /** UFO・光線のコマ、炎の点滅に使う（ステップの数） */
   tick: number;
 }
@@ -131,15 +130,13 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
           put(art.backfire, state.missile.x, state.missile.y + MISSILE_H / 2 + art.backfire.sprite.h / 2);
         }
       }
+      // 爆発は前半・後半で 2 枚を切り替える（ミスは残りのステップ、UFO を倒したときは倒してからのステップで数える）
       if (state.explosion) {
-        const frame = state.explosion.steps > EXPLOSION_STEPS / 2 ? 0 : 1;
-        put(art.explosion[frame]!, state.explosion.x, state.explosion.y);
+        put(art.explosion[explosionFrame(EXPLOSION_STEPS - state.explosion.steps)]!, state.explosion.x, state.explosion.y);
       }
       const effect = killEffectView(state.killEffect);
       if (effect?.kind === 'explosion') {
-        // 倒してからの前半・後半で 2 枚を切り替える
-        const elapsed = KILL_EFFECT_STEPS - state.killEffect!.steps;
-        put(art.explosion[elapsed < EXPLOSION_STEPS / 2 ? 0 : 1]!, effect.x, effect.y);
+        put(art.explosion[explosionFrame(KILL_EFFECT_STEPS - state.killEffect!.steps)]!, effect.x, effect.y);
       } else if (effect?.kind === 'points') {
         const label = String(effect.points);
         text(label, Math.round(effect.x - (label.length * HUD_CHAR) / 2), Math.round(effect.y - HUD_CHAR / 2));
@@ -147,20 +144,16 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
       // 3. 地面と左下の残機（数と控えの発射台のアイコン）
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, GROUND_Y, FIELD_WIDTH, GROUND_H);
-      if (view.showHud) {
-        const lives = lifeModel(state.lives);
-        text(lives.count, LIVES_X, LIVES_Y);
-        for (let i = 0; i < lives.icons; i++) ctx.drawImage(art.lifeIcon.image, LIFE_ICONS_X + i * LIFE_ICON_STEP, LIFE_ICON_Y);
-        // 同じ行の右に経過時間（仕様書 v1.9）
-        const time = timeText(state.playSteps);
-        text(time, HUD_RIGHT - time.length * HUD_CHAR, LIVES_Y);
-      }
+      const lives = lifeModel(state.lives);
+      text(lives.count, LIVES_X, LIVES_Y);
+      for (let i = 0; i < lives.icons; i++) ctx.drawImage(art.lifeIcon.image, LIFE_ICONS_X + i * LIFE_ICON_STEP, LIFE_ICON_Y);
+      // 同じ行の右に経過時間（仕様書 v1.9）
+      const time = timeText(state.playSteps);
+      text(time, HUD_RIGHT - time.length * HUD_CHAR, LIVES_Y);
       // 4. HUD（SCORE・HIGH）
-      if (view.showHud) {
-        const hud = hudModel(state);
-        text(hud.score, HUD_LEFT, HUD_TEXT_Y);
-        text(hud.high, HUD_RIGHT - hud.high.length * HUD_CHAR, HUD_TEXT_Y);
-      }
+      const hud = hudModel(state);
+      text(hud.score, HUD_LEFT, HUD_TEXT_Y);
+      text(hud.high, HUD_RIGHT - hud.high.length * HUD_CHAR, HUD_TEXT_Y);
       // 5. 擬似カラー・6. 被弾フラッシュ
       for (const o of overlaysFor(view.mode, state.flashSteps)) {
         ctx.globalCompositeOperation = o.op;

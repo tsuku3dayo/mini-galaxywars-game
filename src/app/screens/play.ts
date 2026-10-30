@@ -2,8 +2,9 @@
 import { STEPS_PER_SECOND } from '../../core/config';
 import { clearTimeMs } from '../../core/scoring';
 import type { GameState } from '../../core/types';
+import { pad5 } from '../../render/hud';
+import { button } from '../button';
 import { setData } from '../debug';
-import { icon } from '../icons';
 
 /** 終わったあと、TITLE を出すまでの時間（時刻で数える） */
 export const END_WAIT_MS = 3000;
@@ -12,27 +13,12 @@ export interface PlayOverlay {
   update(state: GameState | null): void;
 }
 
-/** 押したあとに枠が残ると、Space でもう一度押されてしまうので、押したらすぐ外す */
-function button(label: string, onClick: () => void): HTMLButtonElement {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.textContent = label;
-  b.addEventListener('click', () => {
-    onClick();
-    b.blur();
-  });
-  return b;
-}
-
 /** ボタンの段の左の一時停止（プレイ中だけ。押しても発射・移動しない） */
 export function createPauseButton(row: HTMLElement, onToggle: () => void): void {
-  const pause = button('一時停止', onToggle);
+  const pause = button('一時停止', onToggle, 'pause');
   pause.id = 'pause-button';
-  pause.prepend(icon('pause'));
   row.append(pause);
 }
-
-const pad5 = (n: number) => String(Math.max(0, Math.min(99_999, n))).padStart(5, '0');
 
 /** クリアの表示の 4 行（MGW-TD-0004 §5）：UFO の得点・タイム（小数第 1 位で切り捨て）・時間ボーナス・合計 */
 export function clearResultLines(state: Pick<GameState, 'score' | 'timeBonus' | 'playSteps'>): string[] {
